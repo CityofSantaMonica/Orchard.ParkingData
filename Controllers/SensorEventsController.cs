@@ -30,7 +30,7 @@ namespace CSM.ParkingData.Controllers
             return Ok(events);
         }
 
-        [RequireBasicAuthorization(Permissions.ApiWriter)]
+        [RequireBasicAuthorization("ApiWriter")]
         public IHttpActionResult Post([FromBody]SensorEventPOST sensorEvent)
         {
             if (sensorEvent == null || !ModelState.IsValid)
