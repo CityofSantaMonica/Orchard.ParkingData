@@ -1,0 +1,9 @@
+﻿Name: CSM.ParkingData
+AntiForgery: enabled
+Author: City of Santa Monica
+Website: https://github.com/CityofSantaMonica
+Version: 1.x
+OrchardVersion: 1.x
+Description: RESTful Web API for the City of Santa Monica's Parking Data.
+Dependencies: CSM.Security, CSM.ApiDocumentation
+Category: Open Data
