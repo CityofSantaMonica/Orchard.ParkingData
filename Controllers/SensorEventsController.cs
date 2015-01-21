@@ -9,7 +9,7 @@ using Orchard.Logging;
 
 namespace CSM.ParkingData.Controllers
 {
-    [EnableCors("*", "GET")]
+    [EnableCors(origins: "*", methods: "GET")]
     public class SensorEventsController : ApiController
     {
         private readonly ISensorEventsService _sensorEventsService;
@@ -30,7 +30,7 @@ namespace CSM.ParkingData.Controllers
             return Ok(events);
         }
 
-        [RequireBasicAuthorization("ApiWriter")]
+        [RequireBasicAuthentication("ApiWriter")]
         public IHttpActionResult Post([FromBody]SensorEventPOST sensorEvent)
         {
             if (sensorEvent == null || !ModelState.IsValid)
@@ -60,8 +60,6 @@ namespace CSM.ParkingData.Controllers
                 Logger.Error(String.Format("Server Error saving POSTed model{0}{1}", Environment.NewLine, Request.Content.ReadAsStringAsync().Result));
                 return InternalServerError();
             }
-
-
         }
     }
 }
