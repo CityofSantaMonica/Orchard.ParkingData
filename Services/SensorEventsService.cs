@@ -12,6 +12,8 @@ namespace CSM.ParkingData.Services
         private readonly IRepository<SensorEvent> _sensorEventsRepo;
         private readonly IMeteredSpacesService _meteredSpacesService;
 
+        public ILogger Logger { get; set; }
+
         public SensorEventsService(
             IRepository<SensorEvent> sensorEventsRepo,
             IMeteredSpacesService meteredSpacesService)
@@ -21,8 +23,6 @@ namespace CSM.ParkingData.Services
 
             Logger = NullLogger.Instance;
         }
-
-        public ILogger Logger { get; set; }
 
         public SensorEventGET ConvertToViewModel(SensorEvent entity)
         {
@@ -51,19 +51,24 @@ namespace CSM.ParkingData.Services
 
         public bool TryAddEvent(SensorEvent entity)
         {
-            var existing = _sensorEventsRepo.Get(e => e.TransmissionId == entity.TransmissionId);
+            var existing = _sensorEventsRepo.GetByTransmissionId(entity.TransmissionId);
 
             try
             {
                 if (existing == null)
+                {
                     _sensorEventsRepo.Create(entity);
+                }
                 else
+                {
+                    entity.Id = existing.Id;
                     _sensorEventsRepo.Update(entity);
+                }
                 return true;
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "Couldn't write entity to database");
+                Logger.Error(ex, "Couldn't write SensorEvent entity to database.");
                 return false;
             }
         }

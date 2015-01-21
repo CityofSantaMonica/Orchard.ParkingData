@@ -9,8 +9,10 @@ namespace CSM.ParkingData.Services
     {
         MeteredSpace ConvertToEntity(SensorEventMeteredSpacePOST viewModel);
         MeteredSpace ConvertToEntity(MeteredSpacePOST viewModel);
+        MeteredSpaceGET ConvertToViewModel(MeteredSpace entity);
         IQueryable<MeteredSpace> QueryEntities();
         IQueryable<MeteredSpaceGET> QueryViewModels();
+        bool TryAddSpace(MeteredSpacePOST viewModel);
         bool TryAddSpace(MeteredSpace entity);
     }
 }
