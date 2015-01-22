@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
@@ -10,31 +11,30 @@ using Orchard.Logging;
 namespace CSM.ParkingData.Controllers
 {
     [EnableCors("*", null, "GET")]
-    public class SensorEventsController : ApiController
+    public class MeteredSpacesController : ApiController
     {
-        private readonly ISensorEventsService _sensorEventsService;
+        private readonly IMeteredSpacesService _meteredSpacesService;
 
         public ILogger Logger { get; set; }
 
-        public SensorEventsController(ISensorEventsService sensorEventsService)
+        public MeteredSpacesController(IMeteredSpacesService meteredSpacesService)
         {
-            _sensorEventsService = sensorEventsService;
+            _meteredSpacesService = meteredSpacesService;
             Logger = NullLogger.Instance;
         }
 
-        public IHttpActionResult Get(int limit = int.MaxValue)
+        public IHttpActionResult Get()
         {
-            var events = _sensorEventsService.QueryViewModels()
-                                             .Take(limit)
-                                             .ToList();
-            return Ok(events);
+            var spaces = _meteredSpacesService.QueryViewModels()
+                                              .ToList();
+            return Ok(spaces);
         }
 
         [RequireBasicAuthentication]
         [RequirePermissions("ApiWriter")]
-        public IHttpActionResult Post([FromBody]SensorEventPOST postedSensorEvent)
+        public IHttpActionResult Post([FromBody]IEnumerable<MeteredSpacePOST> postedMeteredSpaces)
         {
-            if (postedSensorEvent == null || !ModelState.IsValid)
+            if (postedMeteredSpaces == null || !postedMeteredSpaces.Any() || !ModelState.IsValid)
             {
                 Logger.Warning("POST with invalid model{0}{1}", Environment.NewLine, Request.Content.ReadAsStringAsync().Result);
                 return BadRequest();
@@ -42,7 +42,10 @@ namespace CSM.ParkingData.Controllers
 
             try
             {
-                _sensorEventsService.AddOrUpdate(postedSensorEvent);
+                foreach (var postedSpace in postedMeteredSpaces)
+                {
+                    _meteredSpacesService.AddOrUpdate(postedSpace);
+                }
             }
             catch (Exception ex)
             {
