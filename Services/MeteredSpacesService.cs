@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using CSM.ParkingData.Models;
 using CSM.ParkingData.ViewModels;
 using Orchard.Data;
@@ -20,16 +19,9 @@ namespace CSM.ParkingData.Services
             Logger = NullLogger.Instance;
         }
 
-        public MeteredSpace ConvertToEntity(SensorEventMeteredSpacePOST viewModel)
+        public MeteredSpace AddOrUpdate(MeteredSpacePOST viewModel)
         {
-            var existing = _meteredSpacesRepo.GetByMeterId(viewModel.MeterID);
-
-            return existing ?? new MeteredSpace() { MeterId = viewModel.MeterID };
-        }
-
-        public MeteredSpace ConvertToEntity(MeteredSpacePOST viewModel)
-        {
-            return new MeteredSpace() {
+            var posted = new MeteredSpace() {
                 MeterId = viewModel.PoleSerialNumber,
                 Area = viewModel.Area,
                 SubArea = viewModel.SubArea,
@@ -38,6 +30,25 @@ namespace CSM.ParkingData.Services
                 Longitude = viewModel.Long,
                 IsActive = !viewModel.Status.Equals(0)
             };
+
+            var existing = _meteredSpacesRepo.GetByMeterId(posted.MeterId);
+
+            if (existing == null)
+            {
+                _meteredSpacesRepo.Create(posted);
+            }
+            else
+            {
+                posted.Id = existing.Id;
+                _meteredSpacesRepo.Update(posted);
+            }
+
+            return posted;
+        }
+
+        public MeteredSpace AddOrUpdate(SensorEventMeteredSpacePOST viewModel)
+        {
+            return AddOrUpdate(new MeteredSpacePOST() { PoleSerialNumber = viewModel.MeterID });
         }
 
         public MeteredSpaceGET ConvertToViewModel(MeteredSpace entity)
@@ -61,35 +72,6 @@ namespace CSM.ParkingData.Services
         public IQueryable<MeteredSpaceGET> QueryViewModels()
         {
             return QueryEntities().Select(e => ConvertToViewModel(e));
-        }
-
-        public bool TryAddSpace(MeteredSpacePOST viewModel)
-        {
-            return TryAddSpace(ConvertToEntity(viewModel));
-        }
-
-        public bool TryAddSpace(MeteredSpace entity)
-        {
-            var existing = _meteredSpacesRepo.GetByMeterId(entity.MeterId);
-
-            try
-            {
-                if (existing == null)
-                {
-                    _meteredSpacesRepo.Create(entity);
-                }
-                else
-                {
-                    entity.Id = existing.Id;
-                    _meteredSpacesRepo.Update(entity);
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex, "Couldn't write MeteredSpace entity to database.");
-                return false;
-            }
         }
     }
 }

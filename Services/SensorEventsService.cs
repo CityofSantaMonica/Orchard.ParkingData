@@ -24,6 +24,35 @@ namespace CSM.ParkingData.Services
             Logger = NullLogger.Instance;
         }
 
+        public SensorEvent AddOrUpdate(SensorEventPOST viewModel)
+        {
+            var meteredSpace = _meteredSpacesService.AddOrUpdate(viewModel.MeteredSpace);
+
+            var posted = new SensorEvent() {
+                TransmissionId = long.Parse(viewModel.TransmissionID),
+                TransmissionTime = DateTime.Parse(viewModel.TransmissionDateTime),
+                ClientId = viewModel.ClientID,
+                SessionId = long.Parse(viewModel.MeteredSpace.SessionID),
+                EventType = viewModel.EventType,
+                EventTime = DateTime.Parse(viewModel.EventTime),
+                MeteredSpace = meteredSpace
+            };
+
+            var existing = _sensorEventsRepo.GetByTransmissionId(posted.TransmissionId);
+
+            if (existing == null)
+            {
+                _sensorEventsRepo.Create(posted);
+            }
+            else
+            {
+                posted.Id = existing.Id;
+                _sensorEventsRepo.Update(posted);
+            }
+
+            return posted;
+        }
+
         public SensorEventGET ConvertToViewModel(SensorEvent entity)
         {
             return new SensorEventGET() {
@@ -34,48 +63,6 @@ namespace CSM.ParkingData.Services
                 EventTime = entity.EventTime,
                 EventType = entity.EventType
             };
-        }
-
-        public SensorEvent ConvertToEntity(SensorEventPOST viewModel)
-        {
-            return new SensorEvent() {
-                TransmissionId = long.Parse(viewModel.TransmissionID),
-                TransmissionTime = DateTime.Parse(viewModel.TransmissionDateTime),
-                ClientId = viewModel.ClientID,
-                SessionId = long.Parse(viewModel.MeteredSpace.SessionID),
-                EventType = viewModel.EventType,
-                EventTime = DateTime.Parse(viewModel.EventTime),
-                MeteredSpace = _meteredSpacesService.ConvertToEntity(viewModel.MeteredSpace)
-            };
-        }
-
-        public bool TryAddEvent(SensorEvent entity)
-        {
-            var existing = _sensorEventsRepo.GetByTransmissionId(entity.TransmissionId);
-
-            try
-            {
-                if (existing == null)
-                {
-                    _sensorEventsRepo.Create(entity);
-                }
-                else
-                {
-                    entity.Id = existing.Id;
-                    _sensorEventsRepo.Update(entity);
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex, "Couldn't write SensorEvent entity to database.");
-                return false;
-            }
-        }
-
-        public bool TryAddEvent(SensorEventPOST viewModel)
-        {
-            return TryAddEvent(ConvertToEntity(viewModel));
         }
 
         public IQueryable<SensorEvent> QueryEntities()

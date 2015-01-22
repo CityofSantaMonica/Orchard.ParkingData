@@ -7,12 +7,10 @@ namespace CSM.ParkingData.Services
 {
     public interface IMeteredSpacesService : IDependency
     {
-        MeteredSpace ConvertToEntity(SensorEventMeteredSpacePOST viewModel);
-        MeteredSpace ConvertToEntity(MeteredSpacePOST viewModel);
+        MeteredSpace AddOrUpdate(MeteredSpacePOST viewModel);
+        MeteredSpace AddOrUpdate(SensorEventMeteredSpacePOST viewModel);
         MeteredSpaceGET ConvertToViewModel(MeteredSpace entity);
         IQueryable<MeteredSpace> QueryEntities();
         IQueryable<MeteredSpaceGET> QueryViewModels();
-        bool TryAddSpace(MeteredSpacePOST viewModel);
-        bool TryAddSpace(MeteredSpace entity);
     }
 }
