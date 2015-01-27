@@ -55,6 +55,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="MeteredSpaces\SerializationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SensorEvents\SerializationTests.cs">
       <SubType>Code</SubType>
@@ -70,9 +71,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="MeteredSpaces\" />
-  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
