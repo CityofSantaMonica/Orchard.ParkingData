@@ -90,8 +90,6 @@
     <Content Include="Recipes\data.users.recipe.xml" />
     <Content Include="Recipes\data.pages.recipe.xml" />
     <Content Include="Recipes\data.navigation.recipe.xml" />
-    <Content Include="Recipes\metadata.recipe.xml" />
-    <Content Include="Recipes\settings.recipe.xml" />
     <Content Include="Recipes\setup.recipe.xml" />
     <Content Include="Web.config" />
     <Content Include="Scripts\Web.config" />

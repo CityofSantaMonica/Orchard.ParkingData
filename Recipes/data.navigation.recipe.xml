@@ -1,0 +1,36 @@
+<Orchard>
+  <Recipe>
+    <Name>CSM.ParkingData.Recipes.Data.Navigation</Name>
+    <Description>Seed data recipe for the City of Santa Monica Parking Data API Orchard site.</Description>
+    <Author>City of Santa Monica</Author>
+    <WebSite>http://api.smgov.net/parking</WebSite>
+    <Version>1.0</Version>
+  </Recipe>
+  <Data>
+    <Menu Id="/Identifier=f73a26bb433d426db8da769977245f32" Status="Published">
+      <IdentityPart Identifier="f73a26bb433d426db8da769977245f32" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-01-16T20:39:41.2805086Z" PublishedUtc="2015-01-16T20:39:41.4465252Z" ModifiedUtc="2015-01-16T20:39:41.4455251Z" />
+      <TitlePart Title="Main Menu" />
+    </Menu>
+    
+    <MenuItem Id="/Identifier=ca242bfe5b124c4eba2196f5a0808754" Status="Published">
+      <IdentityPart Identifier="ca242bfe5b124c4eba2196f5a0808754" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-01-16T20:42:40.4744262Z" PublishedUtc="2015-01-16T20:42:40.6654453Z" ModifiedUtc="2015-01-16T20:42:40.4974285Z" />
+      <MenuItemPart Url="https://data.smgov.net" />
+      <MenuPart Menu="/Identifier=f73a26bb433d426db8da769977245f32" MenuText="Santa Monica Open Data" MenuPosition="1" />
+    </MenuItem>
+    <MenuItem Id="/Identifier=8cd296ccf15047d898fcb1e603ce1aed" Status="Published">
+      <IdentityPart Identifier="8cd296ccf15047d898fcb1e603ce1aed" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-01-16T20:42:53.5287315Z" PublishedUtc="2015-01-16T20:42:53.623741Z" ModifiedUtc="2015-01-16T20:42:53.5347321Z" />
+      <MenuItemPart Url="https://github.com/CityofSantaMonica" />
+      <MenuPart Menu="/Identifier=f73a26bb433d426db8da769977245f32" MenuText="Santa Monica on GitHub" MenuPosition="2" />
+    </MenuItem>
+    
+    <MenuWidget Id="/Identifier=9f1e09a876a24a64b5183c54383197d0" Status="Published">
+      <IdentityPart Identifier="9f1e09a876a24a64b5183c54383197d0" />
+      <CommonPart Owner="/User.UserName=admin" Container="/Layer.LayerName=Default" CreatedUtc="2015-01-16T20:40:38.9252725Z" PublishedUtc="2015-01-16T20:40:39.0852885Z" ModifiedUtc="2015-01-16T20:40:39.0782878Z" />
+      <WidgetPart Title="Main Menu" Position="1" Zone="Navigation" RenderTitle="false" Name="" />
+      <MenuWidgetPart Menu="/Identifier=f73a26bb433d426db8da769977245f32" StartLevel="1" Levels="0" Breadcrumb="false" AddCurrentPage="false" AddHomePage="false" ShowFullMenu="false" />
+    </MenuWidget>
+  </Data>
+</Orchard>

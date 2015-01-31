@@ -1,0 +1,35 @@
+﻿<?xml version="1.0"?>
+<Orchard>
+  <Recipe>
+    <Name>CSM.ParkingData.Recipes.Setup</Name>
+    <Description>Setup recipe for the City of Santa Monica Parking Data API Orchard site.</Description>
+    <Author>City of Santa Monica</Author>
+    <WebSite>http://api.smgov.net/parking</WebSite>
+    <Version>1.0</Version>
+    <IsSetupRecipe>true</IsSetupRecipe>
+  </Recipe>
+
+  <Feature disable="Orchard.Layouts,Orchard.Comments,Orchard.Blogs"
+           enable="Orchard.CodeGeneration,
+                   Orchard.ImportExport,PackagingServices,Orchard.Packaging,
+                   Orchard.jQuery,
+                   Orchard.Scripting,Orchard.Scripting.Lightweight,Orchard.Scripting.CSharp,
+                   Orchard.Widgets,
+                   TinyMce,
+                   CSM.Security,CSM.ParkingData,CSM.BootstrapBase,CSM.ParkingData.Theme" />
+
+  <Migration features="*" />
+
+  <Settings>
+    <SiteSettingsPart PageTitleSeparator=" - " SiteName="Parking Data API" SiteCulture="en-US" SiteCalendar="" PageSize="10" MaxPageSize="0" MaxPagedCount="0" SiteTimeZone="Pacific Standard Time" BaseUrl="https://api.smgov.net/parking" />
+    <RegistrationSettingsPart UsersCanRegister="false" UsersMustValidateEmail="false" UsersAreModerated="false" NotifyModeration="false" EnableLostPassword="false" />
+    <ThemeSiteSettingsPart CurrentThemeName="CSM.ParkingData.Theme" />
+  </Settings>
+
+  <Command>
+    layer create Default /LayerRule:"true" /Description:"The widgets in this layer are displayed on all pages"
+    recipes execute CSM.ParkingData CSM.ParkingData.Recipes.Data.Users
+    recipes execute CSM.ParkingData CSM.ParkingData.Recipes.Data.Navigation
+    recipes execute CSM.ParkingData CSM.ParkingData.Recipes.Data.Pages
+  </Command>
+</Orchard>

@@ -1,0 +1,22 @@
+<Orchard>
+  <Recipe>
+    <Name>CSM.ParkingData.Recipes.Data.Users</Name>
+    <Description>Seed data recipe for the City of Santa Monica Parking Data API Orchard site.</Description>
+    <Author>City of Santa Monica</Author>
+    <WebSite>http://api.smgov.net/parking</WebSite>
+    <Version>1.0</Version>
+  </Recipe>
+  <Data>
+    
+    <Roles>
+      <Role Name="Administrator" Permissions="ManageSettings,ManageUsers,ManageRoles,AssignRoles,PublishContent,EditContent,DeleteContent,PreviewContent,ApplyTheme,ManageMenus,ManageFeatures,SiteOwner,AccessAdminPanel,Import,Export" />
+      <Role Name="ApiWriter" Permissions="ApiWriter" />
+      <Role Name="Anonymous" Permissions="ViewContent,AccessFrontEnd" />
+    </Roles>
+
+    <User Id="/User.UserName=IPS" Status="Published">
+      <UserPart Email="someone@ips.com" EmailStatus="Approved" HashAlgorithm="SHA1" NormalizedUserName="ips" Password="aDVhBe+rxX9uGw+cHRYkjukyC48=" PasswordFormat="Hashed" PasswordSalt="vcxtgKa69U54jJXk648qdw==" RegistrationStatus="Approved" UserName="IPS" />
+      <UserRolesPart Roles="ApiWriter" />
+    </User>
+  </Data>
+</Orchard>
