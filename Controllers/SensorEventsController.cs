@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using CSM.ParkingData.Models;
 using CSM.ParkingData.Services;
 using CSM.ParkingData.ViewModels;
 using CSM.Security.Filters.Http;
@@ -32,25 +33,28 @@ namespace CSM.ParkingData.Controllers
 
         [RequireBasicAuthentication]
         [RequirePermissions("ApiWriter")]
+        [ModelValidationFilter]
         public IHttpActionResult Post([FromBody]SensorEventPOST postedSensorEvent)
         {
-            if (postedSensorEvent == null || !ModelState.IsValid)
+            if (postedSensorEvent == null)
             {
-                Logger.Warning("POST with invalid model{0}{1}", Environment.NewLine, Request.Content.ReadAsStringAsync().Result);
-                return BadRequest();
+                Logger.Warning("POST to /sensor_events with null model.");
+                return BadRequest("Incoming data parsed to null entity model.");
             }
+
+            SensorEvent entity = null;
 
             try
             {
-                _sensorEventsService.AddOrUpdate(postedSensorEvent);
+                entity = _sensorEventsService.AddOrUpdate(postedSensorEvent);
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, String.Format("Server error saving POSTed model{0}{1}", Environment.NewLine, Request.Content.ReadAsStringAsync().Result));
-                return InternalServerError();
+                Logger.Error(ex, String.Format("Server error on POST to /sensor_events with model:{0}{1}", Environment.NewLine, Request.Content.ReadAsStringAsync().Result));
+                return InternalServerError(ex);
             }
 
-            return Ok();
+            return Created("", entity);
         }
     }
 }
