@@ -23,12 +23,22 @@ namespace CSM.ParkingData.Controllers
             Logger = NullLogger.Instance;
         }
 
-        public IHttpActionResult Get(int limit = 1000)
+        public IHttpActionResult Get(long? id = null)
         {
-            var events = _sensorEventsService.QueryViewModels()
-                                             .OrderByDescending(s => s.EventTime)
-                                             .Take(limit);
-            return Ok(events);
+            if (id.HasValue)
+            {
+                var theEvent = _sensorEventsService.QueryViewModels()
+                                                   .Where(s => s.TransmissionId == id.Value)
+                                                   .SingleOrDefault();
+                return Ok(theEvent);
+            }
+            else
+            {
+                var events = _sensorEventsService.QueryViewModels()
+                                                 .OrderByDescending(s => s.EventTime)
+                                                 .Take(1000);
+                return Ok(events);
+            }
         }
 
         [RequireBasicAuthentication]

@@ -7,28 +7,30 @@ namespace CSM.ParkingData.Routing
 {
     public class SensorEventRoutes : IHttpRouteProvider
     {
-        public void GetRoutes(ICollection<RouteDescriptor> routes)
-        {
-            foreach (var routeDescriptor in GetRoutes())
-            {
-                routes.Add(routeDescriptor);
-            }
-        }
+        private readonly string _area = "CSM.ParkingData";
 
         public IEnumerable<RouteDescriptor> GetRoutes()
         {
             return new[] {
                 new HttpRouteDescriptor {
                     Priority = 5,
-                    Name = "v0 Sensor Events",
-                    RouteTemplate = "v0/sensor_events/{limit}",
+                    Name = "Sensor Events",
+                    RouteTemplate = "sensor_events/{id}",
                     Defaults = new {
-                        area = "CSM.ParkingData",
+                        area = _area,
                         controller = "SensorEvents",
-                        limit = RouteParameter.Optional
+                        id = RouteParameter.Optional
                     }
                 }
             };
+        }
+
+        public void GetRoutes(ICollection<RouteDescriptor> routes)
+        {
+            foreach (var routeDescriptor in GetRoutes())
+            {
+                routes.Add(routeDescriptor);
+            }
         }
     }
 }
