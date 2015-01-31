@@ -22,11 +22,11 @@ namespace CSM.ParkingData.Controllers
             Logger = NullLogger.Instance;
         }
 
-        public IHttpActionResult Get(int limit = int.MaxValue)
+        public IHttpActionResult Get(int limit = 1000)
         {
             var events = _sensorEventsService.QueryViewModels()
-                                             .Take(limit)
-                                             .ToList();
+                                             .OrderByDescending(s => s.EventTime)
+                                             .Take(limit);
             return Ok(events);
         }
 
