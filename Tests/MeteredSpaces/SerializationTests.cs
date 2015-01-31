@@ -9,7 +9,7 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
     public class SerializationTests
     {
         [Test]
-        [Category("MeteredSpace")]
+        [Category("MeteredSpaces")]
         public void Pole_Xml_Deserializes_To_ViewModel()
         {
             var serializer = new DataContractSerializer(typeof(MeteredSpacePOST));
