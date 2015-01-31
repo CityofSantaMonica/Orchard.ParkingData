@@ -23,7 +23,7 @@ namespace CSM.ParkingData.ViewModels
         [DataMember(Name = "longitude")]
         public double Longitude { get; set; }
 
-        [DataMember(Name = "is_active")]
-        public bool IsActive { get; set; }
+        [DataMember(Name = "active")]
+        public bool Active { get; set; }
     }
 }

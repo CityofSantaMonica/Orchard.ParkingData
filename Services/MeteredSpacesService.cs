@@ -28,7 +28,7 @@ namespace CSM.ParkingData.Services
                 Zone = viewModel.Zone,
                 Latitude = viewModel.Lat,
                 Longitude = viewModel.Long,
-                IsActive = !viewModel.Status.Equals(0)
+                Active = !viewModel.Status.Equals(0)
             };
 
             var existing = _meteredSpacesRepo.GetByMeterId(posted.MeterId);
@@ -60,7 +60,7 @@ namespace CSM.ParkingData.Services
                 Zone = entity.Zone,
                 Latitude = entity.Latitude,
                 Longitude = entity.Longitude,
-                IsActive = entity.IsActive
+                Active = entity.Active
             };
         }
 

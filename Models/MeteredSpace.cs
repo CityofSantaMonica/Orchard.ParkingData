@@ -19,6 +19,6 @@
 
         public virtual double Longitude { get; set; }
 
-        public virtual bool IsActive { get; set; }
+        public virtual bool Active { get; set; }
     }
 }
