@@ -1,5 +1,8 @@
 ﻿namespace CSM.ParkingData.Models
 {
+    /// <summary>
+    /// Storage record for the static data of a parking meter.
+    /// </summary>
     public class MeteredSpace
     {
         public virtual long Id { get; set; }

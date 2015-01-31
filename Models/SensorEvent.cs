@@ -2,6 +2,9 @@
 
 namespace CSM.ParkingData.Models
 {
+    /// <summary>
+    /// Storage record for the transactional data of a sensor event.
+    /// </summary>
     public class SensorEvent
     {
         public virtual long Id { get; set; }
