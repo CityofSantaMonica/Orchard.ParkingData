@@ -7,8 +7,8 @@ namespace CSM.ParkingData
     public class Permissions : IPermissionProvider
     {
         public static readonly Permission ApiWriter = new Permission {
+            Name = "ApiWriter",
             Description = "POST data to API endpoints",
-            Name = "ApiWriter"
         };
 
         public virtual Feature Feature { get; set; }
