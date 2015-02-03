@@ -32,11 +32,12 @@ namespace CSM.ParkingData.Controllers
 
         [RequireBasicAuthentication]
         [RequirePermissions("ApiWriter")]
+        [ModelValidation]
         public IHttpActionResult Post([FromBody]IEnumerable<MeteredSpacePOST> postedMeteredSpaces)
         {
-            if (postedMeteredSpaces == null || !postedMeteredSpaces.Any() || !ModelState.IsValid)
+            if (postedMeteredSpaces == null)
             {
-                Logger.Warning("POST with invalid model{0}{1}", Environment.NewLine, Request.Content.ReadAsStringAsync().Result);
+                Logger.Warning("POST to /meters with null model");
                 return BadRequest();
             }
 
