@@ -30,7 +30,10 @@ namespace CSM.ParkingData.Controllers
                 var theEvent = _sensorEventsService.QueryViewModels()
                                                    .Where(s => s.TransmissionId == id.Value)
                                                    .SingleOrDefault();
-                return Ok(theEvent);
+                if (theEvent == null)
+                    return NotFound();
+                else
+                    return Ok(theEvent);
             }
             else
             {
@@ -43,7 +46,7 @@ namespace CSM.ParkingData.Controllers
 
         [RequireBasicAuthentication]
         [RequirePermissions("ApiWriter")]
-        [ModelValidationFilter]
+        [ModelValidationAttribute]
         public IHttpActionResult Post([FromBody]SensorEventPOST postedSensorEvent)
         {
             if (postedSensorEvent == null)
