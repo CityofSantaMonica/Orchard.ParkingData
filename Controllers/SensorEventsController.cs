@@ -67,11 +67,9 @@ namespace CSM.ParkingData.Controllers
             {
                 Logger.Error(
                     ex,
-                    String.Format(
-                        "Server error on POST to {0} with model: {1}",
-                        RequestContext.RouteData.Route.RouteTemplate,
-                        Request.Content.ReadAsStringAsync().Result
-                    )
+                    "Server error on POST to {0} with model: {1}",
+                    RequestContext.RouteData.Route.RouteTemplate,
+                    Request.Content.ReadAsStringAsync().Result
                 );
                 return InternalServerError(ex);
             }
