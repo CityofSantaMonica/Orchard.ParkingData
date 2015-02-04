@@ -1,2 +1,2 @@
 # Orchard.ParkingData
-An Orchard module defining a RESTful Web Api
+RESTful Web API for the City of Santa Monica's Parking Data, implemented as an Orchard module.
