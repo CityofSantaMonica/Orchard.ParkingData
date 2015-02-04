@@ -3,9 +3,9 @@ using System.Web.Http;
 using Orchard.Mvc.Routes;
 using Orchard.WebApi.Routes;
 
-namespace CSM.ParkingData.Routing
+namespace CSM.ParkingData.Routes
 {
-    public class SensorEventRoutes : IHttpRouteProvider
+    public class ApiRoutes : IHttpRouteProvider
     {
         private readonly string _area = "CSM.ParkingData";
 
@@ -13,12 +13,22 @@ namespace CSM.ParkingData.Routing
         {
             return new[] {
                 new HttpRouteDescriptor {
+                    Name = "SensorEvents",
                     Priority = 5,
-                    Name = "Sensor Events",
                     RouteTemplate = "sensor_events/{id}",
                     Defaults = new {
                         area = _area,
                         controller = "SensorEvents",
+                        id = RouteParameter.Optional
+                    }
+                },
+                new HttpRouteDescriptor() {
+                    Name = "MeteredSpaces",
+                    Priority = 5,
+                    RouteTemplate = "metered_spaces/{id}",
+                    Defaults = new {
+                        area = _area,
+                        controller = "MeteredSpaces",
                         id = RouteParameter.Optional
                     }
                 }

@@ -106,9 +106,9 @@
       <Project>{9916839C-39FC-4CEB-A5AF-89CA7E87119F}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSM.Security\CSM.Security.csproj">
+    <ProjectReference Include="..\CSM.WebApi\CSM.WebApi.csproj">
       <Project>{44c685fd-fc5e-41a8-a4dd-20896ca1f77e}</Project>
-      <Name>CSM.Security</Name>
+      <Name>CSM.WebApi</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -118,7 +118,7 @@
     <Compile Include="Controllers\MeteredSpacesController.cs" />
     <Compile Include="Controllers\SensorEventsController.cs" />
     <Compile Include="Permissions.cs" />
-    <Compile Include="Routing\SensorEventRoutes.cs" />
+    <Compile Include="Routes\ApiRoutes.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\MeteredSpace.cs" />
     <Compile Include="Models\SensorEvent.cs" />
