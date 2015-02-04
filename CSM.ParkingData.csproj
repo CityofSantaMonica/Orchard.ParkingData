@@ -92,8 +92,6 @@
     <Content Include="Recipes\data.navigation.recipe.xml" />
     <Content Include="Recipes\setup.recipe.xml" />
     <Content Include="Web.config" />
-    <Content Include="Scripts\Web.config" />
-    <Content Include="Styles\Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
@@ -111,9 +109,7 @@
       <Name>CSM.WebApi</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Compile Include="Controllers\MeteredSpacesController.cs" />
     <Compile Include="Controllers\SensorEventsController.cs" />
