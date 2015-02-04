@@ -29,9 +29,8 @@ namespace CSM.ParkingData.Controllers
         {
             if (id.HasValue)
             {
-                var theEvent = _sensorEventsService.Query()
-                                                   .Where(s => s.TransmissionId == id.Value)
-                                                   .SingleOrDefault();
+                var theEvent = _sensorEventsService.Get(id.Value);
+
                 if (theEvent == null)
                     return NotFound();
                 else

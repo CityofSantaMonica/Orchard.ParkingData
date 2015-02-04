@@ -36,6 +36,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq">
+      <HintPath>..\..\OrchardSource\src\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\OrchardSource\src\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -44,6 +47,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\OrchardSource\lib\aspnetwebapi\System.Web.Http.dll</HintPath>
+    </Reference>
     <Reference Include="System.XML" />
   </ItemGroup>
   <Choose>
@@ -57,6 +64,7 @@
   <ItemGroup>
     <Compile Include="MeteredSpaces\SerializationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SensorEvents\ControllerTests.cs" />
     <Compile Include="SensorEvents\SerializationTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -65,6 +73,10 @@
     <ProjectReference Include="..\..\OrchardSource\src\Orchard.Web\Modules\CSM.ParkingData\CSM.ParkingData.csproj">
       <Project>{c7057b20-646b-4ba4-80fa-b4dc7b15b908}</Project>
       <Name>CSM.ParkingData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\OrchardSource\src\Orchard\Orchard.Framework.csproj">
+      <Project>{2d1d92bb-4555-4cbe-8d0e-63563d6ce4c6}</Project>
+      <Name>Orchard.Framework</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
