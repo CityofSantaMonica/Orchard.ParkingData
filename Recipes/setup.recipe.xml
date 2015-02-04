@@ -10,13 +10,33 @@
   </Recipe>
 
   <Feature disable="Orchard.Layouts,Orchard.Comments,Orchard.Blogs"
-           enable="Orchard.CodeGeneration,
+           enable="Orchard.Autoroute,Orchard.CodeGeneration,Orchard.ContentTypes,
                    Orchard.ImportExport,PackagingServices,Orchard.Packaging,
                    Orchard.jQuery,
                    Orchard.Scripting,Orchard.Scripting.Lightweight,Orchard.Scripting.CSharp,
-                   Orchard.Widgets,
+                   Orchard.OutputCache,Orchard.Widgets,
                    TinyMce,
-                   CSM.Security,CSM.ParkingData,CSM.BootstrapBase,CSM.ParkingData.Theme" />
+                   CSM.WebApi.Security,CSM.ParkingData,CSM.BootstrapBase,CSM.ParkingData.Theme" />
+
+  <Metadata>
+    <Parts>
+      <BodyPart BodyPartSettings.FlavorDefault="html" />
+    </Parts>
+
+    <Types>
+      <Page ContentTypeSettings.Draftable="True">
+        <AutoroutePart AutorouteSettings.AllowCustomPattern="True"
+                       AutorouteSettings.AutomaticAdjustmentOnEdit="False"
+                       AutorouteSettings.PatternDefinitions="[{&quot;Name&quot;:&quot;Title&quot;,&quot;Pattern&quot;:&quot;{Content.Slug}&quot;,&quot;Description&quot;:&quot;my-page&quot;}]"
+                       AutorouteSettings.DefaultPatternIndex="0"
+                       AutorouteSettings.PerItemConfiguration="False" />
+        
+        <CommonPart DateEditorSettings.ShowDateEditor="False"
+                    OwnerEditorSettings.ShowOwnerEditor="False" />
+        <BodyPart />
+      </Page>
+    </Types>
+  </Metadata>
 
   <Migration features="*" />
 
