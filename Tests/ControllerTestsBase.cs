@@ -15,6 +15,7 @@ namespace CSM.ParkingData.Tests
         protected HttpRequestMessage _mockRequest;
         protected HttpRequestContext _mockRequestContext;
         protected Mock<ISensorEventsService> _mockSensorEventsService;
+        protected Mock<IMeteredSpacesService> _mockMeteredSpacesService;
 
         [SetUp]
         public virtual void TestsSetup()
@@ -28,6 +29,17 @@ namespace CSM.ParkingData.Tests
                         TransmissionId = se.TransmissionId,
                         MeterId = (se.MeteredSpace ?? new MeteredSpace()).MeterId,
                         SessionId = se.SessionId,
+                    }
+                );
+
+            _mockMeteredSpacesService = new Mock<IMeteredSpacesService>();
+
+            _mockMeteredSpacesService
+                .Setup(m => m.ConvertToViewModel(It.IsAny<MeteredSpace>()))
+                .Returns<MeteredSpace>(
+                    ms => new MeteredSpaceGET {
+                        Active = ms.Active,
+                        MeterId = ms.MeterId
                     }
                 );
 
