@@ -25,6 +25,11 @@ namespace CSM.ParkingData.Services
             Logger = NullLogger.Instance;
         }
 
+        public SensorEvent Get(long transmissionId)
+        {
+            return _sensorEventsRepo.GetByTransmissionId(transmissionId);
+        }
+
         public SensorEvent AddOrUpdate(SensorEventPOST viewModel)
         {
             var meteredSpace = _meteredSpacesService.AddOrUpdate(viewModel.MeteredSpace);
@@ -66,14 +71,9 @@ namespace CSM.ParkingData.Services
             };
         }
 
-        public IQueryable<SensorEvent> QueryEntities()
+        public IQueryable<SensorEvent> Query()
         {
             return _sensorEventsRepo.Table;
-        }
-
-        public IQueryable<SensorEventGET> QueryViewModels()
-        {
-            return QueryEntities().Select(e => ConvertToViewModel(e));
         }
     }
 }

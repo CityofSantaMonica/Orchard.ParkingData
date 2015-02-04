@@ -20,6 +20,11 @@ namespace CSM.ParkingData.Services
             Logger = NullLogger.Instance;
         }
 
+        public MeteredSpace Get(string meterId)
+        {
+            return _meteredSpacesRepo.GetByMeterId(meterId);
+        }
+
         public MeteredSpace AddOrUpdate(MeteredSpacePOST viewModel)
         {
             var posted = new MeteredSpace() {
@@ -65,14 +70,9 @@ namespace CSM.ParkingData.Services
             };
         }
 
-        public IQueryable<MeteredSpace> QueryEntities()
+        public IQueryable<MeteredSpace> Query()
         {
             return _meteredSpacesRepo.Table;
-        }
-
-        public IQueryable<MeteredSpaceGET> QueryViewModels()
-        {
-            return QueryEntities().Select(e => ConvertToViewModel(e));
         }
     }
 }

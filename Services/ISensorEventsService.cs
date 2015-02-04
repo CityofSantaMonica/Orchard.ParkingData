@@ -11,27 +11,23 @@ namespace CSM.ParkingData.Services
     public interface ISensorEventsService : IDependency
     {
         /// <summary>
+        /// Get a sensor event record by its transmission identifier.
+        /// </summary>
+        SensorEvent Get(long transmissionId);
+
+        /// <summary>
         /// Given the sensor event data in a POSTed view model, insert a new record or update an existing record.
         /// </summary>
-        /// <param name="viewModel">A valid sensor event POST view model.</param>
-        /// <returns>The inserted/updated sensor event record.</returns>
         SensorEvent AddOrUpdate(SensorEventPOST viewModel);
 
         /// <summary>
         /// Given a sensor event record, convert to an equivalent GET view model.
         /// </summary>
-        /// <param name="entity">An existing sensor event record.</param>
-        /// <returns>The GET view model representation of <paramref name="entity"/>.</returns>
         SensorEventGET ConvertToViewModel(SensorEvent entity);
 
         /// <summary>
         /// Get a queryable collection of sensor event records in the database.
         /// </summary>
-        IQueryable<SensorEvent> QueryEntities();
-
-        /// <summary>
-        /// Get a queryable collection of sensor event records in the database, represented as GET view models.
-        /// </summary>
-        IQueryable<SensorEventGET> QueryViewModels();
+        IQueryable<SensorEvent> Query();
     }
 }
