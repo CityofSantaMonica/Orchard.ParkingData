@@ -5,7 +5,7 @@ using System.Web.Http.Cors;
 using CSM.ParkingData.Models;
 using CSM.ParkingData.Services;
 using CSM.ParkingData.ViewModels;
-using CSM.Security.Filters.Http;
+using CSM.WebApi.Filters;
 using Orchard.Logging;
 
 namespace CSM.ParkingData.Controllers
@@ -20,26 +20,29 @@ namespace CSM.ParkingData.Controllers
         public SensorEventsController(ISensorEventsService sensorEventsService)
         {
             _sensorEventsService = sensorEventsService;
+
             Logger = NullLogger.Instance;
         }
 
+        [CompressResponse]
         public IHttpActionResult Get(long? id = null)
         {
             if (id.HasValue)
             {
-                var theEvent = _sensorEventsService.QueryViewModels()
+                var theEvent = _sensorEventsService.Query()
                                                    .Where(s => s.TransmissionId == id.Value)
                                                    .SingleOrDefault();
                 if (theEvent == null)
                     return NotFound();
                 else
-                    return Ok(theEvent);
+                    return Ok(_sensorEventsService.ConvertToViewModel(theEvent));
             }
             else
             {
-                var events = _sensorEventsService.QueryViewModels()
+                var events = _sensorEventsService.Query()
                                                  .OrderByDescending(s => s.EventTime)
-                                                 .Take(1000);
+                                                 .Take(1000)
+                                                 .Select(_sensorEventsService.ConvertToViewModel);
                 return Ok(events);
             }
         }
@@ -51,7 +54,7 @@ namespace CSM.ParkingData.Controllers
         {
             if (postedSensorEvent == null)
             {
-                Logger.Warning("POST to /sensor_events with null model.");
+                Logger.Warning("POST to {0} with null model.", RequestContext.RouteData.Route.RouteTemplate);
                 return BadRequest("Incoming data parsed to null entity model.");
             }
 
@@ -63,11 +66,22 @@ namespace CSM.ParkingData.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, String.Format("Server error on POST to /sensor_events with model:{0}{1}", Environment.NewLine, Request.Content.ReadAsStringAsync().Result));
+                Logger.Error(
+                    ex,
+                    String.Format(
+                        "Server error on POST to {0} with model: {1}",
+                        RequestContext.RouteData.Route.RouteTemplate,
+                        Request.Content.ReadAsStringAsync().Result
+                    )
+                );
                 return InternalServerError(ex);
             }
 
-            return Created("", entity);
+            return CreatedAtRoute(
+                "SensorEvents",
+                new { id = entity.TransmissionId },
+                _sensorEventsService.ConvertToViewModel(entity)
+            );
         }
     }
 }
