@@ -53,15 +53,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
         {
             DateTime time = new DateTime(2015, 1, 26, 17, 0, 0, DateTimeKind.Utc);
 
-            string expected =
-@"{
-  ""transmission_id"": 12345678,
-  ""meter_id"": ""Pole1"",
-  ""session_id"": 123,
-  ""transmission_time"": ""2015-01-26T17:00:00Z"",
-  ""event_time"": ""2015-01-26T17:00:00Z"",
-  ""event_type"": ""SE""
-}";
+            string expected = @"{""transmission_id"":12345678,""meter_id"":""Pole1"",""session_id"":123,""transmission_time"":""2015-01-26T17:00:00Z"",""event_time"":""2015-01-26T17:00:00Z"",""event_type"":""SE""}";
 
             SensorEventGET viewModel = new SensorEventGET()
             {
@@ -73,7 +65,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
                 EventType = "SE"
             };
 
-            string actual = JsonConvert.SerializeObject(viewModel, Formatting.Indented);
+            string actual = JsonConvert.SerializeObject(viewModel);
 
             Assert.AreEqual(expected, actual);
         }
