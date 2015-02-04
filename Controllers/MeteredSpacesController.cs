@@ -42,7 +42,7 @@ namespace CSM.ParkingData.Controllers
                 if (space == null)
                     return NotFound();
                 else
-                    return Ok(space);
+                    return Ok(_meteredSpacesService.ConvertToViewModel(space));
             }
         }
 
