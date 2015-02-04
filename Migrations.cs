@@ -43,7 +43,7 @@ namespace CSM.ParkingData.Data
                     .Column<string>("Zone", col => col.WithLength(512))
                     .Column<double>("Latitude")
                     .Column<double>("Longitude")
-                    .Column<bool>("IsActive", col => col.NotNull())
+                    .Column<bool>("Active", col => col.NotNull())
             );
 
             return 1;
