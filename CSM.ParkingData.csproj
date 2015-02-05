@@ -125,6 +125,7 @@
     <Compile Include="Services\SensorEventsService.cs" />
     <Compile Include="ViewModels\MeteredSpaceGET.cs" />
     <Compile Include="ViewModels\MeteredSpacePOST.cs" />
+    <Compile Include="ViewModels\MeteredSpacePOSTCollection.cs" />
     <Compile Include="ViewModels\SensorEventGET.cs" />
     <Compile Include="ViewModels\SensorEventMeteredSpacePOST.cs" />
     <Compile Include="ViewModels\SensorEventPOST.cs" />

@@ -108,6 +108,27 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
 
         [Test]
         [Category("MeteredSpaces")]
+        public void Post_Returns_BadRequest_With_Empty_Body()
+        {
+            //arrange
+
+            var controller = new MeteredSpacesController(_mockMeteredSpacesService.Object) {
+                RequestContext = _mockRequestContext
+            };
+
+            var emptyViewModelCollection = new MeteredSpacePOSTCollection();
+
+            //act
+
+            IHttpActionResult actionResult = controller.Post(emptyViewModelCollection);
+
+            //assert
+
+            Assert.IsInstanceOf<BadRequestErrorMessageResult>(actionResult);
+        }
+
+        [Test]
+        [Category("MeteredSpaces")]
         public void Post_Returns_InternalServerError_When_Service_Fails()
         {
             //arrnage
@@ -123,9 +144,11 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
                 RequestContext = _mockRequestContext
             };
 
+            var viewModelCollection = new MeteredSpacePOSTCollection { new MeteredSpacePOST() };
+
             //act
 
-            IHttpActionResult actionResult = controller.Post(new[] { new MeteredSpacePOST() });
+            IHttpActionResult actionResult = controller.Post(viewModelCollection);
 
             //assert
 
@@ -149,14 +172,16 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
 
             var controller = new MeteredSpacesController(_mockMeteredSpacesService.Object);
 
-            var viewModel = new MeteredSpacePOST {
-                PoleSerialNumber = "Pole1",
-                Status = 1
+            var viewModelCollection = new MeteredSpacePOSTCollection {
+                new MeteredSpacePOST {
+                    PoleSerialNumber = "Pole1",
+                    Status = 1
+                }
             };
 
             //act
 
-            IHttpActionResult actionResult = controller.Post(new[] { viewModel });
+            IHttpActionResult actionResult = controller.Post(viewModelCollection);
             var createdResult = actionResult as CreatedAtRouteNegotiatedContentResult<MeteredSpaceGET>;
 
             //assert

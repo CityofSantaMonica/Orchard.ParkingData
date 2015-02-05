@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
@@ -49,12 +48,18 @@ namespace CSM.ParkingData.Controllers
         [RequireBasicAuthentication]
         [RequirePermissions("ApiWriter")]
         [ModelValidation]
-        public IHttpActionResult Post([FromBody]IEnumerable<MeteredSpacePOST> postedMeteredSpaces)
+        public IHttpActionResult Post([FromBody]MeteredSpacePOSTCollection postedMeteredSpaces)
         {
             if (postedMeteredSpaces == null)
             {
                 Logger.Warning("POST to {0} with null model", RequestContext.RouteData.Route.RouteTemplate);
                 return BadRequest("Incoming data parsed to null entity model.");
+            }
+
+            if (postedMeteredSpaces.Count == 0)
+            {
+                Logger.Warning("POST to {0} with empty model", RequestContext.RouteData.Route.RouteTemplate);
+                return BadRequest("Incoming data parsed to empty entity model.");
             }
 
             MeteredSpace lastEntity = null;
