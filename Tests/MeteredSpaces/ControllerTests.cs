@@ -4,6 +4,8 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using CSM.ParkingData.Controllers;
 using CSM.ParkingData.Models;
+using CSM.ParkingData.Services;
+using CSM.ParkingData.Tests.Mocks;
 using CSM.ParkingData.ViewModels;
 using Moq;
 using NUnit.Framework;
@@ -12,6 +14,16 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
 {
     public class ControllerTests : ControllerTestsBase
     {
+        private Mock<IMeteredSpacesService> _mockMeteredSpacesService;
+
+        [SetUp]
+        public override void TestsSetup()
+        {
+            base.TestsSetup();
+
+            _mockMeteredSpacesService = MockMeteredSpaceFactory.NewService();
+        }
+
         [Test]
         [Category("MeteredSpaces")]
         public void Get_GivenNoId_ReturnsMeteredSpaceGETCollection()

@@ -5,6 +5,8 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using CSM.ParkingData.Controllers;
 using CSM.ParkingData.Models;
+using CSM.ParkingData.Services;
+using CSM.ParkingData.Tests.Mocks;
 using CSM.ParkingData.ViewModels;
 using Moq;
 using NUnit.Framework;
@@ -13,6 +15,16 @@ namespace CSM.ParkingData.Tests.SensorEvents
 {
     public class ControllerTests : ControllerTestsBase
     {
+        private Mock<ISensorEventsService> _mockSensorEventsService;
+
+        [SetUp]
+        public override void TestsSetup()
+        {
+            base.TestsSetup();
+
+            _mockSensorEventsService = MockSensorEventFactory.NewService();
+        }
+
         [Test]
         [Category("SensorEvents")]
         public void Get_GivenNoId_ReturnsSensorEventGETCollection()

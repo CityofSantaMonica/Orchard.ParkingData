@@ -66,6 +66,8 @@
     <Compile Include="ControllerTestsBase.cs" />
     <Compile Include="MeteredSpaces\ControllerTests.cs" />
     <Compile Include="MeteredSpaces\SerializationTests.cs" />
+    <Compile Include="Mocks\MockMeteredSpaceFactory.cs" />
+    <Compile Include="Mocks\MockSensorEventFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SensorEvents\ControllerTests.cs" />
     <Compile Include="SensorEvents\SerializationTests.cs">
