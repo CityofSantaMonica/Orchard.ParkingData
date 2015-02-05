@@ -12,8 +12,10 @@ namespace CSM.ParkingData.Tests.SensorEvents
     {
         [Test]
         [Category("SensorEvents")]
-        public void SensorEvent_Xml_Deserializes_To_ViewModel()
+        public void SensorEventXml_DeserializesTo_SensorEventPOST()
         {
+            //arrange
+
             var serializer = new DataContractSerializer(typeof(SensorEventPOST));
 
             string xml =
@@ -31,10 +33,14 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
             SensorEventPOST sensorEvent = null;
 
+            //act
+
             using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(xml)))
             {
                 sensorEvent = serializer.ReadObject(ms) as SensorEventPOST;
             }
+
+            //assert
 
             Assert.NotNull(sensorEvent);
             Assert.AreEqual("XYZ123", sensorEvent.ClientID);
@@ -49,14 +55,15 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
         [Test]
         [Category("SensorEvents")]
-        public void SensorEvent_ViewModel_Serializes_To_Json()
+        public void SensorEventGET_SerializesToJson()
         {
+            //arrange
+
             DateTime time = new DateTime(2015, 1, 26, 17, 0, 0, DateTimeKind.Utc);
 
             string expected = @"{""transmission_id"":12345678,""meter_id"":""Pole1"",""session_id"":123,""transmission_time"":""2015-01-26T17:00:00Z"",""event_time"":""2015-01-26T17:00:00Z"",""event_type"":""SE""}";
 
-            SensorEventGET viewModel = new SensorEventGET()
-            {
+            var viewModel = new SensorEventGET {
                 TransmissionId = 12345678,
                 MeterId = "Pole1",
                 SessionId = 123,
@@ -65,7 +72,11 @@ namespace CSM.ParkingData.Tests.SensorEvents
                 EventType = "SE"
             };
 
+            //act
+
             string actual = JsonConvert.SerializeObject(viewModel);
+
+            //assert
 
             Assert.AreEqual(expected, actual);
         }
