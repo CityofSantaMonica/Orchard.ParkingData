@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using CSM.ParkingData.Helpers;
 using CSM.ParkingData.Models;
 using CSM.ParkingData.ViewModels;
 using Orchard.Data;
@@ -22,7 +21,7 @@ namespace CSM.ParkingData.Services
 
         public MeteredSpace Get(string meterId)
         {
-            return _meteredSpacesRepo.GetByMeterId(meterId);
+            return _meteredSpacesRepo.Get(m => m.MeterId == meterId);
         }
 
         public MeteredSpace AddOrUpdate(MeteredSpacePOST viewModel)

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using CSM.ParkingData.Helpers;
 using CSM.ParkingData.Models;
 using CSM.ParkingData.ViewModels;
 using Orchard.Data;
@@ -27,7 +26,7 @@ namespace CSM.ParkingData.Services
 
         public SensorEvent Get(long transmissionId)
         {
-            return _sensorEventsRepo.GetByTransmissionId(transmissionId);
+            return _sensorEventsRepo.Get(s => s.TransmissionId == transmissionId);
         }
 
         public SensorEvent AddOrUpdate(SensorEventPOST viewModel)

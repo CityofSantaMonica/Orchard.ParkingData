@@ -121,7 +121,6 @@
     <Compile Include="Services\IMeteredSpacesService.cs" />
     <Compile Include="Services\ISensorEventsService.cs" />
     <Compile Include="Services\MeteredSpacesService.cs" />
-    <Compile Include="Helpers\RepositoryExtensions.cs" />
     <Compile Include="Services\SensorEventsService.cs" />
     <Compile Include="ViewModels\MeteredSpaceGET.cs" />
     <Compile Include="ViewModels\MeteredSpacePOST.cs" />
