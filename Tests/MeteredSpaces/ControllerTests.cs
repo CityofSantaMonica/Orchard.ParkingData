@@ -14,7 +14,7 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
     {
         [Test]
         [Category("MeteredSpaces")]
-        public void Get_Returns_MeteredSpaceGETCollection_With_No_Id()
+        public void Get_GivenNoId_ReturnsMeteredSpaceGETCollection()
         {
             //arrange
 
@@ -46,7 +46,7 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
 
         [Test]
         [Category("MeteredSpaces")]
-        public void Get_Returns_MeteredSpaceGET_With_Id()
+        public void Get_GivenId_ReturnsMeteredSpaceGET()
         {
             //arrange
 
@@ -72,7 +72,7 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
 
         [Test]
         [Category("MeteredSpaces")]
-        public void Get_Returns_NotFound_With_Bad_Id()
+        public void Get_GivenBadId_ReturnsNotFound()
         {
             //arrange
 
@@ -89,7 +89,7 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
 
         [Test]
         [Category("MeteredSpaces")]
-        public void Post_Returns_BadRequest_With_Null_Body()
+        public void Post_GivenNullViewModel_ReturnsBadRequest()
         {
             //arrange
 
@@ -108,7 +108,7 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
 
         [Test]
         [Category("MeteredSpaces")]
-        public void Post_Returns_BadRequest_With_Empty_Body()
+        public void Post_GivenEmptyViewModel_ReturnsBadRequest()
         {
             //arrange
 
@@ -129,7 +129,7 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
 
         [Test]
         [Category("MeteredSpaces")]
-        public void Post_Returns_InternalServerError_When_Service_Fails()
+        public void Post_ReturnsInternalServerError_WhenServiceFails()
         {
             //arrnage
 
@@ -157,7 +157,7 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
 
         [Test]
         [Category("MeteredSpaces")]
-        public void Post_Returns_Created_MeteredSpaceGET()
+        public void Post_GivenViewModel_ReturnsCreatedMeteredSpaceGETAtRoute()
         {
             //arrange
 

@@ -15,7 +15,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
     {
         [Test]
         [Category("SensorEvents")]
-        public void Get_Returns_SensorEventGETCollection_With_No_Id()
+        public void Get_GivenNoId_ReturnsSensorEventGETCollection()
         {
             _mockSensorEventsService
                 .Setup(m => m.Query())
@@ -41,7 +41,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
         [Test]
         [Category("SensorEvents")]
-        public void Get_Returns_SensorEventGET_With_Id()
+        public void Get_GivenId_ReturnsSensorEventGET()
         {
             long transmissionId = 42;
 
@@ -61,7 +61,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
         [Test]
         [Category("SensorEvents")]
-        public void Get_Returns_NotFound_With_Bad_Id()
+        public void Get_GivenBadId_ReturnsNotFound()
         {
             var controller = new SensorEventsController(_mockSensorEventsService.Object);
 
@@ -72,7 +72,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
         [Test]
         [Category("SensorEvents")]
-        public void Post_Returns_BadRequest_With_Null_Body()
+        public void Post_GivenNullViewModel_ReturnsBadRequestErrorMessage()
         {
             var controller = new SensorEventsController(_mockSensorEventsService.Object) {
                 RequestContext = _mockRequestContext
@@ -85,7 +85,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
         [Test]
         [Category("SensorEvents")]
-        public void Post_Returns_InternalServerError_When_Service_Fails()
+        public void Post_ReturnsInternalServerError_WhenServiceFails()
         {
             var exception = new Exception("This is the exception mock");
 
@@ -105,7 +105,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
         [Test]
         [Category("SensorEvents")]
-        public void Post_Returns_Created_SensorEventGET()
+        public void Post_GivenViewModel_ReturnsCreatedSensorEventGETAtRoute()
         {
             _mockSensorEventsService
                 .Setup(m => m.AddOrUpdate(It.IsAny<SensorEventPOST>()))
