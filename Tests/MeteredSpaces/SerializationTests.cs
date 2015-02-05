@@ -3,6 +3,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using CSM.ParkingData.ViewModels;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace CSM.ParkingData.Tests.MeteredSpaces
@@ -11,7 +12,7 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
     {
         [Test]
         [Category("MeteredSpaces")]
-        public void Pole_Xml_Deserializes_To_ViewModel()
+        public void PoleXml_DeserializesTo_MeteredSpacePOST()
         {
             var serializer = new DataContractSerializer(typeof(MeteredSpacePOST));
 
@@ -45,7 +46,7 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
 
         [Test]
         [Category("MeteredSpaces")]
-        public void PoleCollection_Xml_Deserializes_To_ViewModelCollection()
+        public void PolesCollectionXml_DeserializesTo_MeteredSpacePOSTCollection()
         {
             var serializer = new DataContractSerializer(typeof(MeteredSpacePOSTCollection));
 
@@ -82,6 +83,33 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
             Assert.AreEqual(2, poles.Count);
             Assert.AreEqual("WIL1301", poles.First().PoleSerialNumber);
             Assert.AreEqual("WIL1302", poles.Last().PoleSerialNumber);
+        }
+
+        [Test]
+        [Category("MeteredSpaces")]
+        public void MeteredSpaceGET_SerializesToJson()
+        {
+            //arrange
+
+            string expected = @"{""active"":true,""area"":""51"",""latitude"":42.0,""longitude"":-42.0,""meter_id"":""Pole1"",""sub_area"":""255"",""zone"":""Friend""}";
+
+            var viewModel = new MeteredSpaceGET {
+                Active = true,
+                Area = "51",
+                Latitude = 42.0,
+                Longitude = -42.0,
+                MeterId = "Pole1",
+                SubArea = "255",
+                Zone = "Friend"
+            };
+
+            //act
+
+            string actual = JsonConvert.SerializeObject(viewModel);
+
+            //assert
+
+            Assert.AreEqual(expected, actual);
         }
     }
 }
