@@ -1,23 +1,11 @@
 ﻿using System;
 using CSM.ParkingData.Models;
-using Orchard.Data;
 using Orchard.Data.Migration;
 
-namespace CSM.ParkingData.Data
+namespace CSM.ParkingData
 {
     public class Migrations : DataMigrationImpl
     {
-        private readonly IRepository<SensorEvent> _sensorEventsRepository;
-        private readonly IRepository<MeteredSpace> _meteredSpacesRepository;
-
-        public Migrations(
-            IRepository<SensorEvent> sensorEventsRepository,
-            IRepository<MeteredSpace> meteredSpacesRepository)
-        {
-            _sensorEventsRepository = sensorEventsRepository;
-            _meteredSpacesRepository = meteredSpacesRepository;
-        }
-
         public int Create()
         {
             SchemaBuilder.CreateTable(
