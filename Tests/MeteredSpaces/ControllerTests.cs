@@ -5,7 +5,6 @@ using System.Web.Http.Results;
 using CSM.ParkingData.Controllers;
 using CSM.ParkingData.Models;
 using CSM.ParkingData.Services;
-using CSM.ParkingData.Tests.Mocks;
 using CSM.ParkingData.ViewModels;
 using Moq;
 using NUnit.Framework;
@@ -14,14 +13,17 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
 {
     public class ControllerTests : ControllerTestsBase
     {
-        private Mock<IMeteredSpacesService> _mockMeteredSpacesService;
+        private MeteredSpacesController _controller;
 
         [SetUp]
         public override void TestsSetup()
         {
             base.TestsSetup();
 
-            _mockMeteredSpacesService = MockMeteredSpaceFactory.NewService();
+            _controller = new MeteredSpacesController(_mockMeteredSpacesService.Object) {
+                Request = _mockRequest,
+                RequestContext = _mockRequestContext
+            };
         }
 
         [Test]
@@ -40,11 +42,9 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
                     }.AsQueryable()
                 );
 
-            var controller = new MeteredSpacesController(_mockMeteredSpacesService.Object);
-
             //act
 
-            IHttpActionResult actionResult = controller.Get();
+            IHttpActionResult actionResult = _controller.Get();
             var contentResult = actionResult as OkNegotiatedContentResult<MeteredSpaceGET[]>;
 
             //assert
@@ -68,11 +68,11 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
                 .Setup(m => m.Get(meterId))
                 .Returns(new MeteredSpace { MeterId = meterId });
 
-            var controller = new MeteredSpacesController(_mockMeteredSpacesService.Object);
+            //var controller = new MeteredSpacesController(_mockMeteredSpacesService.Object);
 
             //act
 
-            IHttpActionResult actionResult = controller.Get(meterId);
+            IHttpActionResult actionResult = _controller.Get(meterId);
             var contentResult = actionResult as OkNegotiatedContentResult<MeteredSpaceGET>;
 
             //assert
@@ -88,11 +88,11 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
         {
             //arrange
 
-            var controller = new MeteredSpacesController(_mockMeteredSpacesService.Object);
+            //var controller = new MeteredSpacesController(_mockMeteredSpacesService.Object);
 
             //act
 
-            IHttpActionResult actionResult = controller.Get("bad-id");
+            IHttpActionResult actionResult = _controller.Get("bad-id");
 
             //assert
 
@@ -103,15 +103,15 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
         [Category("MeteredSpaces")]
         public void Post_GivenNullViewModel_ReturnsBadRequest()
         {
-            //arrange
+            ////arrange
 
-            var controller = new MeteredSpacesController(_mockMeteredSpacesService.Object) {
-                RequestContext = _mockRequestContext
-            };
+            //var controller = new MeteredSpacesController(_mockMeteredSpacesService.Object) {
+            //    RequestContext = _mockRequestContext
+            //};
 
             //act
 
-            IHttpActionResult actionResult = controller.Post(null);
+            IHttpActionResult actionResult = _controller.Post(null);
 
             //assert
 
@@ -124,15 +124,15 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
         {
             //arrange
 
-            var controller = new MeteredSpacesController(_mockMeteredSpacesService.Object) {
-                RequestContext = _mockRequestContext
-            };
+            //var controller = new MeteredSpacesController(_mockMeteredSpacesService.Object) {
+            //    RequestContext = _mockRequestContext
+            //};
 
             var emptyViewModelCollection = new MeteredSpacePOSTCollection();
 
             //act
 
-            IHttpActionResult actionResult = controller.Post(emptyViewModelCollection);
+            IHttpActionResult actionResult = _controller.Post(emptyViewModelCollection);
 
             //assert
 
@@ -151,16 +151,16 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
                 .Setup(m => m.AddOrUpdate(It.IsAny<MeteredSpacePOST>()))
                 .Throws(exception);
 
-            var controller = new MeteredSpacesController(_mockMeteredSpacesService.Object) {
-                Request = _mockRequest,
-                RequestContext = _mockRequestContext
-            };
+            //var controller = new MeteredSpacesController(_mockMeteredSpacesService.Object) {
+            //    Request = _mockRequest,
+            //    RequestContext = _mockRequestContext
+            //};
 
             var viewModelCollection = new MeteredSpacePOSTCollection { new MeteredSpacePOST() };
 
             //act
 
-            IHttpActionResult actionResult = controller.Post(viewModelCollection);
+            IHttpActionResult actionResult = _controller.Post(viewModelCollection);
 
             //assert
 
@@ -182,7 +182,7 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
                     }
                 );
 
-            var controller = new MeteredSpacesController(_mockMeteredSpacesService.Object);
+            //var controller = new MeteredSpacesController(_mockMeteredSpacesService.Object);
 
             var viewModelCollection = new MeteredSpacePOSTCollection {
                 new MeteredSpacePOST {
@@ -193,18 +193,18 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
 
             //act
 
-            IHttpActionResult actionResult = controller.Post(viewModelCollection);
-            var createdResult = actionResult as CreatedAtRouteNegotiatedContentResult<MeteredSpaceGET>;
+            IHttpActionResult actionResult = _controller.Post(viewModelCollection);
+            var okResult = actionResult as OkNegotiatedContentResult<MeteredSpaceGET>;
 
             //assert
 
-            Assert.IsNotNull(createdResult);
-            Assert.AreEqual("MeteredSpaces", createdResult.RouteName);
-            Assert.AreEqual("Pole1", createdResult.RouteValues["id"]);
+            Assert.IsNotNull(okResult);
+            //Assert.AreEqual("MeteredSpaces", createdResult.RouteName);
+            //Assert.AreEqual("Pole1", createdResult.RouteValues["id"]);
 
-            Assert.IsNotNull(createdResult.Content);
-            Assert.AreEqual(true, createdResult.Content.Active);
-            Assert.AreEqual("Pole1", createdResult.Content.MeterId);
+            Assert.IsNotNull(okResult.Content);
+            Assert.AreEqual(true, okResult.Content.Active);
+            Assert.AreEqual("Pole1", okResult.Content.MeterId);
         }
     }
 }

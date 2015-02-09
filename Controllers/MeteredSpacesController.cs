@@ -84,11 +84,17 @@ namespace CSM.ParkingData.Controllers
                 return InternalServerError(ex);
             }
 
-            return CreatedAtRoute(
-                "MeteredSpaces", 
-                new { id = lastEntity.MeterId },
-                _meteredSpacesService.ConvertToViewModel(lastEntity)
-            );
+            //temporary because WebApi routes are registered with Route.Name = null, hence cannot be looked up by name
+            //we should return CreatedAtRoute (201 with a location header)
+            //instead we just return 200 with the entity
+
+            //return CreatedAtRoute(
+            //    "MeteredSpaces", 
+            //    new { id = lastEntity.MeterId },
+            //    _meteredSpacesService.ConvertToViewModel(lastEntity)
+            //);
+
+            return Ok(_meteredSpacesService.ConvertToViewModel(lastEntity));
         }
     }
 }

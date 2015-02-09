@@ -5,8 +5,6 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using CSM.ParkingData.Controllers;
 using CSM.ParkingData.Models;
-using CSM.ParkingData.Services;
-using CSM.ParkingData.Tests.Mocks;
 using CSM.ParkingData.ViewModels;
 using Moq;
 using NUnit.Framework;
@@ -15,14 +13,17 @@ namespace CSM.ParkingData.Tests.SensorEvents
 {
     public class ControllerTests : ControllerTestsBase
     {
-        private Mock<ISensorEventsService> _mockSensorEventsService;
+        private SensorEventsController _controller;
 
         [SetUp]
         public override void TestsSetup()
         {
             base.TestsSetup();
 
-            _mockSensorEventsService = MockSensorEventFactory.NewService();
+            _controller = new SensorEventsController(_mockSensorEventsService.Object) {
+                Request = _mockRequest,
+                RequestContext = _mockRequestContext
+            };
         }
 
         [Test]
@@ -39,9 +40,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
                     }.AsQueryable()
                 );
 
-            var controller = new SensorEventsController(_mockSensorEventsService.Object);
-
-            IHttpActionResult actionResult = controller.Get();
+            IHttpActionResult actionResult = _controller.Get();
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
 
             Assert.IsNotNull(contentResult);
@@ -61,9 +60,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
                 .Setup(m => m.Get(transmissionId))
                 .Returns(new SensorEvent { TransmissionId = transmissionId });
 
-            var controller = new SensorEventsController(_mockSensorEventsService.Object);
-
-            IHttpActionResult actionResult = controller.Get(transmissionId);
+            IHttpActionResult actionResult = _controller.Get(transmissionId);
             var contentResult = actionResult as OkNegotiatedContentResult<SensorEventGET>;
 
             Assert.IsNotNull(contentResult);
@@ -75,9 +72,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
         [Category("SensorEvents")]
         public void Get_GivenBadId_ReturnsNotFound()
         {
-            var controller = new SensorEventsController(_mockSensorEventsService.Object);
-
-            IHttpActionResult actionResult = controller.Get(-100);
+            IHttpActionResult actionResult = _controller.Get(-100);
 
             Assert.IsInstanceOf<NotFoundResult>(actionResult);
         }
@@ -86,11 +81,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
         [Category("SensorEvents")]
         public void Post_GivenNullViewModel_ReturnsBadRequestErrorMessage()
         {
-            var controller = new SensorEventsController(_mockSensorEventsService.Object) {
-                RequestContext = _mockRequestContext
-            };
-
-            IHttpActionResult actionResult = controller.Post(null);
+            IHttpActionResult actionResult = _controller.Post(null);
 
             Assert.IsInstanceOf<BadRequestErrorMessageResult>(actionResult);
         }
@@ -105,12 +96,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
                 .Setup(m => m.AddOrUpdate(It.IsAny<SensorEventPOST>()))
                 .Throws(exception);
 
-            var controller = new SensorEventsController(_mockSensorEventsService.Object) {
-                Request = _mockRequest,
-                RequestContext = _mockRequestContext
-            };
-
-            IHttpActionResult actionResult = controller.Post(new SensorEventPOST());
+            IHttpActionResult actionResult = _controller.Post(new SensorEventPOST());
 
             Assert.IsInstanceOf<ExceptionResult>(actionResult);
         }
@@ -131,8 +117,6 @@ namespace CSM.ParkingData.Tests.SensorEvents
                         }
                 );
 
-            var controller = new SensorEventsController(_mockSensorEventsService.Object);
-
             var viewModel = new SensorEventPOST {
                 TransmissionID = "1",
                 MeteredSpace = new SensorEventMeteredSpacePOST {
@@ -141,17 +125,17 @@ namespace CSM.ParkingData.Tests.SensorEvents
                 }
             };
 
-            IHttpActionResult actionResult = controller.Post(viewModel);
-            var createdResult = actionResult as CreatedAtRouteNegotiatedContentResult<SensorEventGET>;
+            IHttpActionResult actionResult = _controller.Post(viewModel);
+            var okResult = actionResult as OkNegotiatedContentResult<SensorEventGET>;
 
-            Assert.IsNotNull(createdResult);
-            Assert.AreEqual("SensorEvents", createdResult.RouteName);
-            Assert.AreEqual(1, createdResult.RouteValues["id"]);
+            Assert.IsNotNull(okResult);
+            //Assert.AreEqual("SensorEvents", createdResult.RouteName);
+            //Assert.AreEqual(1, createdResult.RouteValues["id"]);
 
-            Assert.IsNotNull(createdResult.Content);
-            Assert.AreEqual(1, createdResult.Content.TransmissionId);
-            Assert.AreEqual(0, createdResult.Content.SessionId);
-            Assert.AreEqual("Pole1", createdResult.Content.MeterId);
+            Assert.IsNotNull(okResult.Content);
+            Assert.AreEqual(1, okResult.Content.TransmissionId);
+            Assert.AreEqual(0, okResult.Content.SessionId);
+            Assert.AreEqual("Pole1", okResult.Content.MeterId);
         }
     }
 }
