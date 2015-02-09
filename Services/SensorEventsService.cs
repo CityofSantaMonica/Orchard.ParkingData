@@ -26,7 +26,7 @@ namespace CSM.ParkingData.Services
 
         public SensorEvent Get(long transmissionId)
         {
-            return _sensorEventsRepo.Get(s => s.TransmissionId == transmissionId);
+            return _sensorEventsRepo.Get(x => x.TransmissionId == transmissionId);
         }
 
         public SensorEvent AddOrUpdate(SensorEventPOST viewModel)
@@ -43,7 +43,7 @@ namespace CSM.ParkingData.Services
                 MeteredSpace = meteredSpace
             };
 
-            var existing = _sensorEventsRepo.GetByTransmissionId(posted.TransmissionId);
+            var existing = _sensorEventsRepo.Fetch(x => x.TransmissionId == posted.TransmissionId).SingleOrDefault();
 
             if (existing == null)
             {

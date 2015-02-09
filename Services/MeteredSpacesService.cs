@@ -36,7 +36,7 @@ namespace CSM.ParkingData.Services
                 Active = !viewModel.Status.Equals(0)
             };
 
-            var existing = _meteredSpacesRepo.GetByMeterId(posted.MeterId);
+            var existing = _meteredSpacesRepo.Get(x => x.MeterId == posted.MeterId);
 
             if (existing == null)
             {
