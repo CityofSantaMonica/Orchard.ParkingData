@@ -24,7 +24,6 @@ namespace CSM.ParkingData.Controllers
             Logger = NullLogger.Instance;
         }
 
-        [CompressResponse]
         public IHttpActionResult Get(long? id = null)
         {
             if (id.HasValue)
