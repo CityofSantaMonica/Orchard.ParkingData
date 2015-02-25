@@ -43,7 +43,7 @@ namespace CSM.ParkingData.Services
                 MeteredSpace = meteredSpace
             };
 
-            var existing = _sensorEventsRepo.Fetch(x => x.TransmissionId == posted.TransmissionId).SingleOrDefault();
+            var existing = Get(posted.TransmissionId);
 
             if (existing == null)
             {
