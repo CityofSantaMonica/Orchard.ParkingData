@@ -29,9 +29,9 @@ namespace CSM.ParkingData
                     .Column<string>("Area", col => col.WithLength(512))
                     .Column<string>("SubArea", col => col.WithLength(512))
                     .Column<string>("Zone", col => col.WithLength(512))
-                    .Column<double>("Latitude")
-                    .Column<double>("Longitude")
-                    .Column<bool>("Active", col => col.NotNull())
+                    .Column<double>("Latitude", col => col.Nullable())
+                    .Column<double>("Longitude", col => col.Nullable())
+                    .Column<bool>("Active", col => col.Nullable())
             );
 
             return 1;

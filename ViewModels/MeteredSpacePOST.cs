@@ -12,11 +12,11 @@ namespace CSM.ParkingData.ViewModels
 
         [DataMember(Order = 1)]
         [Required]
-        public double Lat { get; set; }
+        public double? Lat { get; set; }
 
         [DataMember(Order = 2)]
         [Required]
-        public double Long { get; set; }
+        public double? Long { get; set; }
 
         [DataMember(Order = 3)]
         [Required]
@@ -25,7 +25,7 @@ namespace CSM.ParkingData.ViewModels
         [DataMember(Order = 4)]
         [Required]
         [Range(0,1)]
-        public int Status { get; set; }
+        public int? Status { get; set; }
 
         [DataMember(Order = 5)]
         [Required]

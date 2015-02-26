@@ -33,7 +33,7 @@ namespace CSM.ParkingData.Services
                 Zone = viewModel.Zone,
                 Latitude = viewModel.Lat,
                 Longitude = viewModel.Long,
-                Active = !viewModel.Status.Equals(0)
+                Active = viewModel.Status.HasValue ? !viewModel.Status.Equals(0) : default(bool?)
             };
 
             var existing = Get(posted.MeterId);
