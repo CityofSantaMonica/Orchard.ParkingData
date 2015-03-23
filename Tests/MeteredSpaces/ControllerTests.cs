@@ -52,8 +52,8 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
             Assert.IsNotNull(contentResult);
             Assert.IsNotNull(contentResult.Content);
             Assert.AreEqual(3, contentResult.Content.Count());
-            Assert.AreEqual(2, contentResult.Content.Where(vm => !vm.Active).Count());
-            Assert.AreEqual(1, contentResult.Content.Where(vm => vm.Active).Count());
+            Assert.AreEqual(2, contentResult.Content.Where(vm => !vm.Active.Value).Count());
+            Assert.AreEqual(1, contentResult.Content.Where(vm => vm.Active.Value).Count());
         }
 
         [Test]
