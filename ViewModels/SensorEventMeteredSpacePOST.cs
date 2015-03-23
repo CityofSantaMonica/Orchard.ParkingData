@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace CSM.ParkingData.ViewModels
 {
     [DataContract(Name = "MeteredSpace", Namespace = "")]
-    public class SensorEventMeteredSpacePOST
+    public class SensorEventMeteredSpacePOST : ISourcedFromXml
     {
         [DataMember(Order = 0)]
         [Required]

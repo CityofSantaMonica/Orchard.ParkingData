@@ -113,6 +113,7 @@
   <ItemGroup>
     <Compile Include="Controllers\MeteredSpacesController.cs" />
     <Compile Include="Controllers\SensorEventsController.cs" />
+    <Compile Include="Extensions\XmlSerializationExtensions.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Routes\ApiRoutes.cs" />
     <Compile Include="Migrations.cs" />
@@ -122,6 +123,7 @@
     <Compile Include="Services\ISensorEventsService.cs" />
     <Compile Include="Services\MeteredSpacesService.cs" />
     <Compile Include="Services\SensorEventsService.cs" />
+    <Compile Include="ViewModels\ISourcedFromXml.cs" />
     <Compile Include="ViewModels\MeteredSpaceGET.cs" />
     <Compile Include="ViewModels\MeteredSpacePOST.cs" />
     <Compile Include="ViewModels\MeteredSpacePOSTCollection.cs" />

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using CSM.ParkingData.Extensions;
 using CSM.ParkingData.Models;
 using CSM.ParkingData.Services;
 using CSM.ParkingData.ViewModels;
@@ -62,26 +63,28 @@ namespace CSM.ParkingData.Controllers
                 return BadRequest("Incoming data parsed to empty entity model.");
             }
 
+            
             MeteredSpace lastEntity = null;
+            Exception lastException = null;
 
-            try
+            for (int index = 0; index < postedMeteredSpaces.Count; index++)
             {
-                foreach (var postedSpace in postedMeteredSpaces)
+                try
                 {
-                    lastEntity = _meteredSpacesService.AddOrUpdate(postedSpace);
+                    lastEntity = _meteredSpacesService.AddOrUpdate(postedMeteredSpaces[index]);
                 }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(
-                    ex,
-                    String.Format(
-                        "Server error on POST to {0} with model: {1}",
-                        RequestContext.RouteData.Route.RouteTemplate,
-                        Request.Content.ReadAsStringAsync().Result
-                    )
-                );
-                return InternalServerError(ex);
+                catch (Exception ex)
+                {
+                    lastException = ex;
+                    Logger.Error(
+                        ex,
+                        String.Format(
+                            "Server error on POST to {0} with model: {1}",
+                            RequestContext.RouteData.Route.RouteTemplate,
+                            postedMeteredSpaces[index].ToXmlString()
+                        )
+                    );
+                }
             }
 
             //temporary because WebApi routes are registered with Route.Name = null, hence cannot be looked up by name
@@ -94,7 +97,14 @@ namespace CSM.ParkingData.Controllers
             //    _meteredSpacesService.ConvertToViewModel(lastEntity)
             //);
 
-            return Ok(_meteredSpacesService.ConvertToViewModel(lastEntity));
+            if (lastException == null)
+            {
+                return Ok(_meteredSpacesService.ConvertToViewModel(lastEntity));
+            }
+            else
+            {
+                return InternalServerError(lastException);
+            }
         }
     }
 }
