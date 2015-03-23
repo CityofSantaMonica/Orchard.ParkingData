@@ -50,15 +50,15 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\OrchardSource\lib\aspnetmvc\System.Web.Helpers.dll</HintPath>
+      <HintPath>..\..\..\..\..\lib\aspnetmvc\System.Web.Helpers.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\OrchardSource\lib\aspnetwebapi\System.Web.Http.dll</HintPath>
+      <HintPath>..\..\..\..\..\lib\aspnetwebapi\System.Web.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\OrchardSource\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
+      <HintPath>..\..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.XML" />
   </ItemGroup>
@@ -81,11 +81,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\OrchardSource\src\Orchard.Web\Modules\CSM.ParkingData\CSM.ParkingData.csproj">
+    <ProjectReference Include="..\CSM.ParkingData.csproj">
       <Project>{c7057b20-646b-4ba4-80fa-b4dc7b15b908}</Project>
       <Name>CSM.ParkingData</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\OrchardSource\src\Orchard\Orchard.Framework.csproj">
+    <ProjectReference Include="..\..\..\..\Orchard\Orchard.Framework.csproj">
       <Project>{2d1d92bb-4555-4cbe-8d0e-63563d6ce4c6}</Project>
       <Name>Orchard.Framework</Name>
     </ProjectReference>
