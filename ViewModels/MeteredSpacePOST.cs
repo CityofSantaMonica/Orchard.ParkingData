@@ -12,11 +12,11 @@ namespace CSM.ParkingData.ViewModels
 
         [DataMember(Order = 1)]
         [Required]
-        public double? Lat { get; set; }
+        public decimal? Lat { get; set; }
 
         [DataMember(Order = 2)]
         [Required]
-        public double? Long { get; set; }
+        public decimal? Long { get; set; }
 
         [DataMember(Order = 3)]
         [Required]

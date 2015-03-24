@@ -36,8 +36,8 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
 
             Assert.NotNull(pole);
             Assert.AreEqual("WILSHIRE", pole.Area);
-            Assert.AreEqual(34.026239, pole.Lat);
-            Assert.AreEqual(-118.489714, pole.Long);
+            Assert.AreEqual(34.026239m, pole.Lat);
+            Assert.AreEqual(-118.489714m, pole.Long);
             Assert.AreEqual("WIL1301", pole.PoleSerialNumber);
             Assert.AreEqual(1, pole.Status);
             Assert.AreEqual("1301 WILSHIRE BLVD", pole.SubArea);
@@ -96,8 +96,8 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
             var viewModel = new MeteredSpaceGET {
                 Active = true,
                 Area = "51",
-                Latitude = 42.0,
-                Longitude = -42.0,
+                Latitude = 42.0m,
+                Longitude = -42.0m,
                 MeterId = "Pole1",
                 SubArea = "255",
                 Zone = "Friend"

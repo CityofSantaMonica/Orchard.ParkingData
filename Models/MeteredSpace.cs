@@ -15,9 +15,9 @@
 
         public virtual string Zone { get; set; }
 
-        public virtual double? Latitude { get; set; }
+        public virtual decimal? Latitude { get; set; }
 
-        public virtual double? Longitude { get; set; }
+        public virtual decimal? Longitude { get; set; }
 
         public virtual bool? Active { get; set; }
     }

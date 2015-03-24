@@ -14,11 +14,11 @@ namespace CSM.ParkingData.ViewModels
 
         [DataMember(Name = "latitude")]
         [Range(-90.0, 90.0)]
-        public double? Latitude { get; set; }
+        public decimal? Latitude { get; set; }
 
         [DataMember(Name = "longitude")]
         [Range(-180.0, 180.0)]
-        public double? Longitude { get; set; }
+        public decimal? Longitude { get; set; }
 
         [DataMember(Name = "meter_id")]
         public string MeterId { get; set; }
