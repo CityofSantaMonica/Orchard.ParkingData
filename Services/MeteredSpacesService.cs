@@ -45,6 +45,12 @@ namespace CSM.ParkingData.Services
             else
             {
                 posted.Id = existing.Id;
+                posted.Area = posted.Area ?? existing.Area;
+                posted.SubArea = posted.SubArea ?? existing.SubArea;
+                posted.Zone = posted.Zone ?? existing.Zone;
+                posted.Latitude = posted.Latitude ?? existing.Latitude;
+                posted.Longitude = posted.Longitude ?? existing.Longitude;
+                posted.Active = posted.Active ?? existing.Active;
                 _meteredSpacesRepo.Update(posted);
             }
 
