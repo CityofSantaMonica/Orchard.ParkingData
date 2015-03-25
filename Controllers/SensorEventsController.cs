@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using CSM.ParkingData.Extensions;
 using CSM.ParkingData.Models;
 using CSM.ParkingData.Services;
 using CSM.ParkingData.ViewModels;
@@ -68,7 +69,7 @@ namespace CSM.ParkingData.Controllers
                     ex,
                     "Server error on POST to {0} with model: {1}",
                     RequestContext.RouteData.Route.RouteTemplate,
-                    Request.Content.ReadAsStringAsync().Result
+                    postedSensorEvent.ToXmlString()
                 );
                 return InternalServerError(ex);
             }
