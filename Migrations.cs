@@ -28,7 +28,7 @@ namespace CSM.ParkingData
                 typeof(MeteredSpace).Name,
                 table => table
                     .Column<long>("Id", col => col.PrimaryKey().Identity())
-                    .Column<string>("MeterId", col => col.NotNull().Unique())
+                    .Column<string>("MeterId", col => col.NotNull().Unique().WithLength(128))
                     .Column<string>("Area", col => col.WithLength(128))
                     .Column<string>("SubArea", col => col.WithLength(128))
                     .Column<string>("Zone", col => col.WithLength(128))
