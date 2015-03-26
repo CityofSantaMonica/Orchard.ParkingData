@@ -51,6 +51,7 @@ namespace CSM.ParkingData.Services
                 posted.Latitude = posted.Latitude ?? existing.Latitude;
                 posted.Longitude = posted.Longitude ?? existing.Longitude;
                 posted.Active = posted.Active ?? existing.Active;
+
                 _meteredSpacesRepo.Update(posted);
             }
 

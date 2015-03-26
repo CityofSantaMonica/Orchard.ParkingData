@@ -67,8 +67,9 @@ namespace CSM.ParkingData.Controllers
             {
                 Logger.Error(
                     ex,
-                    "Server error on POST to {0} with model: {1}",
+                    "Server error on POST to {0} with model:{1}{2}",
                     RequestContext.RouteData.Route.RouteTemplate,
+                    Environment.NewLine,
                     postedSensorEvent.ToXmlString()
                 );
                 return InternalServerError(ex);

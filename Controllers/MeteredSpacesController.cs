@@ -79,8 +79,9 @@ namespace CSM.ParkingData.Controllers
                     Logger.Error(
                         ex,
                         String.Format(
-                            "Server error on POST to {0} with model: {1}",
+                            "Server error on POST to {0} with model:{1}{2}",
                             RequestContext.RouteData.Route.RouteTemplate,
+                            Environment.NewLine,
                             postedMeteredSpaces[index].ToXmlString()
                         )
                     );
