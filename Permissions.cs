@@ -26,6 +26,10 @@ namespace CSM.ParkingData
                 new PermissionStereotype {
                     Name = "Administrator",
                     Permissions = new[] { ApiWriter }
+                },
+                new PermissionStereotype {
+                    Name = "ApiWriter",
+                    Permissions = new[] { ApiWriter }
                 }
             };
         }
