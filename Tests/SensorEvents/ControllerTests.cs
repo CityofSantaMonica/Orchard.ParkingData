@@ -20,7 +20,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
         {
             base.TestsSetup();
 
-            _controller = new SensorEventsController(_mockSensorEventsService.Object) {
+            _controller = new SensorEventsController(_mockSensorEventsService.Object, _mockSiteSettings.Object) {
                 Request = _mockRequest,
                 RequestContext = _mockRequestContext
             };

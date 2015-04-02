@@ -4,7 +4,6 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using CSM.ParkingData.Controllers;
 using CSM.ParkingData.Models;
-using CSM.ParkingData.Services;
 using CSM.ParkingData.ViewModels;
 using Moq;
 using NUnit.Framework;
@@ -20,7 +19,7 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
         {
             base.TestsSetup();
 
-            _controller = new MeteredSpacesController(_mockMeteredSpacesService.Object) {
+            _controller = new MeteredSpacesController(_mockMeteredSpacesService.Object, _mockSiteSettings.Object) {
                 Request = _mockRequest,
                 RequestContext = _mockRequestContext
             };

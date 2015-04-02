@@ -6,7 +6,7 @@ using CSM.ParkingData.Services;
 using CSM.ParkingData.ViewModels;
 using Moq;
 using NUnit.Framework;
-using MvcUrlHelper = System.Web.Mvc.UrlHelper;
+using Orchard.Settings;
 
 namespace CSM.ParkingData.Tests
 {
@@ -17,6 +17,7 @@ namespace CSM.ParkingData.Tests
         protected HttpRequestContext _mockRequestContext;
         protected Mock<ISensorEventsService> _mockSensorEventsService;
         protected Mock<IMeteredSpacesService> _mockMeteredSpacesService;
+        protected Mock<ISite> _mockSiteSettings;
 
         [SetUp]
         public virtual void TestsSetup()
@@ -57,6 +58,11 @@ namespace CSM.ParkingData.Tests
                         MeterId = ms.MeterId
                     }
                 );
+
+            _mockSiteSettings = new Mock<ISite>();
+            _mockSiteSettings
+                .Setup(m => m.BaseUrl)
+                .Returns("https://parking.api.smgov.net");
         }
     }
 }
