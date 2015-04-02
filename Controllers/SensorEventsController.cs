@@ -10,28 +10,35 @@ using CSM.WebApi.Filters;
 using GoogleAnalyticsTracker.WebApi2;
 using Microsoft.WindowsAzure;
 using Orchard.Logging;
+using Orchard.Settings;
 
 namespace CSM.ParkingData.Controllers
 {
     [EnableCors("*", null, "GET")]
     public class SensorEventsController : ApiController
     {
-        const string analyticsId = CloudConfigurationManager.GetSetting("GoogleAnalyticsId");
+        static string analyticsId = CloudConfigurationManager.GetSetting("GoogleAnalyticsId");
 
         private readonly ISensorEventsService _sensorEventsService;
+        private readonly ISite _siteSettings;
 
         public ILogger Logger { get; set; }
 
-        public SensorEventsController(ISensorEventsService sensorEventsService)
+        public SensorEventsController(ISensorEventsService sensorEventsService, ISite siteSettings)
         {
             _sensorEventsService = sensorEventsService;
+            _siteSettings = siteSettings;
 
             Logger = NullLogger.Instance;
         }
 
-        [ActionTracking(analyticsId, ActionDescription = "Sensor Event GET")]
         public IHttpActionResult Get(long? id = null)
         {
+            using (var tracker = new Tracker(analyticsId, _siteSettings.BaseUrl))
+            {
+                tracker.TrackPageViewAsync(Request, "Sensor Events GET");
+            }
+
             if (id.HasValue)
             {
                 var theEvent = _sensorEventsService.Get(id.Value);
@@ -54,9 +61,13 @@ namespace CSM.ParkingData.Controllers
         [RequireBasicAuthentication]
         [RequirePermissions("ApiWriter")]
         [ModelValidation]
-        [ActionTracking(analyticsId, ActionDescription = "Sensor Event POST")]
         public IHttpActionResult Post([FromBody]SensorEventPOST postedSensorEvent)
         {
+            using (var tracker = new Tracker(analyticsId, _siteSettings.BaseUrl))
+            {
+                tracker.TrackPageViewAsync(Request, "Sensor Events POST");
+            }
+
             if (postedSensorEvent == null)
             {
                 Logger.Warning("POST to {0} with null model.", RequestContext.RouteData.Route.RouteTemplate);
