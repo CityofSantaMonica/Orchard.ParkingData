@@ -7,6 +7,8 @@ using CSM.ParkingData.Models;
 using CSM.ParkingData.Services;
 using CSM.ParkingData.ViewModels;
 using CSM.WebApi.Filters;
+using GoogleAnalyticsTracker.WebApi2;
+using Microsoft.WindowsAzure;
 using Orchard.Logging;
 
 namespace CSM.ParkingData.Controllers
@@ -14,6 +16,8 @@ namespace CSM.ParkingData.Controllers
     [EnableCors("*", null, "GET")]
     public class MeteredSpacesController : ApiController
     {
+        const string analyticsId = CloudConfigurationManager.GetSetting("GoogleAnalyticsId");
+
         private readonly IMeteredSpacesService _meteredSpacesService;
 
         public ILogger Logger { get; set; }
@@ -25,6 +29,7 @@ namespace CSM.ParkingData.Controllers
             Logger = NullLogger.Instance;
         }
 
+        [ActionTracking(analyticsId, ActionDescription = "Metered Space GET")]
         public IHttpActionResult Get(string id = null)
         {
             if (String.IsNullOrEmpty(id))
@@ -49,6 +54,7 @@ namespace CSM.ParkingData.Controllers
         [RequireBasicAuthentication]
         [RequirePermissions("ApiWriter")]
         [ModelValidation]
+        [ActionTracking(analyticsId, ActionDescription = "Metered Space POST")]
         public IHttpActionResult Post([FromBody]MeteredSpacePOSTCollection postedMeteredSpaces)
         {
             if (postedMeteredSpaces == null)
