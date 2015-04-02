@@ -19,7 +19,7 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
         {
             base.TestsSetup();
 
-            _controller = new MeteredSpacesController(_mockMeteredSpacesService.Object, _mockSiteSettings.Object) {
+            _controller = new MeteredSpacesController(_mockMeteredSpacesService.Object, _mockSiteSevice.Object) {
                 Request = _mockRequest,
                 RequestContext = _mockRequestContext
             };

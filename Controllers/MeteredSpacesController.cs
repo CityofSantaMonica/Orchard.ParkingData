@@ -20,21 +20,21 @@ namespace CSM.ParkingData.Controllers
         static string analyticsId = CloudConfigurationManager.GetSetting("GoogleAnalyticsId");
 
         private readonly IMeteredSpacesService _meteredSpacesService;
-        private readonly ISite _siteSettings;
+        private readonly ISiteService _siteService;
 
         public ILogger Logger { get; set; }
 
-        public MeteredSpacesController(IMeteredSpacesService meteredSpacesService, ISite siteSettings)
+        public MeteredSpacesController(IMeteredSpacesService meteredSpacesService, ISiteService siteService)
         {
             _meteredSpacesService = meteredSpacesService;
-            _siteSettings = siteSettings;
+            _siteService = siteService;
 
             Logger = NullLogger.Instance;
         }
 
         public IHttpActionResult Get(string id = null)
         {
-            using (var tracker = new Tracker(analyticsId, _siteSettings.BaseUrl))
+            using (var tracker = new Tracker(analyticsId, _siteService.GetSiteSettings().BaseUrl))
             {
                 tracker.TrackPageViewAsync(Request, "Metered Spaces GET");
             }
@@ -63,7 +63,7 @@ namespace CSM.ParkingData.Controllers
         [ModelValidation]
         public IHttpActionResult Post([FromBody]MeteredSpacePOSTCollection postedMeteredSpaces)
         {
-            using (var tracker = new Tracker(analyticsId, _siteSettings.BaseUrl))
+            using (var tracker = new Tracker(analyticsId, _siteService.GetSiteSettings().BaseUrl))
             {
                 tracker.TrackPageViewAsync(Request, "Metered Spaces POST");
             }

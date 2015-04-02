@@ -20,21 +20,21 @@ namespace CSM.ParkingData.Controllers
         static string analyticsId = CloudConfigurationManager.GetSetting("GoogleAnalyticsId");
 
         private readonly ISensorEventsService _sensorEventsService;
-        private readonly ISite _siteSettings;
+        private readonly ISiteService _siteService;
 
         public ILogger Logger { get; set; }
 
-        public SensorEventsController(ISensorEventsService sensorEventsService, ISite siteSettings)
+        public SensorEventsController(ISensorEventsService sensorEventsService, ISiteService siteService)
         {
             _sensorEventsService = sensorEventsService;
-            _siteSettings = siteSettings;
+            _siteService = siteService;
 
             Logger = NullLogger.Instance;
         }
 
         public IHttpActionResult Get(long? id = null)
         {
-            using (var tracker = new Tracker(analyticsId, _siteSettings.BaseUrl))
+            using (var tracker = new Tracker(analyticsId, _siteService.GetSiteSettings().BaseUrl))
             {
                 tracker.TrackPageViewAsync(Request, "Sensor Events GET");
             }
@@ -63,7 +63,7 @@ namespace CSM.ParkingData.Controllers
         [ModelValidation]
         public IHttpActionResult Post([FromBody]SensorEventPOST postedSensorEvent)
         {
-            using (var tracker = new Tracker(analyticsId, _siteSettings.BaseUrl))
+            using (var tracker = new Tracker(analyticsId, _siteService.GetSiteSettings().BaseUrl))
             {
                 tracker.TrackPageViewAsync(Request, "Sensor Events POST");
             }

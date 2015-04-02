@@ -17,7 +17,7 @@ namespace CSM.ParkingData.Tests
         protected HttpRequestContext _mockRequestContext;
         protected Mock<ISensorEventsService> _mockSensorEventsService;
         protected Mock<IMeteredSpacesService> _mockMeteredSpacesService;
-        protected Mock<ISite> _mockSiteSettings;
+        protected Mock<ISiteService> _mockSiteSevice;
 
         [SetUp]
         public virtual void TestsSetup()
@@ -59,10 +59,13 @@ namespace CSM.ParkingData.Tests
                     }
                 );
 
-            _mockSiteSettings = new Mock<ISite>();
-            _mockSiteSettings
-                .Setup(m => m.BaseUrl)
-                .Returns("https://parking.api.smgov.net");
+            var mockSettings = new Mock<ISite>();
+            mockSettings.Setup(m => m.BaseUrl).Returns("http://www.example.com");
+
+            _mockSiteSevice = new Mock<ISiteService>();
+            _mockSiteSevice
+                .Setup(m => m.GetSiteSettings())
+                .Returns(mockSettings.Object);
         }
     }
 }
