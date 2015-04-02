@@ -46,8 +46,8 @@ namespace CSM.ParkingData.Controllers
             }
         }
 
-        //[RequireBasicAuthentication]
-        //[RequirePermissions("ApiWriter")]
+        [RequireBasicAuthentication]
+        [RequirePermissions("ApiWriter")]
         [ModelValidation]
         public IHttpActionResult Post([FromBody]SensorEventPOST postedSensorEvent)
         {
