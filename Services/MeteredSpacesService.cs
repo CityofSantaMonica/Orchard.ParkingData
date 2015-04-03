@@ -68,8 +68,7 @@ namespace CSM.ParkingData.Services
             return new MeteredSpaceGET() {
                 MeterId = entity.MeterId,
                 Area = entity.Area,
-                SubArea = entity.SubArea,
-                Zone = entity.Zone,
+                StreetAddress = entity.SubArea,
                 Latitude = entity.Latitude,
                 Longitude = entity.Longitude,
                 Active = entity.Active

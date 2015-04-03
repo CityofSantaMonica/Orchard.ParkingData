@@ -23,10 +23,7 @@ namespace CSM.ParkingData.ViewModels
         [DataMember(Name = "meter_id")]
         public string MeterId { get; set; }
 
-        [DataMember(Name = "sub_area")]
-        public string SubArea { get; set; }
-
-        [DataMember(Name = "zone")]
-        public string Zone { get; set; }
+        [DataMember(Name = "street_address")]
+        public string StreetAddress { get; set; }
     }
 }

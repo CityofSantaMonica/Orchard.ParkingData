@@ -91,7 +91,7 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
         {
             //arrange
 
-            string expected = @"{""active"":true,""area"":""51"",""latitude"":42.0,""longitude"":-42.0,""meter_id"":""Pole1"",""sub_area"":""255"",""zone"":""Friend""}";
+            string expected = @"{""active"":true,""area"":""51"",""latitude"":42.0,""longitude"":-42.0,""meter_id"":""Pole1"",""street_address"":""255""}";
 
             var viewModel = new MeteredSpaceGET {
                 Active = true,
@@ -99,8 +99,7 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
                 Latitude = 42.0m,
                 Longitude = -42.0m,
                 MeterId = "Pole1",
-                SubArea = "255",
-                Zone = "Friend"
+                StreetAddress = "255",
             };
 
             //act
