@@ -7,26 +7,38 @@ using CSM.ParkingData.Models;
 using CSM.ParkingData.Services;
 using CSM.ParkingData.ViewModels;
 using CSM.WebApi.Filters;
+using GoogleAnalyticsTracker.WebApi2;
+using Microsoft.WindowsAzure;
 using Orchard.Logging;
+using Orchard.Settings;
 
 namespace CSM.ParkingData.Controllers
 {
     [EnableCors("*", null, "GET")]
     public class SensorEventsController : ApiController
     {
+        static string analyticsId = CloudConfigurationManager.GetSetting("GoogleAnalyticsId");
+
         private readonly ISensorEventsService _sensorEventsService;
+        private readonly ISiteService _siteService;
 
         public ILogger Logger { get; set; }
 
-        public SensorEventsController(ISensorEventsService sensorEventsService)
+        public SensorEventsController(ISensorEventsService sensorEventsService, ISiteService siteService)
         {
             _sensorEventsService = sensorEventsService;
+            _siteService = siteService;
 
             Logger = NullLogger.Instance;
         }
 
         public IHttpActionResult Get(long? id = null)
         {
+            using (var tracker = new Tracker(analyticsId, _siteService.GetSiteSettings().BaseUrl))
+            {
+                tracker.TrackPageViewAsync(Request, "Sensor Events GET");
+            }
+
             if (id.HasValue)
             {
                 var theEvent = _sensorEventsService.Get(id.Value);
@@ -51,6 +63,11 @@ namespace CSM.ParkingData.Controllers
         [ModelValidation]
         public IHttpActionResult Post([FromBody]SensorEventPOST postedSensorEvent)
         {
+            using (var tracker = new Tracker(analyticsId, _siteService.GetSiteSettings().BaseUrl))
+            {
+                tracker.TrackPageViewAsync(Request, "Sensor Events POST");
+            }
+
             if (postedSensorEvent == null)
             {
                 Logger.Warning("POST to {0} with null model.", RequestContext.RouteData.Route.RouteTemplate);

@@ -7,26 +7,38 @@ using CSM.ParkingData.Models;
 using CSM.ParkingData.Services;
 using CSM.ParkingData.ViewModels;
 using CSM.WebApi.Filters;
+using GoogleAnalyticsTracker.WebApi2;
+using Microsoft.WindowsAzure;
 using Orchard.Logging;
+using Orchard.Settings;
 
 namespace CSM.ParkingData.Controllers
 {
     [EnableCors("*", null, "GET")]
     public class MeteredSpacesController : ApiController
     {
+        static string analyticsId = CloudConfigurationManager.GetSetting("GoogleAnalyticsId");
+
         private readonly IMeteredSpacesService _meteredSpacesService;
+        private readonly ISiteService _siteService;
 
         public ILogger Logger { get; set; }
 
-        public MeteredSpacesController(IMeteredSpacesService meteredSpacesService)
+        public MeteredSpacesController(IMeteredSpacesService meteredSpacesService, ISiteService siteService)
         {
             _meteredSpacesService = meteredSpacesService;
+            _siteService = siteService;
 
             Logger = NullLogger.Instance;
         }
 
         public IHttpActionResult Get(string id = null)
         {
+            using (var tracker = new Tracker(analyticsId, _siteService.GetSiteSettings().BaseUrl))
+            {
+                tracker.TrackPageViewAsync(Request, "Metered Spaces GET");
+            }
+
             if (String.IsNullOrEmpty(id))
             {
                 var spaces =
@@ -51,6 +63,11 @@ namespace CSM.ParkingData.Controllers
         [ModelValidation]
         public IHttpActionResult Post([FromBody]MeteredSpacePOSTCollection postedMeteredSpaces)
         {
+            using (var tracker = new Tracker(analyticsId, _siteService.GetSiteSettings().BaseUrl))
+            {
+                tracker.TrackPageViewAsync(Request, "Metered Spaces POST");
+            }
+
             if (postedMeteredSpaces == null)
             {
                 Logger.Warning("POST to {0} with null model", RequestContext.RouteData.Route.RouteTemplate);
@@ -63,7 +80,6 @@ namespace CSM.ParkingData.Controllers
                 return BadRequest("Incoming data parsed to empty entity model.");
             }
 
-            
             MeteredSpace lastEntity = null;
             Exception lastException = null;
 
