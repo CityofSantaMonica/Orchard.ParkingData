@@ -120,7 +120,10 @@
   <ItemGroup>
     <Compile Include="Controllers\MeteredSpacesController.cs" />
     <Compile Include="Controllers\SensorEventsController.cs" />
+    <Compile Include="Drivers\SensorEventsSettingsDriver.cs" />
     <Compile Include="Extensions\XmlSerializationExtensions.cs" />
+    <Compile Include="Handlers\SensorEventsSettingsHandler.cs" />
+    <Compile Include="Models\SensorEventSettings.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Routes\ApiRoutes.cs" />
     <Compile Include="Migrations.cs" />
@@ -140,6 +143,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts.SensorEventsSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

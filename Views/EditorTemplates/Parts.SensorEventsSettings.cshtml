@@ -1,0 +1,9 @@
+﻿@model CSM.ParkingData.Models.SensorEventsSettings
+
+<h2>Sensor Events Settings</h2>
+
+<fieldset>
+    @Html.LabelFor(m => m.TimeLimitHours, T("Time Limit (hours)"))
+    @Html.TextBoxFor(m => m.TimeLimitHours, new { @class = "text medium" })
+    <span class="hint">This is the number of hours after a sensor event's <code>EventTime</code> that the sensor event is available from the public API.</span>
+</fieldset>
