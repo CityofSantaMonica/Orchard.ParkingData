@@ -14,7 +14,7 @@ namespace CSM.ParkingData.Drivers
         protected override DriverResult Editor(SensorEventsSettings part, dynamic shapeHelper)
         {
             return ContentShape(
-                "Parts_SensorEvents_Settings",
+                "Parts_SensorEventsSettings",
                 () => shapeHelper.EditorTemplate(
                     TemplateName: "Parts.SensorEventsSettings",
                     Model: part,
