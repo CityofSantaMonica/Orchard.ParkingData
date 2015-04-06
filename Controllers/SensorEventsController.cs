@@ -10,7 +10,9 @@ using CSM.WebApi.Filters;
 using GoogleAnalyticsTracker.WebApi2;
 using Microsoft.WindowsAzure;
 using Orchard.Logging;
+using Orchard.Services;
 using Orchard.Settings;
+using Orchard.ContentManagement;
 
 namespace CSM.ParkingData.Controllers
 {
@@ -19,13 +21,18 @@ namespace CSM.ParkingData.Controllers
     {
         static string analyticsId = CloudConfigurationManager.GetSetting("GoogleAnalyticsId");
 
+        private readonly IClock _clock;
         private readonly ISensorEventsService _sensorEventsService;
         private readonly ISiteService _siteService;
 
         public ILogger Logger { get; set; }
 
-        public SensorEventsController(ISensorEventsService sensorEventsService, ISiteService siteService)
+        public SensorEventsController(
+            IClock clock,
+            ISensorEventsService sensorEventsService,
+            ISiteService siteService)
         {
+            _clock = clock;
             _sensorEventsService = sensorEventsService;
             _siteService = siteService;
 
@@ -50,9 +57,12 @@ namespace CSM.ParkingData.Controllers
             }
             else
             {
+                var sensorEventsSettings = _siteService.GetSiteSettings().As<SensorEventsSettings>();
+                var timeLimit = _clock.UtcNow.AddHours(-1 * sensorEventsSettings.TimeLimitHours);
+
                 var events = _sensorEventsService.Query()
+                                                 .Where(s => timeLimit <= s.EventTime)
                                                  .OrderByDescending(s => s.EventTime)
-                                                 .Take(1000)
                                                  .Select(_sensorEventsService.ConvertToViewModel);
                 return Ok(events);
             }

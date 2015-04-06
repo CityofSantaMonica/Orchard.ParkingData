@@ -8,6 +8,7 @@ using CSM.ParkingData.Models;
 using CSM.ParkingData.ViewModels;
 using Moq;
 using NUnit.Framework;
+using Orchard.Services;
 
 namespace CSM.ParkingData.Tests.SensorEvents
 {
@@ -20,7 +21,12 @@ namespace CSM.ParkingData.Tests.SensorEvents
         {
             base.TestsSetup();
 
-            _controller = new SensorEventsController(_mockSensorEventsService.Object, _mockSiteSevice.Object) {
+            var clockMock = new Mock<IClock>();
+            clockMock
+                .Setup(m => m.UtcNow)
+                .Returns(new DateTime(2015, 01, 01, 0, 0, 0, DateTimeKind.Utc));
+
+            _controller = new SensorEventsController(clockMock.Object, _mockSensorEventsService.Object, _mockSiteSevice.Object) {
                 Request = _mockRequest,
                 RequestContext = _mockRequestContext
             };
