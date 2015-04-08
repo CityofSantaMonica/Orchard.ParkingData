@@ -7,3 +7,7 @@ OrchardVersion: 1.9
 Description: RESTful Web API for the City of Santa Monica's Parking Data.
 Dependencies: CSM.WebApi.Security
 Category: Open Data
+Features:
+    CSM.ParkingData:
+        Description: RESTful Web API for the City of Santa Monica's Parking Data.
+        Category: Open Data
