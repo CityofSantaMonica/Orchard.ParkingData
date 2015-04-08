@@ -2,28 +2,33 @@
 using System.Linq;
 using CSM.ParkingData.Models;
 using CSM.ParkingData.ViewModels;
+using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Logging;
 using Orchard.Services;
+using Orchard.Settings;
 
 namespace CSM.ParkingData.Services
 {
     public class SensorEventsService : ISensorEventsService
     {
         private readonly IClock _clock;
-        private readonly IRepository<SensorEvent> _sensorEventsRepo;
         private readonly IMeteredSpacesService _meteredSpacesService;
+        private readonly IRepository<SensorEvent> _sensorEventsRepo;
+        private readonly ISiteService _siteService;
 
         public ILogger Logger { get; set; }
 
         public SensorEventsService(
             IClock clock,
+            IMeteredSpacesService meteredSpacesService,
             IRepository<SensorEvent> sensorEventsRepo,
-            IMeteredSpacesService meteredSpacesService)
+            ISiteService siteService)
         {
             _clock = clock;
-            _sensorEventsRepo = sensorEventsRepo;
             _meteredSpacesService = meteredSpacesService;
+            _sensorEventsRepo = sensorEventsRepo;
+            _siteService = siteService;
 
             Logger = NullLogger.Instance;
         }
@@ -79,6 +84,14 @@ namespace CSM.ParkingData.Services
         public IQueryable<SensorEvent> Query()
         {
             return _sensorEventsRepo.Table;
+        }
+
+        public double GetLifetimeHours()
+        {
+            var siteSettings = _siteService.GetSiteSettings();
+            var sensorEventsSettings = siteSettings.As<SensorEventsSettings>();
+
+            return sensorEventsSettings != null ? sensorEventsSettings.LifetimeHours : 0.0;
         }
     }
 }

@@ -12,7 +12,6 @@ using Microsoft.WindowsAzure;
 using Orchard.Logging;
 using Orchard.Services;
 using Orchard.Settings;
-using Orchard.ContentManagement;
 
 namespace CSM.ParkingData.Controllers
 {
@@ -57,8 +56,7 @@ namespace CSM.ParkingData.Controllers
             }
             else
             {
-                var sensorEventsSettings = _siteService.GetSiteSettings().As<SensorEventsSettings>();
-                var timeLimit = _clock.UtcNow.AddHours(-1 * sensorEventsSettings.TimeLimitHours);
+                var timeLimit = _clock.UtcNow.AddHours(-1 * _sensorEventsService.GetLifetimeHours());
 
                 var events = _sensorEventsService.Query()
                                                  .Where(s => timeLimit <= s.EventTime)

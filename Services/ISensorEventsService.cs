@@ -29,5 +29,10 @@ namespace CSM.ParkingData.Services
         /// Get a queryable collection of sensor event records in the database.
         /// </summary>
         IQueryable<SensorEvent> Query();
+
+        /// <summary>
+        /// Get a value indicating how long after a SensorEvent's EventTime that SensorEvent should be available on the public API.
+        /// </summary>
+        double GetLifetimeHours();
     }
 }
