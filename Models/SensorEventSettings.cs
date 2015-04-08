@@ -4,9 +4,9 @@ namespace CSM.ParkingData.Models
 {
     public class SensorEventsSettings : ContentPart
     {
-        public int TimeLimitHours
+        public double TimeLimitHours
         {
-            get { return this.Retrieve(x => x.TimeLimitHours, 3); }
+            get { return this.Retrieve(x => x.TimeLimitHours, 3.0); }
             set { this.Store(x => x.TimeLimitHours, value); }
         }
     }
