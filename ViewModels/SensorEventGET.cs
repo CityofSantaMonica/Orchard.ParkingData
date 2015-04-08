@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Runtime.Serialization;
 
 namespace CSM.ParkingData.ViewModels
@@ -15,6 +14,9 @@ namespace CSM.ParkingData.ViewModels
 
         [DataMember(Name = "meter_id")]
         public string MeterId { get; set; }
+
+        [DataMember(Name = "received_time")]
+        public DateTime ReceivedTime { get; set; }
 
         [DataMember(Name = "session_id")]
         public long SessionId { get; set; }

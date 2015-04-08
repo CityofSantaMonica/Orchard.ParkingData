@@ -4,20 +4,24 @@ using CSM.ParkingData.Models;
 using CSM.ParkingData.ViewModels;
 using Orchard.Data;
 using Orchard.Logging;
+using Orchard.Services;
 
 namespace CSM.ParkingData.Services
 {
     public class SensorEventsService : ISensorEventsService
     {
+        private readonly IClock _clock;
         private readonly IRepository<SensorEvent> _sensorEventsRepo;
         private readonly IMeteredSpacesService _meteredSpacesService;
 
         public ILogger Logger { get; set; }
 
         public SensorEventsService(
+            IClock clock,
             IRepository<SensorEvent> sensorEventsRepo,
             IMeteredSpacesService meteredSpacesService)
         {
+            _clock = clock;
             _sensorEventsRepo = sensorEventsRepo;
             _meteredSpacesService = meteredSpacesService;
 
@@ -34,13 +38,14 @@ namespace CSM.ParkingData.Services
             var meteredSpace = _meteredSpacesService.AddOrUpdate(viewModel.MeteredSpace);
 
             var posted = new SensorEvent() {
-                TransmissionId = long.Parse(viewModel.TransmissionID),
-                TransmissionTime = DateTime.Parse(viewModel.TransmissionDateTime),
                 ClientId = viewModel.ClientID,
-                SessionId = long.Parse(viewModel.MeteredSpace.SessionID),
-                EventType = viewModel.EventType,
                 EventTime = DateTime.Parse(viewModel.EventTime),
-                MeteredSpace = meteredSpace
+                EventType = viewModel.EventType,
+                MeteredSpace = meteredSpace,
+                ReceivedTime = _clock.UtcNow,
+                SessionId = long.Parse(viewModel.MeteredSpace.SessionID),
+                TransmissionId = long.Parse(viewModel.TransmissionID),
+                TransmissionTime = DateTime.Parse(viewModel.TransmissionDateTime)
             };
 
             var existing = Get(posted.TransmissionId);
@@ -61,12 +66,13 @@ namespace CSM.ParkingData.Services
         public SensorEventGET ConvertToViewModel(SensorEvent entity)
         {
             return new SensorEventGET() {
-                TransmissionId = entity.TransmissionId,
-                MeterId = entity.MeteredSpace.MeterId,
-                SessionId = entity.SessionId,
-                TransmissionTime = entity.TransmissionTime,
                 EventTime = entity.EventTime,
-                EventType = entity.EventType
+                EventType = entity.EventType,
+                MeterId = entity.MeteredSpace.MeterId,
+                ReceivedTime = entity.ReceivedTime,
+                SessionId = entity.SessionId,
+                TransmissionId = entity.TransmissionId,
+                TransmissionTime = entity.TransmissionTime
             };
         }
 
