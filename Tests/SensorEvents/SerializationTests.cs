@@ -61,15 +61,15 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
             DateTime time = new DateTime(2015, 1, 26, 17, 0, 0, DateTimeKind.Utc);
 
-            string expected = @"{""event_time"":""2015-01-26T17:00:00Z"",""event_type"":""SE"",""meter_id"":""Pole1"",""session_id"":123,""transmission_id"":12345678,""transmission_time"":""2015-01-26T17:00:00Z""}";
+            string expected = @"{""event_id"":12345678,""event_time"":""2015-01-26T17:00:00Z"",""event_type"":""SE"",""meter_id"":""Pole1"",""received_time"":""2015-01-26T17:00:00Z"",""session_id"":123}";
 
             var viewModel = new SensorEventGET {
-                TransmissionId = 12345678,
-                MeterId = "Pole1",
-                SessionId = 123,
-                TransmissionTime = time,
+                EventId = 12345678,
                 EventTime = time,
-                EventType = "SE"
+                EventType = "SE",
+                MeterId = "Pole1",
+                ReceivedTime = time,
+                SessionId = 123
             };
 
             //act

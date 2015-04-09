@@ -3,16 +3,15 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using CSM.ParkingData.Extensions;
+using CSM.ParkingData.Filters;
 using CSM.ParkingData.Models;
 using CSM.ParkingData.Services;
 using CSM.ParkingData.ViewModels;
 using CSM.WebApi.Filters;
-using GoogleAnalyticsTracker.WebApi2;
 using Microsoft.WindowsAzure;
 using Orchard.Logging;
 using Orchard.Services;
 using Orchard.Settings;
-using Orchard.ContentManagement;
 
 namespace CSM.ParkingData.Controllers
 {
@@ -39,13 +38,9 @@ namespace CSM.ParkingData.Controllers
             Logger = NullLogger.Instance;
         }
 
+        [TrackAnalytics("Sensor Events GET")]
         public IHttpActionResult Get(long? id = null)
         {
-            using (var tracker = new Tracker(analyticsId, _siteService.GetSiteSettings().BaseUrl))
-            {
-                tracker.TrackPageViewAsync(Request, "Sensor Events GET");
-            }
-
             if (id.HasValue)
             {
                 var theEvent = _sensorEventsService.Get(id.Value);
@@ -57,8 +52,7 @@ namespace CSM.ParkingData.Controllers
             }
             else
             {
-                var sensorEventsSettings = _siteService.GetSiteSettings().As<SensorEventsSettings>();
-                var timeLimit = _clock.UtcNow.AddHours(-1 * sensorEventsSettings.TimeLimitHours);
+                var timeLimit = _clock.UtcNow.AddHours(-1 * _sensorEventsService.GetLifetimeHours());
 
                 var events = _sensorEventsService.Query()
                                                  .Where(s => timeLimit <= s.EventTime)
@@ -71,13 +65,9 @@ namespace CSM.ParkingData.Controllers
         [RequireBasicAuthentication]
         [RequirePermissions("ApiWriter")]
         [ModelValidation]
+        [TrackAnalytics("Sensor Events POST")]
         public IHttpActionResult Post([FromBody]SensorEventPOST postedSensorEvent)
         {
-            using (var tracker = new Tracker(analyticsId, _siteService.GetSiteSettings().BaseUrl))
-            {
-                tracker.TrackPageViewAsync(Request, "Sensor Events POST");
-            }
-
             if (postedSensorEvent == null)
             {
                 Logger.Warning("POST to {0} with null model.", RequestContext.RouteData.Route.RouteTemplate);

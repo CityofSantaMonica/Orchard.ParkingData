@@ -125,6 +125,7 @@
     <Compile Include="Controllers\SensorEventsController.cs" />
     <Compile Include="Drivers\SensorEventsSettingsDriver.cs" />
     <Compile Include="Extensions\XmlSerializationExtensions.cs" />
+    <Compile Include="Filters\TrackAnalyticsAttribute.cs" />
     <Compile Include="Handlers\SensorEventsSettingsHandler.cs" />
     <Compile Include="Models\SensorEventSettings.cs" />
     <Compile Include="Permissions.cs" />

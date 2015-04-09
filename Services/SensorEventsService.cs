@@ -2,24 +2,33 @@
 using System.Linq;
 using CSM.ParkingData.Models;
 using CSM.ParkingData.ViewModels;
+using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Logging;
+using Orchard.Services;
+using Orchard.Settings;
 
 namespace CSM.ParkingData.Services
 {
     public class SensorEventsService : ISensorEventsService
     {
-        private readonly IRepository<SensorEvent> _sensorEventsRepo;
+        private readonly IClock _clock;
         private readonly IMeteredSpacesService _meteredSpacesService;
+        private readonly IRepository<SensorEvent> _sensorEventsRepo;
+        private readonly ISiteService _siteService;
 
         public ILogger Logger { get; set; }
 
         public SensorEventsService(
+            IClock clock,
+            IMeteredSpacesService meteredSpacesService,
             IRepository<SensorEvent> sensorEventsRepo,
-            IMeteredSpacesService meteredSpacesService)
+            ISiteService siteService)
         {
-            _sensorEventsRepo = sensorEventsRepo;
+            _clock = clock;
             _meteredSpacesService = meteredSpacesService;
+            _sensorEventsRepo = sensorEventsRepo;
+            _siteService = siteService;
 
             Logger = NullLogger.Instance;
         }
@@ -34,13 +43,14 @@ namespace CSM.ParkingData.Services
             var meteredSpace = _meteredSpacesService.AddOrUpdate(viewModel.MeteredSpace);
 
             var posted = new SensorEvent() {
-                TransmissionId = long.Parse(viewModel.TransmissionID),
-                TransmissionTime = DateTime.Parse(viewModel.TransmissionDateTime),
                 ClientId = viewModel.ClientID,
-                SessionId = long.Parse(viewModel.MeteredSpace.SessionID),
-                EventType = viewModel.EventType,
                 EventTime = DateTime.Parse(viewModel.EventTime),
-                MeteredSpace = meteredSpace
+                EventType = viewModel.EventType,
+                MeteredSpace = meteredSpace,
+                ReceivedTime = _clock.UtcNow,
+                SessionId = long.Parse(viewModel.MeteredSpace.SessionID),
+                TransmissionId = long.Parse(viewModel.TransmissionID),
+                TransmissionTime = DateTime.Parse(viewModel.TransmissionDateTime)
             };
 
             var existing = Get(posted.TransmissionId);
@@ -61,18 +71,26 @@ namespace CSM.ParkingData.Services
         public SensorEventGET ConvertToViewModel(SensorEvent entity)
         {
             return new SensorEventGET() {
-                TransmissionId = entity.TransmissionId,
-                MeterId = entity.MeteredSpace.MeterId,
-                SessionId = entity.SessionId,
-                TransmissionTime = entity.TransmissionTime,
+                EventId = entity.TransmissionId,
                 EventTime = entity.EventTime,
-                EventType = entity.EventType
+                EventType = entity.EventType,
+                MeterId = entity.MeteredSpace.MeterId,
+                ReceivedTime = entity.ReceivedTime,
+                SessionId = entity.SessionId
             };
         }
 
         public IQueryable<SensorEvent> Query()
         {
             return _sensorEventsRepo.Table;
+        }
+
+        public double GetLifetimeHours()
+        {
+            var siteSettings = _siteService.GetSiteSettings();
+            var sensorEventsSettings = siteSettings.As<SensorEventsSettings>();
+
+            return sensorEventsSettings != null ? sensorEventsSettings.LifetimeHours : 0.0;
         }
     }
 }
