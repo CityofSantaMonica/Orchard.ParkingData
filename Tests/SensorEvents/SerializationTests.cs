@@ -2,6 +2,7 @@
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
+using CSM.ParkingData.Models;
 using CSM.ParkingData.ViewModels;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -79,6 +80,29 @@ namespace CSM.ParkingData.Tests.SensorEvents
             //assert
 
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        [Category("SensorEvents")]
+        public void SensorEventLifetime_SerializesToJson()
+        {
+            //arrange
+
+            var lifetime1 = new SensorEventLifetime() { Length = 1.0, Scope = LifetimeScope.Hours };
+            var lifetime2 = new SensorEventLifetime() { Length = 0.42, Scope = LifetimeScope.Seconds };
+
+            string expected1 = @"{""length"":1.0,""scope"":""Hours""}";
+            string expected2 = @"{""length"":0.42,""scope"":""Seconds""}";
+
+            //act
+
+            string actual1 = JsonConvert.SerializeObject(lifetime1);
+            string actual2 = JsonConvert.SerializeObject(lifetime2);
+
+            //assert
+
+            Assert.AreEqual(expected1, actual1);
+            Assert.AreEqual(expected2, actual2);
         }
     }
 }

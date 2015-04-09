@@ -38,7 +38,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
         [Test]
         [Category("SensorEvents")]
-        public void Get_ReturnsSensorEventGETCollection_WithEventTimeSinceTimeLimitHoursBeforeUtcNow()
+        public void GetDefault_ReturnsSensorEventGETCollection_WithEventTimeSinceTimeLimitHoursBeforeUtcNow()
         {
             _mockSensorEventsService
                 .Setup(m => m.Query())
@@ -57,13 +57,30 @@ namespace CSM.ParkingData.Tests.SensorEvents
                 .Setup(m => m.GetLifetime())
                 .Returns(_referenceLifetime);
 
-            IHttpActionResult actionResult = _controller.Get();
+            IHttpActionResult actionResult = _controller.GetDefault();
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
 
             Assert.IsNotNull(contentResult);
             Assert.IsNotNull(contentResult.Content);
             Assert.AreEqual(2, contentResult.Content.Count());
             Assert.IsNull(contentResult.Content.FirstOrDefault(c => c.EventId == 3));
+        }
+
+        [Test]
+        [Category("SensorEvents")]
+        public void GetLifetime_ReturnsSensorEventLifetime()
+        {
+            _mockSensorEventsService
+                .Setup(m => m.GetLifetime())
+                .Returns(_referenceLifetime);
+
+            IHttpActionResult actionResult = _controller.GetLifetime();
+            var contentResult = actionResult as OkNegotiatedContentResult<SensorEventLifetime>;
+
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.AreEqual(_referenceLifetime.Length, contentResult.Content.Length);
+            Assert.AreEqual(_referenceLifetime.ScopeString, contentResult.Content.ScopeString);
         }
 
         [Test]

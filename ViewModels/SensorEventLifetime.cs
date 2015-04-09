@@ -6,10 +6,16 @@ namespace CSM.ParkingData.ViewModels
     [DataContract(Name = "lifetime", Namespace = "")]
     public class SensorEventLifetime
     {
-        [DataMember(Name="length")]
+        public LifetimeScope Scope { get; set; }
+
+        [DataMember(Name = "length")]
         public double Length { get; set; }
 
         [DataMember(Name = "scope")]
-        public LifetimeScope Scope { get; set; }
+        public string ScopeString
+        {
+            get { return Scope.ToString(); }
+            private set { ; }
+        }
     }
 }

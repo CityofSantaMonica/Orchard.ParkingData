@@ -39,7 +39,8 @@ namespace CSM.ParkingData.Controllers
         }
 
         [TrackAnalytics("Sensor Events GET")]
-        public IHttpActionResult Get()
+        [HttpGet]
+        public IHttpActionResult GetDefault()
         {
             var lifetime = _sensorEventsService.GetLifetime();
             var timeLimit = getLifetimeOffset(lifetime);
@@ -49,6 +50,14 @@ namespace CSM.ParkingData.Controllers
                                              .OrderByDescending(s => s.EventTime)
                                              .Select(_sensorEventsService.ConvertToViewModel);
             return Ok(events);
+        }
+
+        [TrackAnalytics("Sensor Events Lifetime GET")]
+        [HttpGet]
+        public IHttpActionResult GetLifetime()
+        {
+            var lifetime = _sensorEventsService.GetLifetime();
+            return Ok(lifetime);
         }
 
         [RequireBasicAuthentication]
