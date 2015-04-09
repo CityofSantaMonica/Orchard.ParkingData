@@ -71,12 +71,12 @@ namespace CSM.ParkingData.Services
         public SensorEventGET ConvertToViewModel(SensorEvent entity)
         {
             return new SensorEventGET() {
+                EventId = entity.TransmissionId,
                 EventTime = entity.EventTime,
                 EventType = entity.EventType,
                 MeterId = entity.MeteredSpace.MeterId,
                 ReceivedTime = entity.ReceivedTime,
-                SessionId = entity.SessionId,
-                TransmissionId = entity.TransmissionId,
+                SessionId = entity.SessionId
             };
         }
 

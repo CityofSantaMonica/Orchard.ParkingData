@@ -43,7 +43,7 @@ namespace CSM.ParkingData.Tests
                 .Setup(m => m.ConvertToViewModel(It.IsAny<SensorEvent>()))
                 .Returns<SensorEvent>(
                     se => new SensorEventGET {
-                        TransmissionId = se.TransmissionId,
+                        EventId = se.TransmissionId,
                         MeterId = (se.MeteredSpace ?? new MeteredSpace()).MeterId,
                         SessionId = se.SessionId,
                     }

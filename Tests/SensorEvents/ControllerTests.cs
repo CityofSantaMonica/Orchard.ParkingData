@@ -64,7 +64,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
             Assert.IsNotNull(contentResult);
             Assert.IsNotNull(contentResult.Content);
             Assert.AreEqual(2, contentResult.Content.Count());
-            Assert.IsNull(contentResult.Content.FirstOrDefault(c => c.TransmissionId == 3));
+            Assert.IsNull(contentResult.Content.FirstOrDefault(c => c.EventId == 3));
         }
 
         [Test]
@@ -82,7 +82,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
             Assert.IsNotNull(contentResult);
             Assert.IsNotNull(contentResult.Content);
-            Assert.AreEqual(transmissionId, contentResult.Content.TransmissionId);
+            Assert.AreEqual(transmissionId, contentResult.Content.EventId);
         }
 
         [Test]
@@ -150,7 +150,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
             //Assert.AreEqual(1, createdResult.RouteValues["id"]);
 
             Assert.IsNotNull(okResult.Content);
-            Assert.AreEqual(1, okResult.Content.TransmissionId);
+            Assert.AreEqual(1, okResult.Content.EventId);
             Assert.AreEqual(0, okResult.Content.SessionId);
             Assert.AreEqual("Pole1", okResult.Content.MeterId);
         }
