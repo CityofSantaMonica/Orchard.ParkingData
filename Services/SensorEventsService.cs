@@ -77,7 +77,6 @@ namespace CSM.ParkingData.Services
                 ReceivedTime = entity.ReceivedTime,
                 SessionId = entity.SessionId,
                 TransmissionId = entity.TransmissionId,
-                TransmissionTime = entity.TransmissionTime
             };
         }
 

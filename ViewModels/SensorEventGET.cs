@@ -23,8 +23,5 @@ namespace CSM.ParkingData.ViewModels
 
         [DataMember(Name = "transmission_id")]
         public long TransmissionId { get; set; }
-
-        [DataMember(Name = "transmission_time")]
-        public DateTime TransmissionTime { get; set; }
     }
 }
