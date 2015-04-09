@@ -17,8 +17,6 @@ namespace CSM.ParkingData.Services
         private readonly IRepository<SensorEvent> _sensorEventsRepo;
         private readonly ISiteService _siteService;
 
-        public ILogger Logger { get; set; }
-
         public SensorEventsService(
             IClock clock,
             IMeteredSpacesService meteredSpacesService,
@@ -29,8 +27,6 @@ namespace CSM.ParkingData.Services
             _meteredSpacesService = meteredSpacesService;
             _sensorEventsRepo = sensorEventsRepo;
             _siteService = siteService;
-
-            Logger = NullLogger.Instance;
         }
 
         public SensorEventLifetime GetLifetime()
@@ -46,7 +42,8 @@ namespace CSM.ParkingData.Services
 
             var lifetime = new SensorEventLifetime() {
                 Length = sensorEventsSettings.LifetimeLength,
-                Scope = sensorEventsSettings.LifetimeScope
+                Scope = sensorEventsSettings.LifetimeScope,
+                Since = getLifetimeSince(sensorEventsSettings.LifetimeLength, sensorEventsSettings.LifetimeScope)
             };
 
             return lifetime;
@@ -102,6 +99,27 @@ namespace CSM.ParkingData.Services
                 ReceivedTime = entity.ReceivedTime,
                 SessionId = entity.SessionId
             };
+        }
+
+        private DateTime getLifetimeSince(double length, LifetimeScope scope)
+        {
+            DateTime since = DateTime.MaxValue;
+            double lengthModifier = -1 * length;
+
+            switch (scope)
+            {
+                case LifetimeScope.Hours:
+                    since = _clock.UtcNow.AddHours(lengthModifier);
+                    break;
+                case LifetimeScope.Minutes:
+                    since = _clock.UtcNow.AddSeconds(lengthModifier);
+                    break;
+                case LifetimeScope.Seconds:
+                    since = _clock.UtcNow.AddMinutes(lengthModifier);
+                    break;
+            }
+
+            return since;
         }
     }
 }

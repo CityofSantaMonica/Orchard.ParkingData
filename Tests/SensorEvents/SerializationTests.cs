@@ -88,11 +88,13 @@ namespace CSM.ParkingData.Tests.SensorEvents
         {
             //arrange
 
-            var lifetime1 = new SensorEventLifetime() { Length = 1.0, Scope = LifetimeScope.Hours };
-            var lifetime2 = new SensorEventLifetime() { Length = 0.42, Scope = LifetimeScope.Seconds };
+            DateTime since = new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-            string expected1 = @"{""length"":1.0,""scope"":""Hours""}";
-            string expected2 = @"{""length"":0.42,""scope"":""Seconds""}";
+            var lifetime1 = new SensorEventLifetime() { Length = 1.0, Scope = LifetimeScope.Hours, Since = since };
+            var lifetime2 = new SensorEventLifetime() { Length = 0.42, Scope = LifetimeScope.Seconds, Since = since };
+
+            string expected1 = @"{""length"":1.0,""scope"":""Hours"",""since"":""2015-01-01T00:00:00Z""}";
+            string expected2 = @"{""length"":0.42,""scope"":""Seconds"",""since"":""2015-01-01T00:00:00Z""}";
 
             //act
 

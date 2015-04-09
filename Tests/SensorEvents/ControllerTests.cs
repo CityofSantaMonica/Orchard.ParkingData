@@ -15,7 +15,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
     public class ControllerTests : ControllerTestsBase
     {
         private static DateTime _referenceDateTime = new DateTime(2015, 01, 01, 0, 0, 0, DateTimeKind.Utc);
-        private static SensorEventLifetime _referenceLifetime = new SensorEventLifetime() { Length = 1.0, Scope = LifetimeScope.Hours };
+        private static SensorEventLifetime _referenceLifetime = new SensorEventLifetime() { Length = 1.0, Scope = LifetimeScope.Hours, Since = _referenceDateTime };
 
         private SensorEventsController _controller;
         private Mock<IClock> _mockClock;
@@ -81,6 +81,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
             Assert.IsNotNull(contentResult.Content);
             Assert.AreEqual(_referenceLifetime.Length, contentResult.Content.Length);
             Assert.AreEqual(_referenceLifetime.ScopeString, contentResult.Content.ScopeString);
+            Assert.AreEqual(_referenceLifetime.Since, contentResult.Content.Since);
         }
 
         [Test]

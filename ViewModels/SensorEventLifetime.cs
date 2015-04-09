@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 using CSM.ParkingData.Models;
 
 namespace CSM.ParkingData.ViewModels
@@ -17,5 +18,8 @@ namespace CSM.ParkingData.ViewModels
             get { return Scope.ToString(); }
             private set { ; }
         }
+
+        [DataMember(Name = "since")]
+        public DateTime Since { get; set; }
     }
 }
