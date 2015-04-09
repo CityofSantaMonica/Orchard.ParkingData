@@ -17,7 +17,7 @@ namespace CSM.ParkingData.Models
 
         public virtual MeteredSpace MeteredSpace { get; set; }
 
-        public virtual DateTime ReceivedTime { get; set; }
+        public virtual DateTime? ReceivedTime { get; set; }
 
         public virtual long SessionId { get; set; }
 

@@ -16,7 +16,7 @@ namespace CSM.ParkingData.ViewModels
         public string MeterId { get; set; }
 
         [DataMember(Name = "received_time")]
-        public DateTime ReceivedTime { get; set; }
+        public DateTime? ReceivedTime { get; set; }
 
         [DataMember(Name = "session_id")]
         public long SessionId { get; set; }

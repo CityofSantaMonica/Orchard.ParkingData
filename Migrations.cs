@@ -57,12 +57,6 @@ namespace CSM.ParkingData
                     .AddColumn<DateTime>("ReceivedTime")
             );
 
-            foreach (var entity in _sensorEventsRepository.Table)
-            {
-                entity.ReceivedTime = entity.TransmissionTime;
-                _sensorEventsRepository.Update(entity);
-            }
-
             return 2;
         }
     }
