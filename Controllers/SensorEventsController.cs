@@ -52,7 +52,8 @@ namespace CSM.ParkingData.Controllers
             }
             else
             {
-                var timeLimit = _clock.UtcNow.AddHours(-1 * _sensorEventsService.GetLifetimeHours());
+                var lifetime = _sensorEventsService.GetLifetime();
+                var timeLimit = getLifetimeOffset(lifetime);
 
                 var events = _sensorEventsService.Query()
                                                  .Where(s => timeLimit <= s.EventTime)
@@ -103,6 +104,27 @@ namespace CSM.ParkingData.Controllers
             //);
 
             return Ok(_sensorEventsService.ConvertToViewModel(entity));
+        }
+
+        private DateTime getLifetimeOffset(SensorEventLifetime lifetime)
+        {
+            DateTime offset = DateTime.MaxValue;
+            double lengthModifier = -1 * lifetime.Length;
+
+            switch (lifetime.Scope)
+            {
+                case LifetimeScope.Hours:
+                    offset = _clock.UtcNow.AddHours(lengthModifier);
+                    break;
+                case LifetimeScope.Minutes:
+                    offset = _clock.UtcNow.AddSeconds(lengthModifier);
+                    break;
+                case LifetimeScope.Seconds:
+                    offset = _clock.UtcNow.AddMinutes(lengthModifier);
+                    break;
+            }
+
+            return offset;
         }
     }
 }

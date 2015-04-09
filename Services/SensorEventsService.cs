@@ -33,9 +33,33 @@ namespace CSM.ParkingData.Services
             Logger = NullLogger.Instance;
         }
 
+        public SensorEventLifetime GetLifetime()
+        {
+            var siteSettings = _siteService.GetSiteSettings();
+            var sensorEventsSettings = siteSettings.As<SensorEventsSettings>();
+
+            if (sensorEventsSettings == null)
+            {
+                sensorEventsSettings = new SensorEventsSettings();
+                sensorEventsSettings.ContentItem = siteSettings.ContentItem;
+            }
+
+            var lifetime = new SensorEventLifetime() {
+                Length = sensorEventsSettings.LifetimeLength,
+                Scope = sensorEventsSettings.LifetimeScope
+            };
+
+            return lifetime;
+        }
+
         public SensorEvent Get(long transmissionId)
         {
             return _sensorEventsRepo.Get(x => x.TransmissionId == transmissionId);
+        }
+
+        public IQueryable<SensorEvent> Query()
+        {
+            return _sensorEventsRepo.Table;
         }
 
         public SensorEvent AddOrUpdate(SensorEventPOST viewModel)
@@ -78,19 +102,6 @@ namespace CSM.ParkingData.Services
                 ReceivedTime = entity.ReceivedTime,
                 SessionId = entity.SessionId
             };
-        }
-
-        public IQueryable<SensorEvent> Query()
-        {
-            return _sensorEventsRepo.Table;
-        }
-
-        public double GetLifetimeHours()
-        {
-            var siteSettings = _siteService.GetSiteSettings();
-            var sensorEventsSettings = siteSettings.As<SensorEventsSettings>();
-
-            return sensorEventsSettings != null ? sensorEventsSettings.LifetimeHours : 0.0;
         }
     }
 }

@@ -39,24 +39,24 @@ namespace CSM.ParkingData.Tests.SensorEvents
         [Category("SensorEvents")]
         public void Get_GivenNoId_ReturnsSensorEventGETCollection_WithEventTimeSinceTimeLimitHoursBeforeUtcNow()
         {
-            double lifeTimeHours = 1.0;
+            SensorEventLifetime lifetime = new SensorEventLifetime() { Length = 1.0, Scope = LifetimeScope.Hours };
 
             _mockSensorEventsService
                 .Setup(m => m.Query())
                 .Returns(
                     new[] {
                         //EventTime in the "future" => should be included in the results
-                        new SensorEvent { TransmissionId = 1, EventTime = _referenceDateTime.AddHours(lifeTimeHours * 1) },
+                        new SensorEvent { TransmissionId = 1, EventTime = _referenceDateTime.AddHours(lifetime.Length * 1) },
                         //EventTime in the "future" => should be included in the results
-                        new SensorEvent { TransmissionId = 2, EventTime = _referenceDateTime.AddHours(lifeTimeHours * 2) },
+                        new SensorEvent { TransmissionId = 2, EventTime = _referenceDateTime.AddHours(lifetime.Length * 2) },
                         //EventTime in the "past" by more than lifeTimeHours => should be excluded
-                        new SensorEvent { TransmissionId = 3, EventTime = _referenceDateTime.AddHours(lifeTimeHours * -2) }
+                        new SensorEvent { TransmissionId = 3, EventTime = _referenceDateTime.AddHours(lifetime.Length * -2) }
                     }.AsQueryable()
                 );
 
             _mockSensorEventsService
-                .Setup(m => m.GetLifetimeHours())
-                .Returns(lifeTimeHours);
+                .Setup(m => m.GetLifetime())
+                .Returns(lifetime);
 
             IHttpActionResult actionResult = _controller.Get();
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
