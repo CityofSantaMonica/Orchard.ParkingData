@@ -15,6 +15,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
     public class ControllerTests : ControllerTestsBase
     {
         private static DateTime _referenceDateTime = new DateTime(2015, 01, 01, 0, 0, 0, DateTimeKind.Utc);
+        private static SensorEventLifetime _referenceLifetime = new SensorEventLifetime() { Length = 1.0, Scope = LifetimeScope.Hours };
 
         private SensorEventsController _controller;
         private Mock<IClock> _mockClock;
@@ -37,26 +38,24 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
         [Test]
         [Category("SensorEvents")]
-        public void Get_GivenNoId_ReturnsSensorEventGETCollection_WithEventTimeSinceTimeLimitHoursBeforeUtcNow()
+        public void Get_ReturnsSensorEventGETCollection_WithEventTimeSinceTimeLimitHoursBeforeUtcNow()
         {
-            SensorEventLifetime lifetime = new SensorEventLifetime() { Length = 1.0, Scope = LifetimeScope.Hours };
-
             _mockSensorEventsService
                 .Setup(m => m.Query())
                 .Returns(
                     new[] {
                         //EventTime in the "future" => should be included in the results
-                        new SensorEvent { TransmissionId = 1, EventTime = _referenceDateTime.AddHours(lifetime.Length * 1) },
+                        new SensorEvent { TransmissionId = 1, EventTime = _referenceDateTime.AddHours(_referenceLifetime.Length * 1) },
                         //EventTime in the "future" => should be included in the results
-                        new SensorEvent { TransmissionId = 2, EventTime = _referenceDateTime.AddHours(lifetime.Length * 2) },
+                        new SensorEvent { TransmissionId = 2, EventTime = _referenceDateTime.AddHours(_referenceLifetime.Length * 2) },
                         //EventTime in the "past" by more than lifeTimeHours => should be excluded
-                        new SensorEvent { TransmissionId = 3, EventTime = _referenceDateTime.AddHours(lifetime.Length * -2) }
+                        new SensorEvent { TransmissionId = 3, EventTime = _referenceDateTime.AddHours(_referenceLifetime.Length * -2) }
                     }.AsQueryable()
                 );
 
             _mockSensorEventsService
                 .Setup(m => m.GetLifetime())
-                .Returns(lifetime);
+                .Returns(_referenceLifetime);
 
             IHttpActionResult actionResult = _controller.Get();
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
@@ -65,33 +64,6 @@ namespace CSM.ParkingData.Tests.SensorEvents
             Assert.IsNotNull(contentResult.Content);
             Assert.AreEqual(2, contentResult.Content.Count());
             Assert.IsNull(contentResult.Content.FirstOrDefault(c => c.EventId == 3));
-        }
-
-        [Test]
-        [Category("SensorEvents")]
-        public void Get_GivenId_ReturnsSensorEventGET()
-        {
-            long transmissionId = 42;
-
-            _mockSensorEventsService
-                .Setup(m => m.Get(transmissionId))
-                .Returns(new SensorEvent { TransmissionId = transmissionId });
-
-            IHttpActionResult actionResult = _controller.Get(transmissionId);
-            var contentResult = actionResult as OkNegotiatedContentResult<SensorEventGET>;
-
-            Assert.IsNotNull(contentResult);
-            Assert.IsNotNull(contentResult.Content);
-            Assert.AreEqual(transmissionId, contentResult.Content.EventId);
-        }
-
-        [Test]
-        [Category("SensorEvents")]
-        public void Get_GivenBadId_ReturnsNotFound()
-        {
-            IHttpActionResult actionResult = _controller.Get(-100);
-
-            Assert.IsInstanceOf<NotFoundResult>(actionResult);
         }
 
         [Test]

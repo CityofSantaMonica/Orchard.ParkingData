@@ -39,28 +39,16 @@ namespace CSM.ParkingData.Controllers
         }
 
         [TrackAnalytics("Sensor Events GET")]
-        public IHttpActionResult Get(long? id = null)
+        public IHttpActionResult Get()
         {
-            if (id.HasValue)
-            {
-                var theEvent = _sensorEventsService.Get(id.Value);
+            var lifetime = _sensorEventsService.GetLifetime();
+            var timeLimit = getLifetimeOffset(lifetime);
 
-                if (theEvent == null)
-                    return NotFound();
-                else
-                    return Ok(_sensorEventsService.ConvertToViewModel(theEvent));
-            }
-            else
-            {
-                var lifetime = _sensorEventsService.GetLifetime();
-                var timeLimit = getLifetimeOffset(lifetime);
-
-                var events = _sensorEventsService.Query()
-                                                 .Where(s => timeLimit <= s.EventTime)
-                                                 .OrderByDescending(s => s.EventTime)
-                                                 .Select(_sensorEventsService.ConvertToViewModel);
-                return Ok(events);
-            }
+            var events = _sensorEventsService.Query()
+                                             .Where(s => timeLimit <= s.EventTime)
+                                             .OrderByDescending(s => s.EventTime)
+                                             .Select(_sensorEventsService.ConvertToViewModel);
+            return Ok(events);
         }
 
         [RequireBasicAuthentication]

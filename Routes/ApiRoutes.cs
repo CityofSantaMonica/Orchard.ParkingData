@@ -13,13 +13,12 @@ namespace CSM.ParkingData.Routes
         {
             return new[] {
                 new HttpRouteDescriptor {
-                    Name = "SensorEvents",
+                    Name = "SensorEventsDefault",
                     Priority = 5,
-                    RouteTemplate = "sensor_events/{id}",
+                    RouteTemplate = "sensor_events",
                     Defaults = new {
                         area = _area,
-                        controller = "SensorEvents",
-                        id = RouteParameter.Optional
+                        controller = "SensorEvents"
                     }
                 },
                 new HttpRouteDescriptor() {
