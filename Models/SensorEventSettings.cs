@@ -2,7 +2,7 @@
 
 namespace CSM.ParkingData.Models
 {
-    public enum LifetimeScope
+    public enum LifetimeUnits
     {
         Hours,
         Minutes,
@@ -17,10 +17,10 @@ namespace CSM.ParkingData.Models
             set { this.Store(x => x.LifetimeLength, value); }
         }
 
-        public LifetimeScope LifetimeScope
+        public LifetimeUnits LifetimeUnits
         {
-            get { return this.Retrieve(x => x.LifetimeScope, LifetimeScope.Hours); }
-            set { this.Store(x => x.LifetimeScope, value); }
+            get { return this.Retrieve(x => x.LifetimeUnits, LifetimeUnits.Hours); }
+            set { this.Store(x => x.LifetimeUnits, value); }
         }
     }
 }

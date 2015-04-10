@@ -42,8 +42,8 @@ namespace CSM.ParkingData.Services
 
             var lifetime = new SensorEventLifetime() {
                 Length = sensorEventsSettings.LifetimeLength,
-                Scope = sensorEventsSettings.LifetimeScope,
-                Since = getLifetimeSince(sensorEventsSettings.LifetimeLength, sensorEventsSettings.LifetimeScope)
+                Since = getLifetimeSince(sensorEventsSettings.LifetimeLength, sensorEventsSettings.LifetimeUnits),
+                Units = sensorEventsSettings.LifetimeUnits
             };
 
             return lifetime;
@@ -101,20 +101,20 @@ namespace CSM.ParkingData.Services
             };
         }
 
-        private DateTime getLifetimeSince(double length, LifetimeScope scope)
+        private DateTime getLifetimeSince(double length, LifetimeUnits units)
         {
             DateTime since = DateTime.MaxValue;
             double lengthModifier = -1 * length;
 
-            switch (scope)
+            switch (units)
             {
-                case LifetimeScope.Hours:
+                case LifetimeUnits.Hours:
                     since = _clock.UtcNow.AddHours(lengthModifier);
                     break;
-                case LifetimeScope.Minutes:
+                case LifetimeUnits.Minutes:
                     since = _clock.UtcNow.AddSeconds(lengthModifier);
                     break;
-                case LifetimeScope.Seconds:
+                case LifetimeUnits.Seconds:
                     since = _clock.UtcNow.AddMinutes(lengthModifier);
                     break;
             }
