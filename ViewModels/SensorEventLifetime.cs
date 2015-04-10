@@ -18,7 +18,7 @@ namespace CSM.ParkingData.ViewModels
         [DataMember(Name = "units")]
         public string UnitsString
         {
-            get { return Units.ToString(); }
+            get { return Units.ToString().ToLower(); }
             private set { ; }
         }
     }
