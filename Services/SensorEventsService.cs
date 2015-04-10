@@ -4,7 +4,6 @@ using CSM.ParkingData.Models;
 using CSM.ParkingData.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Data;
-using Orchard.Logging;
 using Orchard.Services;
 using Orchard.Settings;
 
@@ -42,8 +41,8 @@ namespace CSM.ParkingData.Services
 
             var lifetime = new SensorEventLifetime() {
                 Length = sensorEventsSettings.LifetimeLength,
-                Since = getLifetimeSince(sensorEventsSettings.LifetimeLength, sensorEventsSettings.LifetimeUnits),
-                Units = sensorEventsSettings.LifetimeUnits
+                Units = sensorEventsSettings.LifetimeUnits,
+                Since = getLifetimeSince(sensorEventsSettings.LifetimeLength, sensorEventsSettings.LifetimeUnits)
             };
 
             return lifetime;

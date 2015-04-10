@@ -13,6 +13,19 @@ namespace CSM.ParkingData.Routes
         {
             return new[] {
                 new HttpRouteDescriptor {
+                    Name = "SensorEventsSince",
+                    Priority = 6,
+                    RouteTemplate = "sensor_events/since/{datetime}",
+                    Defaults = new {
+                        area = _area,
+                        controller = "SensorEvents",
+                        action = "GetSince"
+                    },
+                    Constraints = new {
+                        datetime = @"\d{8}T\d{6}Z"
+                    }
+                },
+                new HttpRouteDescriptor {
                     Name = "SensorEventsLifetime",
                     Priority = 6,
                     RouteTemplate = "sensor_events/lifetime",
