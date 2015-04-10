@@ -11,7 +11,6 @@ using CSM.ParkingData.Services;
 using CSM.ParkingData.ViewModels;
 using CSM.WebApi.Filters;
 using Orchard.Logging;
-using Orchard.Settings;
 
 namespace CSM.ParkingData.Controllers
 {
@@ -19,23 +18,19 @@ namespace CSM.ParkingData.Controllers
     public class SensorEventsController : ApiController
     {
         private readonly ISensorEventsService _sensorEventsService;
-        private readonly ISiteService _siteService;
 
         public ILogger Logger { get; set; }
 
-        public SensorEventsController(
-            ISensorEventsService sensorEventsService,
-            ISiteService siteService)
+        public SensorEventsController(ISensorEventsService sensorEventsService)
         {
             _sensorEventsService = sensorEventsService;
-            _siteService = siteService;
 
             Logger = NullLogger.Instance;
         }
 
         [TrackAnalytics("GET Sensor Events Since")]
         [HttpGet]
-        public IHttpActionResult GetSince(string datetime)
+        public IHttpActionResult Get(string datetime)
         {
             DateTime datetimeParsed;
             if (!DateTime.TryParseExact(datetime, "yyyyMMddTHHmmssZ", null, DateTimeStyles.AdjustToUniversal, out datetimeParsed))
@@ -54,17 +49,9 @@ namespace CSM.ParkingData.Controllers
             return Ok(events);
         }
 
-        [TrackAnalytics("GET Sensor Events Lifetime")]
-        [HttpGet]
-        public IHttpActionResult GetLifetime()
-        {
-            var lifetime = _sensorEventsService.GetLifetime();
-            return Ok(lifetime);
-        }
-
         [TrackAnalytics("GET Sensor Events")]
         [HttpGet]
-        public IHttpActionResult GetDefault()
+        public IHttpActionResult Get()
         {
             var lifetime = _sensorEventsService.GetLifetime();
             var events = getSince(lifetime.Since);

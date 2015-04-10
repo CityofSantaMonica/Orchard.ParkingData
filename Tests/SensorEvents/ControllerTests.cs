@@ -13,10 +13,6 @@ namespace CSM.ParkingData.Tests.SensorEvents
 {
     public class ControllerTests : ControllerTestsBase
     {
-        private static readonly string _utcISO8061BasicFormat = "yyyyMMddTHHmmssZ";
-        private static readonly DateTime _referenceDateTime = new DateTime(2015, 01, 01, 0, 0, 0, DateTimeKind.Utc);
-        private static readonly SensorEventLifetime _referenceLifetime = new SensorEventLifetime() { Length = 1.0, Units = LifetimeUnits.Hours, Since = _referenceDateTime };
-
         private SensorEventsController _controller;
 
         [SetUp]
@@ -24,39 +20,10 @@ namespace CSM.ParkingData.Tests.SensorEvents
         {
             base.TestsSetup();
 
-            _controller = new SensorEventsController(_mockSensorEventsService.Object, _mockSiteSevice.Object) {
+            _controller = new SensorEventsController(_mockSensorEventsService.Object) {
                 Request = _mockRequest,
                 RequestContext = _mockRequestContext
             };
-        }
-
-        private void setupLifetime()
-        {
-            _mockSensorEventsService
-                .Setup(m => m.GetLifetime())
-                .Returns(_referenceLifetime);
-        }
-
-        private void setupQuery()
-        {
-            setupLifetime();
-
-            _mockSensorEventsService
-                .Setup(m => m.Query())
-                .Returns(
-                    new[] {
-                        //EventTime in the "future" => should be included in the results
-                        new SensorEvent { TransmissionId = 1, EventTime = _referenceDateTime.AddHours(_referenceLifetime.Length * 1) },
-                        //EventTime in the "future" => should be included in the results
-                        new SensorEvent { TransmissionId = 2, EventTime = _referenceDateTime.AddHours(_referenceLifetime.Length * 2) },
-                        //EventTime in the "past" by more than lifetime => should be excluded
-                        new SensorEvent { TransmissionId = 3, EventTime = _referenceDateTime.AddHours(_referenceLifetime.Length * -4) }
-                    }.AsQueryable()
-                );
-
-            _mockSensorEventsService
-                .Setup(m => m.ConvertToViewModel(It.IsAny<SensorEvent>()))
-                .Returns<SensorEvent>(s => new SensorEventGET() { EventId = s.TransmissionId, EventTime = s.EventTime });
         }
 
         //nothing
@@ -77,7 +44,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
         [Category("SensorEvents")]
         public void GetSince_RequiresUTCISO8061_yyyyMMddTHHmmssZ(string argument)
         {
-            IHttpActionResult actionResult = _controller.GetSince(argument);
+            IHttpActionResult actionResult = _controller.Get(argument);
             var contentResult = actionResult as BadRequestErrorMessageResult;
 
             Assert.IsNotNull(contentResult);
@@ -88,11 +55,11 @@ namespace CSM.ParkingData.Tests.SensorEvents
         [Category("SensorEvents")]
         public void GetSince_RequiresArgument_NotBeforeLifetime()
         {
-            setupLifetime();
+            base.setupLifetime();
 
             string argumentBeforeLifetime = _referenceLifetime.Since.AddHours(-1).ToString(_utcISO8061BasicFormat);
 
-            IHttpActionResult actionResult = _controller.GetSince(argumentBeforeLifetime);
+            IHttpActionResult actionResult = _controller.Get(argumentBeforeLifetime);
             var contentResult = actionResult as BadRequestErrorMessageResult;
 
             Assert.IsNotNull(contentResult);
@@ -103,11 +70,11 @@ namespace CSM.ParkingData.Tests.SensorEvents
         [Category("SensorEvents")]
         public void GetSince_ReturnsSensorEventGETCollection_WithEventTimeSinceArgument()
         {
-            setupQuery();
+            base.setupQuery();
 
             string sinceArgument = _referenceLifetime.Since.AddHours(_referenceLifetime.Length / 2).ToString(_utcISO8061BasicFormat);
 
-            IHttpActionResult actionResult = _controller.GetSince(sinceArgument);
+            IHttpActionResult actionResult = _controller.Get(sinceArgument);
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
 
             Assert.IsNotNull(contentResult);
@@ -120,11 +87,11 @@ namespace CSM.ParkingData.Tests.SensorEvents
         [Category("SensorEvents")]
         public void GetSince_ReturnsSensorEventGETCollection_WithMostRecentFirst()
         {
-            setupQuery();
+            base.setupQuery();
 
             string sinceArgument = _referenceLifetime.Since.AddHours(_referenceLifetime.Length / 2).ToString(_utcISO8061BasicFormat);
 
-            IHttpActionResult actionResult = _controller.GetSince(sinceArgument);
+            IHttpActionResult actionResult = _controller.Get(sinceArgument);
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
             var content = contentResult.Content;
 
@@ -133,28 +100,11 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
         [Test]
         [Category("SensorEvents")]
-        public void GetLifetime_ReturnsSensorEventLifetime()
-        {
-            setupLifetime();
-
-            IHttpActionResult actionResult = _controller.GetLifetime();
-            var contentResult = actionResult as OkNegotiatedContentResult<SensorEventLifetime>;
-
-            Assert.IsNotNull(contentResult);
-            Assert.IsNotNull(contentResult.Content);
-            Assert.AreEqual(_referenceLifetime.Length, contentResult.Content.Length);
-            Assert.AreEqual(DateTimeKind.Utc, contentResult.Content.Since.Kind);
-            Assert.AreEqual(_referenceLifetime.Since, contentResult.Content.Since);
-            Assert.AreEqual(_referenceLifetime.Units, contentResult.Content.Units);
-        }
-
-        [Test]
-        [Category("SensorEvents")]
         public void GetDefault_ReturnsSensorEventGETCollection_WithEventTimeSinceLifetime()
         {
-            setupQuery();
+            base.setupQuery();
 
-            IHttpActionResult actionResult = _controller.GetDefault();
+            IHttpActionResult actionResult = _controller.Get();
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
 
             Assert.IsNotNull(contentResult);
@@ -167,9 +117,9 @@ namespace CSM.ParkingData.Tests.SensorEvents
         [Category("SensorEvents")]
         public void GetDefault_ReturnsSensorEventGETCollection_WithMostRecentFirst()
         {
-            setupQuery();
+            base.setupQuery();
 
-            IHttpActionResult actionResult = _controller.GetDefault();
+            IHttpActionResult actionResult = _controller.Get();
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
             var content = contentResult.Content;
 

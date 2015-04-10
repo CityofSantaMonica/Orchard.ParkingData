@@ -1,4 +1,6 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Linq;
+using System.Net.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Routing;
 using CSM.ParkingData.Models;
@@ -13,6 +15,10 @@ namespace CSM.ParkingData.Tests
     [TestFixture]
     public abstract class ControllerTestsBase
     {
+        protected static readonly string _utcISO8061BasicFormat = "yyyyMMddTHHmmssZ";
+        protected static readonly DateTime _referenceDateTime = new DateTime(2015, 01, 01, 0, 0, 0, DateTimeKind.Utc);
+        protected static readonly SensorEventLifetime _referenceLifetime = new SensorEventLifetime() { Length = 1.0, Units = LifetimeUnits.Hours, Since = _referenceDateTime };
+
         protected HttpRequestMessage _mockRequest;
         protected HttpRequestContext _mockRequestContext;
         protected Mock<ISensorEventsService> _mockSensorEventsService;
@@ -66,6 +72,35 @@ namespace CSM.ParkingData.Tests
             _mockSiteSevice
                 .Setup(m => m.GetSiteSettings())
                 .Returns(mockSettings.Object);
+        }
+
+        protected void setupLifetime()
+        {
+            _mockSensorEventsService
+                .Setup(m => m.GetLifetime())
+                .Returns(_referenceLifetime);
+        }
+
+        protected void setupQuery()
+        {
+            setupLifetime();
+
+            _mockSensorEventsService
+                .Setup(m => m.Query())
+                .Returns(
+                    new[] {
+                        //EventTime in the "future" => should be included in the results
+                        new SensorEvent { TransmissionId = 1, EventTime = _referenceDateTime.AddHours(_referenceLifetime.Length * 1) },
+                        //EventTime in the "future" => should be included in the results
+                        new SensorEvent { TransmissionId = 2, EventTime = _referenceDateTime.AddHours(_referenceLifetime.Length * 2) },
+                        //EventTime in the "past" by more than lifetime => should be excluded
+                        new SensorEvent { TransmissionId = 3, EventTime = _referenceDateTime.AddHours(_referenceLifetime.Length * -4) }
+                    }.AsQueryable()
+                );
+
+            _mockSensorEventsService
+                .Setup(m => m.ConvertToViewModel(It.IsAny<SensorEvent>()))
+                .Returns<SensorEvent>(s => new SensorEventGET() { EventId = s.TransmissionId, EventTime = s.EventTime });
         }
     }
 }
