@@ -4,7 +4,6 @@ using CSM.ParkingData.Models;
 using CSM.ParkingData.ViewModels;
 using Orchard.ContentManagement;
 using Orchard.Data;
-using Orchard.Logging;
 using Orchard.Services;
 using Orchard.Settings;
 
@@ -17,8 +16,6 @@ namespace CSM.ParkingData.Services
         private readonly IRepository<SensorEvent> _sensorEventsRepo;
         private readonly ISiteService _siteService;
 
-        public ILogger Logger { get; set; }
-
         public SensorEventsService(
             IClock clock,
             IMeteredSpacesService meteredSpacesService,
@@ -29,13 +26,36 @@ namespace CSM.ParkingData.Services
             _meteredSpacesService = meteredSpacesService;
             _sensorEventsRepo = sensorEventsRepo;
             _siteService = siteService;
+        }
 
-            Logger = NullLogger.Instance;
+        public SensorEventLifetime GetLifetime()
+        {
+            var siteSettings = _siteService.GetSiteSettings();
+            var sensorEventsSettings = siteSettings.As<SensorEventsSettings>();
+
+            if (sensorEventsSettings == null)
+            {
+                sensorEventsSettings = new SensorEventsSettings();
+                sensorEventsSettings.ContentItem = siteSettings.ContentItem;
+            }
+
+            var lifetime = new SensorEventLifetime() {
+                Length = sensorEventsSettings.LifetimeLength,
+                Units = sensorEventsSettings.LifetimeUnits,
+                Since = getLifetimeSince(sensorEventsSettings.LifetimeLength, sensorEventsSettings.LifetimeUnits)
+            };
+
+            return lifetime;
         }
 
         public SensorEvent Get(long transmissionId)
         {
             return _sensorEventsRepo.Get(x => x.TransmissionId == transmissionId);
+        }
+
+        public IQueryable<SensorEvent> Query()
+        {
+            return _sensorEventsRepo.Table;
         }
 
         public SensorEvent AddOrUpdate(SensorEventPOST viewModel)
@@ -80,17 +100,25 @@ namespace CSM.ParkingData.Services
             };
         }
 
-        public IQueryable<SensorEvent> Query()
+        private DateTime getLifetimeSince(double length, LifetimeUnits units)
         {
-            return _sensorEventsRepo.Table;
-        }
+            DateTime since = DateTime.MaxValue;
+            double lengthModifier = -1 * length;
 
-        public double GetLifetimeHours()
-        {
-            var siteSettings = _siteService.GetSiteSettings();
-            var sensorEventsSettings = siteSettings.As<SensorEventsSettings>();
+            switch (units)
+            {
+                case LifetimeUnits.Hours:
+                    since = _clock.UtcNow.AddHours(lengthModifier);
+                    break;
+                case LifetimeUnits.Minutes:
+                    since = _clock.UtcNow.AddSeconds(lengthModifier);
+                    break;
+                case LifetimeUnits.Seconds:
+                    since = _clock.UtcNow.AddMinutes(lengthModifier);
+                    break;
+            }
 
-            return sensorEventsSettings != null ? sensorEventsSettings.LifetimeHours : 0.0;
+            return since;
         }
     }
 }

@@ -142,6 +142,7 @@
     <Compile Include="ViewModels\MeteredSpacePOST.cs" />
     <Compile Include="ViewModels\MeteredSpacePOSTCollection.cs" />
     <Compile Include="ViewModels\SensorEventGET.cs" />
+    <Compile Include="ViewModels\SensorEventLifetime.cs" />
     <Compile Include="ViewModels\SensorEventMeteredSpacePOST.cs" />
     <Compile Include="ViewModels\SensorEventPOST.cs" />
   </ItemGroup>

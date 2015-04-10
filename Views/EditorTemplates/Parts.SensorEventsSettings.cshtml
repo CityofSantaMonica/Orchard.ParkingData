@@ -3,7 +3,8 @@
 <h2>Sensor Events Settings</h2>
 
 <fieldset>
-    @Html.LabelFor(m => m.LifetimeHours, T("Lifetime (hours)"))
-    @Html.TextBoxFor(m => m.LifetimeHours, new { @class = "text medium" })
-    <span class="hint">This is the number of hours after a sensor event's <code>EventTime</code> that the sensor event is available from the public API.</span>
+    @Html.LabelFor(m => m.LifetimeLength, T("Lifetime"))
+    @Html.TextBoxFor(m => m.LifetimeLength, new { @class = "text small" })
+    @Html.EnumDropDownListFor(m => m.LifetimeUnits)
+    <span class="hint">This is the length of time after a sensor event's <code>EventTime</code> that the sensor event is available from the public API.</span>
 </fieldset>

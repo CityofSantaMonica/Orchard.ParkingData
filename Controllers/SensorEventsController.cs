@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
@@ -8,9 +10,7 @@ using CSM.ParkingData.Models;
 using CSM.ParkingData.Services;
 using CSM.ParkingData.ViewModels;
 using CSM.WebApi.Filters;
-using Microsoft.WindowsAzure;
 using Orchard.Logging;
-using Orchard.Services;
 using Orchard.Settings;
 
 namespace CSM.ParkingData.Controllers
@@ -18,54 +18,63 @@ namespace CSM.ParkingData.Controllers
     [EnableCors("*", null, "GET")]
     public class SensorEventsController : ApiController
     {
-        static string analyticsId = CloudConfigurationManager.GetSetting("GoogleAnalyticsId");
-
-        private readonly IClock _clock;
         private readonly ISensorEventsService _sensorEventsService;
         private readonly ISiteService _siteService;
 
         public ILogger Logger { get; set; }
 
         public SensorEventsController(
-            IClock clock,
             ISensorEventsService sensorEventsService,
             ISiteService siteService)
         {
-            _clock = clock;
             _sensorEventsService = sensorEventsService;
             _siteService = siteService;
 
             Logger = NullLogger.Instance;
         }
 
-        [TrackAnalytics("Sensor Events GET")]
-        public IHttpActionResult Get(long? id = null)
+        [TrackAnalytics("GET Sensor Events Since")]
+        [HttpGet]
+        public IHttpActionResult GetSince(string datetime)
         {
-            if (id.HasValue)
+            DateTime datetimeParsed;
+            if (!DateTime.TryParseExact(datetime, "yyyyMMddTHHmmssZ", null, DateTimeStyles.AdjustToUniversal, out datetimeParsed))
             {
-                var theEvent = _sensorEventsService.Get(id.Value);
-
-                if (theEvent == null)
-                    return NotFound();
-                else
-                    return Ok(_sensorEventsService.ConvertToViewModel(theEvent));
+                return BadRequest(String.Format("'{0}' could not be interpreted as an UTC ISO 8061 basic formatted DateTime.", datetime));
             }
-            else
+
+            var lifetime = _sensorEventsService.GetLifetime();
+
+            if (datetimeParsed < lifetime.Since)
             {
-                var timeLimit = _clock.UtcNow.AddHours(-1 * _sensorEventsService.GetLifetimeHours());
-
-                var events = _sensorEventsService.Query()
-                                                 .Where(s => timeLimit <= s.EventTime)
-                                                 .OrderByDescending(s => s.EventTime)
-                                                 .Select(_sensorEventsService.ConvertToViewModel);
-                return Ok(events);
+                return BadRequest("The provided datetime was earlier than the allowed lifetime.");
             }
+
+            var events = getSince(datetimeParsed);
+            return Ok(events);
+        }
+
+        [TrackAnalytics("GET Sensor Events Lifetime")]
+        [HttpGet]
+        public IHttpActionResult GetLifetime()
+        {
+            var lifetime = _sensorEventsService.GetLifetime();
+            return Ok(lifetime);
+        }
+
+        [TrackAnalytics("GET Sensor Events")]
+        [HttpGet]
+        public IHttpActionResult GetDefault()
+        {
+            var lifetime = _sensorEventsService.GetLifetime();
+            var events = getSince(lifetime.Since);
+            return Ok(events);
         }
 
         [RequireBasicAuthentication]
         [RequirePermissions("ApiWriter")]
         [ModelValidation]
-        [TrackAnalytics("Sensor Events POST")]
+        [TrackAnalytics("POST Sensor Events")]
         public IHttpActionResult Post([FromBody]SensorEventPOST postedSensorEvent)
         {
             if (postedSensorEvent == null)
@@ -103,6 +112,14 @@ namespace CSM.ParkingData.Controllers
             //);
 
             return Ok(_sensorEventsService.ConvertToViewModel(entity));
+        }
+
+        private IEnumerable<SensorEventGET> getSince(DateTime datetime)
+        {
+            return _sensorEventsService.Query()
+                                       .Where(s => datetime <= s.EventTime)
+                                       .OrderByDescending(s => s.EventTime)
+                                       .Select(_sensorEventsService.ConvertToViewModel);
         }
     }
 }
