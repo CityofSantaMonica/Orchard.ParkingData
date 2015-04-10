@@ -12,14 +12,14 @@ namespace CSM.ParkingData.ViewModels
         [DataMember(Name = "length")]
         public double Length { get; set; }
 
-        [DataMember(Name = "since")]
-        public DateTime Since { get; set; }
-
         [DataMember(Name = "units")]
         public string UnitsString
         {
             get { return Units.ToString().ToLower(); }
             private set { ; }
         }
+
+        [DataMember(Name = "since")]
+        public DateTime Since { get; set; }
     }
 }

@@ -93,9 +93,6 @@ namespace CSM.ParkingData.Tests.SensorEvents
             var lifetime1 = new SensorEventLifetime() { Length = 1.0, Units = LifetimeUnits.Hours, Since = since };
             var lifetime2 = new SensorEventLifetime() { Length = 0.42, Units = LifetimeUnits.Seconds, Since = since };
 
-            string expected1 = @"{""length"":1.0,""since"":""2015-01-01T00:00:00Z"",""units"":""hours""}";
-            string expected2 = @"{""length"":0.42,""since"":""2015-01-01T00:00:00Z"",""units"":""seconds""}";
-
             //act
 
             string actual1 = JsonConvert.SerializeObject(lifetime1);
@@ -103,8 +100,13 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
             //assert
 
-            Assert.AreEqual(expected1, actual1);
-            Assert.AreEqual(expected2, actual2);
+            StringAssert.IsMatch(@"""length"":1.0", actual1);
+            StringAssert.IsMatch(@"""units"":""hours""", actual1);
+            StringAssert.IsMatch(@"""since"":""2015-01-01T00:00:00Z""", actual1);
+
+            StringAssert.IsMatch(@"""length"":0.42", actual2);
+            StringAssert.IsMatch(@"""units"":""seconds""", actual2);
+            StringAssert.IsMatch(@"""since"":""2015-01-01T00:00:00Z""", actual2);
         }
     }
 }
