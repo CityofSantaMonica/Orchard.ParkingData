@@ -18,8 +18,7 @@ namespace CSM.ParkingData.Routes
                     RouteTemplate = "sensor_events/since/{datetime}",
                     Defaults = new {
                         area = _area,
-                        controller = "SensorEvents",
-                        action = "GetSince"
+                        controller = "SensorEvents"
                     },
                     Constraints = new {
                         datetime = @"\d{8}T\d{6}Z"
@@ -31,8 +30,7 @@ namespace CSM.ParkingData.Routes
                     RouteTemplate = "sensor_events/lifetime",
                     Defaults = new {
                         area = _area,
-                        controller = "SensorEvents",
-                        action = "GetLifetime"
+                        controller = "Lifetime",
                     }
                 },
                 new HttpRouteDescriptor {
@@ -41,8 +39,7 @@ namespace CSM.ParkingData.Routes
                     RouteTemplate = "sensor_events",
                     Defaults = new {
                         area = _area,
-                        controller = "SensorEvents",
-                        action = "GetDefault"
+                        controller = "SensorEvents"
                     }
                 },
                 new HttpRouteDescriptor() {
