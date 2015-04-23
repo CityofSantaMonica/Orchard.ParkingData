@@ -12,11 +12,11 @@
   <Feature disable="Orchard.Layouts,Orchard.Comments,Orchard.Blogs"
            enable="Orchard.Autoroute,Orchard.CodeGeneration,Orchard.ContentTypes,
                    Orchard.ImportExport,PackagingServices,Orchard.Packaging,
-                   Orchard.jQuery,
+                   Orchard.jQuery,Orchard.Projections,
                    Orchard.Scripting,Orchard.Scripting.Lightweight,Orchard.Scripting.CSharp,
                    Orchard.OutputCache,Orchard.Widgets,
                    TinyMce,
-                   CSM.WebApi.Security,CSM.ParkingData,CSM.BootstrapBase,CSM.ParkingData.Theme" />
+                   CSM.WebApi.Documentation,CSM.WebApi.Security,CSM.ParkingData,CSM.BootstrapBase,CSM.ParkingData.Theme" />
 
   <Metadata>
     <Parts>
