@@ -119,7 +119,9 @@
       <Name>CSM.WebApi</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Placement.info" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\MeteredSpacesController.cs" />
     <Compile Include="Controllers\LifetimeController.cs" />
