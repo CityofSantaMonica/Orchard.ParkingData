@@ -30,6 +30,12 @@ namespace CSM.ParkingData
                     .Column<DateTime>("TransmissionTime", col => col.NotNull())
             );
 
+            SchemaBuilder.AlterTable(
+                "SensorEvent",
+                table => table
+                    .CreateIndex("IDX_EventTime", "EventTime")
+            );
+
             var precision = byte.Parse("9");
             var scale = byte.Parse("6");
 
@@ -46,7 +52,7 @@ namespace CSM.ParkingData
                     .Column<bool>("Active", col => col.Nullable())
             );
 
-            return 2;
+            return 3;
         }
 
         public int UpdateFrom1()
@@ -58,6 +64,17 @@ namespace CSM.ParkingData
             );
 
             return 2;
+        }
+
+        public int UpdateFrom2()
+        {
+            SchemaBuilder.AlterTable(
+                "SensorEvent",
+                table => table
+                    .CreateIndex("IDX_EventTime", "EventTime")
+            );
+
+            return 3;
         }
     }
 }
