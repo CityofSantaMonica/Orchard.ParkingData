@@ -111,10 +111,10 @@ namespace CSM.ParkingData.Services
                     since = _clock.UtcNow.AddHours(lengthModifier);
                     break;
                 case LifetimeUnits.Minutes:
-                    since = _clock.UtcNow.AddSeconds(lengthModifier);
+                    since = _clock.UtcNow.AddMinutes(lengthModifier);
                     break;
                 case LifetimeUnits.Seconds:
-                    since = _clock.UtcNow.AddMinutes(lengthModifier);
+                    since = _clock.UtcNow.AddSeconds(lengthModifier);
                     break;
             }
 
