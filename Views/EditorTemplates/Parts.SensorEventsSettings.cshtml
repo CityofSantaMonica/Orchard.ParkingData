@@ -3,8 +3,15 @@
 <h2>Sensor Events Settings</h2>
 
 <fieldset>
-    @Html.LabelFor(m => m.LifetimeLength, T("Lifetime"))
-    @Html.TextBoxFor(m => m.LifetimeLength, new { @class = "text small" })
-    @Html.EnumDropDownListFor(m => m.LifetimeUnits)
-    <span class="hint">This is the length of time after a sensor event's <code>EventTime</code> that the sensor event is available from the public API.</span>
+    @Html.LabelFor(m => m.MaxLifetimeLength, T("Maximum Lifetime"))
+    @Html.TextBoxFor(m => m.MaxLifetimeLength, new { @class = "text small" })
+    @Html.EnumDropDownListFor(m => m.MaxLifetimeUnits)
+    <span class="hint">This is the maximum length of time after a sensor event's <code>EventTime</code> that the sensor event is available from the public API.</span>
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.DefaultLifetimeLength, T("Default Lifetime"))
+    @Html.TextBoxFor(m => m.DefaultLifetimeLength, new { @class = "text small" })
+    @Html.EnumDropDownListFor(m => m.DefaultLifetimeUnits)
+    <span class="hint">This is the lifetime for requests to the default sensor event endpoint.</span>
 </fieldset>
