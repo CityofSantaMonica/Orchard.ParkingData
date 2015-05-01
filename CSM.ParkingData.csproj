@@ -102,6 +102,7 @@
     <Content Include="Recipes\data.users.recipe.xml" />
     <Content Include="Recipes\data.pages.recipe.xml" />
     <Content Include="Recipes\data.navigation.recipe.xml" />
+    <Content Include="Recipes\documentation.recipe.xml" />
     <Content Include="Recipes\setup.recipe.xml" />
     <Content Include="Web.config" />
     <Content Include="Properties\AssemblyInfo.cs" />

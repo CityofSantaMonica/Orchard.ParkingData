@@ -57,7 +57,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
         {
             base.setupMaxLifetime();
 
-            string argumentBeforeLifetime = _referenceMaxLifetime.Since.Value.AddHours(-1).ToString(_utcISO8061BasicFormat);
+            string argumentBeforeLifetime = _referenceMaxLifetime.Since.AddHours(-1).ToString(_utcISO8061BasicFormat);
 
             IHttpActionResult actionResult = _controller.Get(argumentBeforeLifetime);
             var contentResult = actionResult as BadRequestErrorMessageResult;
@@ -72,7 +72,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
         {
             base.setupQuery();
 
-            string sinceArgument = _referenceMaxLifetime.Since.Value.AddHours(_referenceMaxLifetime.Length.Value / 2).ToString(_utcISO8061BasicFormat);
+            string sinceArgument = _referenceMaxLifetime.Since.AddHours(_referenceMaxLifetime.Length / 2).ToString(_utcISO8061BasicFormat);
 
             IHttpActionResult actionResult = _controller.Get(sinceArgument);
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
@@ -89,7 +89,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
         {
             base.setupQuery();
 
-            string sinceArgument = _referenceMaxLifetime.Since.Value.AddHours(_referenceMaxLifetime.Length.Value / 2).ToString(_utcISO8061BasicFormat);
+            string sinceArgument = _referenceMaxLifetime.Since.AddHours(_referenceMaxLifetime.Length / 2).ToString(_utcISO8061BasicFormat);
 
             IHttpActionResult actionResult = _controller.Get(sinceArgument);
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;

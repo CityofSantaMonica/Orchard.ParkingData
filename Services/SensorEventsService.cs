@@ -130,17 +130,12 @@ namespace CSM.ParkingData.Services
             };
         }
 
-        private DateTime? getLifetimeSince(double? length, LifetimeUnits? units)
+        private DateTime getLifetimeSince(double length, LifetimeUnits units)
         {
-            if (!length.HasValue && !units.HasValue)
-            {
-                return default(DateTime?);
-            }
-
             DateTime since = DateTime.MaxValue;
-            double lengthModifier = -1 * length.Value;
+            double lengthModifier = -1 * length;
 
-            switch (units.Value)
+            switch (units)
             {
                 case LifetimeUnits.Hours:
                     since = _clock.UtcNow.AddHours(lengthModifier);

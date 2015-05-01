@@ -56,14 +56,14 @@ namespace CSM.ParkingData.Controllers
             var defaultLifetime = _sensorEventsService.GetDefaultLifetime();
             var events = Enumerable.Empty<SensorEventGET>();
 
-            if (defaultLifetime != null && defaultLifetime.Since.HasValue)
+            if (defaultLifetime != null)
             {
-                events = getSince(defaultLifetime.Since.Value);
+                events = getSince(defaultLifetime.Since);
             }
             else
             {
                 var maxLifetime = _sensorEventsService.GetMaxLifetime();
-                events = getSince(maxLifetime.Since.Value);
+                events = getSince(maxLifetime.Since);
             }
 
             return Ok(events);

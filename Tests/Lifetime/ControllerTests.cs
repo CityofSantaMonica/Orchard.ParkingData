@@ -35,14 +35,14 @@ namespace CSM.ParkingData.Tests.Lifetime
             Assert.IsNotNull(contentResult);
             Assert.IsNotNull(contentResult.Content);
             Assert.AreEqual(_referenceMaxLifetime.Length, contentResult.Content.Length);
-            Assert.AreEqual(DateTimeKind.Utc, contentResult.Content.Since.Value.Kind);
+            Assert.AreEqual(DateTimeKind.Utc, contentResult.Content.Since.Kind);
             Assert.AreEqual(_referenceMaxLifetime.Since, contentResult.Content.Since);
             Assert.AreEqual(_referenceMaxLifetime.Units, contentResult.Content.Units);
         }
 
         [Test]
         [Category("SensorEventsLifetime")]
-        public void GetDefault_ReturnsSensorEventMaxLifetime_WhenNoDefaultConfigured()
+        public void GetDefault_ReturnsSensorEventMaxLifetime_WhenDefaultIsNull()
         {
             base.setupMaxLifetime();
 
@@ -58,7 +58,7 @@ namespace CSM.ParkingData.Tests.Lifetime
             Assert.IsNotNull(contentResult);
             Assert.IsNotNull(contentResult.Content);
             Assert.AreEqual(_referenceMaxLifetime.Length, contentResult.Content.Length);
-            Assert.AreEqual(DateTimeKind.Utc, contentResult.Content.Since.Value.Kind);
+            Assert.AreEqual(DateTimeKind.Utc, contentResult.Content.Since.Kind);
             Assert.AreEqual(_referenceMaxLifetime.Since, contentResult.Content.Since);
             Assert.AreEqual(_referenceMaxLifetime.Units, contentResult.Content.Units);
         }
@@ -83,7 +83,7 @@ namespace CSM.ParkingData.Tests.Lifetime
             Assert.IsNotNull(contentResult);
             Assert.IsNotNull(contentResult.Content);
             Assert.AreEqual(mockDefaultLifetime.Length, contentResult.Content.Length);
-            Assert.AreEqual(DateTimeKind.Utc, contentResult.Content.Since.Value.Kind);
+            Assert.AreEqual(DateTimeKind.Utc, contentResult.Content.Since.Kind);
             Assert.AreEqual(mockDefaultLifetime.Since, contentResult.Content.Since);
             Assert.AreEqual(mockDefaultLifetime.Units, contentResult.Content.Units);
         }

@@ -7,19 +7,19 @@ namespace CSM.ParkingData.ViewModels
     [DataContract(Name = "lifetime", Namespace = "")]
     public class SensorEventLifetime
     {
-        public LifetimeUnits? Units { get; set; }
+        public LifetimeUnits Units { get; set; }
 
         [DataMember(Name = "length")]
-        public double? Length { get; set; }
+        public double Length { get; set; }
 
         [DataMember(Name = "units")]
         public string UnitsString
         {
-            get { return Units.HasValue ? Units.Value.ToString().ToLower() : null; }
+            get { return Units.ToString().ToLower(); }
             private set { ; }
         }
 
         [DataMember(Name = "since")]
-        public DateTime? Since { get; set; }
+        public DateTime Since { get; set; }
     }
 }

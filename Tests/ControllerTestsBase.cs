@@ -87,11 +87,11 @@ namespace CSM.ParkingData.Tests
 
             var queryResult = new[] {
                 //EventTime in the "future" => should be included in the results
-                new SensorEvent { TransmissionId = 1, EventTime = _referenceDateTime.AddHours(_referenceMaxLifetime.Length.Value * 1) },
+                new SensorEvent { TransmissionId = 1, EventTime = _referenceDateTime.AddHours(_referenceMaxLifetime.Length * 1) },
                 //EventTime in the "future" => should be included in the results
-                new SensorEvent { TransmissionId = 2, EventTime = _referenceDateTime.AddHours(_referenceMaxLifetime.Length.Value * 2) },
+                new SensorEvent { TransmissionId = 2, EventTime = _referenceDateTime.AddHours(_referenceMaxLifetime.Length * 2) },
                 //EventTime in the "past" by more than lifetime => should be excluded
-                new SensorEvent { TransmissionId = 3, EventTime = _referenceDateTime.AddHours(_referenceMaxLifetime.Length.Value * -4) }
+                new SensorEvent { TransmissionId = 3, EventTime = _referenceDateTime.AddHours(_referenceMaxLifetime.Length * -4) }
             }.AsQueryable();
 
             _mockSensorEventsService

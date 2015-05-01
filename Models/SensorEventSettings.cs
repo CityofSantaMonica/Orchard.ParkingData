@@ -11,13 +11,13 @@ namespace CSM.ParkingData.Models
 
     public class SensorEventsSettings : ContentPart
     {
-        public double? DefaultLifetimeLength
+        public double DefaultLifetimeLength
         {
             get { return this.Retrieve(x => x.DefaultLifetimeLength); }
             set { this.Store(x => x.DefaultLifetimeLength, value); }
         }
 
-        public LifetimeUnits? DefaultLifetimeUnits
+        public LifetimeUnits DefaultLifetimeUnits
         {
             get { return this.Retrieve(x => x.DefaultLifetimeUnits); }
             set { this.Store(x => x.DefaultLifetimeUnits, value); }
