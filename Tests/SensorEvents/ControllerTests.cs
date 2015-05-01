@@ -53,11 +53,11 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
         [Test]
         [Category("SensorEvents")]
-        public void GetSince_RequiresArgument_NotBeforeLifetime()
+        public void GetSince_RequiresArgument_NotBeforeMaxLifetime()
         {
-            base.setupLifetime();
+            base.setupMaxLifetime();
 
-            string argumentBeforeLifetime = _referenceLifetime.Since.AddHours(-1).ToString(_utcISO8061BasicFormat);
+            string argumentBeforeLifetime = _referenceMaxLifetime.Since.Value.AddHours(-1).ToString(_utcISO8061BasicFormat);
 
             IHttpActionResult actionResult = _controller.Get(argumentBeforeLifetime);
             var contentResult = actionResult as BadRequestErrorMessageResult;
@@ -72,7 +72,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
         {
             base.setupQuery();
 
-            string sinceArgument = _referenceLifetime.Since.AddHours(_referenceLifetime.Length / 2).ToString(_utcISO8061BasicFormat);
+            string sinceArgument = _referenceMaxLifetime.Since.Value.AddHours(_referenceMaxLifetime.Length.Value / 2).ToString(_utcISO8061BasicFormat);
 
             IHttpActionResult actionResult = _controller.Get(sinceArgument);
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
@@ -89,12 +89,13 @@ namespace CSM.ParkingData.Tests.SensorEvents
         {
             base.setupQuery();
 
-            string sinceArgument = _referenceLifetime.Since.AddHours(_referenceLifetime.Length / 2).ToString(_utcISO8061BasicFormat);
+            string sinceArgument = _referenceMaxLifetime.Since.Value.AddHours(_referenceMaxLifetime.Length.Value / 2).ToString(_utcISO8061BasicFormat);
 
             IHttpActionResult actionResult = _controller.Get(sinceArgument);
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
             var content = contentResult.Content;
 
+            Assert.Greater(content.First().EventTime, content.Skip(1).First().EventTime);
             Assert.Greater(content.First().EventTime, content.Last().EventTime);
         }
 

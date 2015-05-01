@@ -9,7 +9,7 @@ namespace CSM.ParkingData.Tests.Lifetime
     public class SerializationTests
     {
         [Test]
-        [Category("SensorEvents")]
+        [Category("SensorEventsLifetime")]
         public void SensorEventLifetime_SerializesToJson()
         {
             //arrange

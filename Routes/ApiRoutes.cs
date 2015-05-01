@@ -25,12 +25,23 @@ namespace CSM.ParkingData.Routes
                     }
                 },
                 new HttpRouteDescriptor {
-                    Name = "SensorEventsLifetime",
+                    Name = "SensorEventsMaxLifetime",
+                    Priority = 6,
+                    RouteTemplate = "sensor_events/lifetime/max",
+                    Defaults = new {
+                        area = _area,
+                        controller = "Lifetime",
+                        action = "Max"
+                    }
+                },
+                new HttpRouteDescriptor {
+                    Name = "SensorEventsDefaultLifetime",
                     Priority = 6,
                     RouteTemplate = "sensor_events/lifetime",
                     Defaults = new {
                         area = _area,
                         controller = "Lifetime",
+                        action = "Default"
                     }
                 },
                 new HttpRouteDescriptor {

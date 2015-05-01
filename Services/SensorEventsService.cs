@@ -28,7 +28,7 @@ namespace CSM.ParkingData.Services
             _siteService = siteService;
         }
 
-        public SensorEventLifetime GetLifetime()
+        public SensorEventLifetime GetMaxLifetime()
         {
             var siteSettings = _siteService.GetSiteSettings();
             var sensorEventsSettings = siteSettings.As<SensorEventsSettings>();
@@ -40,9 +40,29 @@ namespace CSM.ParkingData.Services
             }
 
             var lifetime = new SensorEventLifetime() {
-                Length = sensorEventsSettings.LifetimeLength,
-                Units = sensorEventsSettings.LifetimeUnits,
-                Since = getLifetimeSince(sensorEventsSettings.LifetimeLength, sensorEventsSettings.LifetimeUnits)
+                Length = sensorEventsSettings.MaxLifetimeLength,
+                Units = sensorEventsSettings.MaxLifetimeUnits,
+                Since = getLifetimeSince(sensorEventsSettings.MaxLifetimeLength, sensorEventsSettings.MaxLifetimeUnits)
+            };
+
+            return lifetime;
+        }
+
+        public SensorEventLifetime GetDefaultLifetime()
+        {
+            var siteSettings = _siteService.GetSiteSettings();
+            var sensorEventsSettings = siteSettings.As<SensorEventsSettings>();
+
+            if (sensorEventsSettings == null)
+            {
+                sensorEventsSettings = new SensorEventsSettings();
+                sensorEventsSettings.ContentItem = siteSettings.ContentItem;
+            }
+
+            var lifetime = new SensorEventLifetime() {
+                Length = sensorEventsSettings.DefaultLifetimeLength,
+                Units = sensorEventsSettings.DefaultLifetimeUnits,
+                Since = getLifetimeSince(sensorEventsSettings.DefaultLifetimeLength, sensorEventsSettings.DefaultLifetimeUnits)
             };
 
             return lifetime;
@@ -56,6 +76,16 @@ namespace CSM.ParkingData.Services
         public IQueryable<SensorEvent> Query()
         {
             return _sensorEventsRepo.Table;
+        }
+
+        public IQueryable<SensorEvent> QuerySince(DateTime since)
+        {
+            return
+                Query()
+                //taking advantage of the clustered index on Id
+                //and the fact that later events are always at the end
+                .OrderByDescending(s => s.Id)
+                .Where(s => s.EventTime >= since);
         }
 
         public SensorEvent AddOrUpdate(SensorEventPOST viewModel)
@@ -100,12 +130,17 @@ namespace CSM.ParkingData.Services
             };
         }
 
-        private DateTime getLifetimeSince(double length, LifetimeUnits units)
+        private DateTime? getLifetimeSince(double? length, LifetimeUnits? units)
         {
-            DateTime since = DateTime.MaxValue;
-            double lengthModifier = -1 * length;
+            if (!length.HasValue && !units.HasValue)
+            {
+                return default(DateTime?);
+            }
 
-            switch (units)
+            DateTime since = DateTime.MaxValue;
+            double lengthModifier = -1 * length.Value;
+
+            switch (units.Value)
             {
                 case LifetimeUnits.Hours:
                     since = _clock.UtcNow.AddHours(lengthModifier);
