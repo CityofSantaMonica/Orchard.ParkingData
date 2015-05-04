@@ -1,0 +1,225 @@
+﻿<?xml version="1.0"?>
+<Orchard>
+  <Recipe>
+    <Name>CSM.ParkingData.Recipes.Documentation</Name>
+    <Description>Setup recipe for the City of Santa Monica Parking Data API Orchard site.</Description>
+    <Author>City of Santa Monica</Author>
+    <WebSite>http://api.smgov.net/parking</WebSite>
+    <Version>1.0</Version>
+    <IsSetupRecipe>false</IsSetupRecipe>
+  </Recipe>
+
+  <Data>
+    <Endpoint Id="/Identifier=5a66d23da0964e0386b82d2f4cf69e61" Status="Published">
+      <ContentPickerField.Returns ContentItems="/Identifier=afd991d226d6487e99704d2549b3cb5b" />
+      <EnumerationField.ReturnsAmount Value="Collection" />
+      <TitlePart Title="SensorEvents.Default" />
+      <IdentityPart Identifier="5a66d23da0964e0386b82d2f4cf69e61" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T19:02:18.9327129Z" PublishedUtc="2015-04-23T20:47:33.2877082Z" ModifiedUtc="2015-04-23T20:47:33.2807075Z" />
+      <EndpointPart-Infoset Verb="GET" ApiPath="/sensor_events" Description="" />
+    </Endpoint>
+    <Endpoint Id="/Identifier=f08837be94a1451cac908a29a76a67a2" Status="Published">
+      <ContentPickerField.Returns ContentItems="/Identifier=6863e7323b0343d5b5ad9cca43d4c6ba" />
+      <EnumerationField.ReturnsAmount Value="Single" />
+      <TitlePart Title="SensorEvents.Lifetime" />
+      <IdentityPart Identifier="f08837be94a1451cac908a29a76a67a2" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T19:02:49.9098103Z" PublishedUtc="2015-04-23T20:47:52.9706763Z" ModifiedUtc="2015-04-23T20:47:52.967676Z" />
+      <EndpointPart-Infoset Verb="GET" ApiPath="/sensor_events/lifetime" Description="" />
+    </Endpoint>
+    <Endpoint Id="/Identifier=91431e89a2554d609d8ac80d27c009cb" Status="Published">
+      <ContentPickerField.Returns ContentItems="/Identifier=8b093424f1834e4e897d86e3544c0e13" />
+      <EnumerationField.ReturnsAmount Value="Collection" />
+      <TitlePart Title="MeteredSpaces.Default" />
+      <IdentityPart Identifier="91431e89a2554d609d8ac80d27c009cb" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T19:03:33.9192108Z" PublishedUtc="2015-04-23T20:48:08.8572648Z" ModifiedUtc="2015-04-23T20:48:08.8542645Z" />
+      <EndpointPart-Infoset Verb="GET" ApiPath="/metered_spaces" Description="" />
+    </Endpoint>
+    <Endpoint Id="/Identifier=4bb55a87fa6f4ea69abf7e11a212107b" Status="Published">
+      <ContentPickerField.Parameters ContentItems="/Identifier=77d9482bce564b859dde49661288b17b" />
+      <ContentPickerField.Returns ContentItems="/Identifier=afd991d226d6487e99704d2549b3cb5b" />
+      <ContentPickerField.Errors ContentItems="/Identifier=4debe6e47b3b4055a9b7e51ee64dd974,/Identifier=58d8256656174ba8ae64ee15ff695d1b" />
+      <EnumerationField.ReturnsAmount Value="Collection" />
+      <TitlePart Title="SensorEvents.Since" />
+      <IdentityPart Identifier="4bb55a87fa6f4ea69abf7e11a212107b" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T19:14:57.3845505Z" PublishedUtc="2015-04-23T21:07:25.2968972Z" ModifiedUtc="2015-04-23T21:07:25.2858961Z" />
+      <EndpointPart-Infoset Verb="GET" ApiPath="/sensor_events/since/:{EndpointParameters.SensorEvents.Since.Datetime:ApiName}" Description="" />
+    </Endpoint>
+    <EndpointParameter Id="/Identifier=77d9482bce564b859dde49661288b17b" Status="Published">
+      <TitlePart Title="SensorEvents.Since.Datetime" />
+      <IdentityPart Identifier="77d9482bce564b859dde49661288b17b" />
+      <BodyPart Text="&lt;p&gt;&lt;code&gt;:#{EndpointParameters.Current:ApiName}&lt;/code&gt; is an &lt;a href=&quot;http://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations&quot; target=&quot;_blank&quot;&gt;ISO 8061&lt;/a&gt; (basic) formatted date/time in UTC (e.g. &lt;em&gt;#{EndpointParameters.Current:Example}&lt;/em&gt;)&lt;/p&gt;&#xD;&#xA;&lt;p&gt;&lt;code&gt;:#{EndpointParameters.Current:ApiName}&lt;/code&gt; should be within an acceptable range defined by &lt;code&gt;#{Endpoints.SensorEvents.Lifetime:ApiPath}&lt;/code&gt;&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T19:08:40.2608419Z" PublishedUtc="2015-04-23T22:15:47.0670614Z" ModifiedUtc="2015-04-23T22:15:47.063061Z" />
+      <EndpointParameterPart-Infoset DataType="UTC datetime" ApiName="datetime" Example="20150101T133000Z" Required="true" />
+    </EndpointParameter>
+    <EntityDefinition Id="/Identifier=afd991d226d6487e99704d2549b3cb5b" Status="Published">
+      <ContentPickerField.FieldDefinitions ContentItems="/Identifier=7b18013d8e5e443ba45d7f120f029189,/Identifier=bec491af1a174e188d87b892327405fb,/Identifier=5096fea5a3a24df4b618f831e8ccb141,/Identifier=7e571caeb6b5427ba426147528e04ed2,/Identifier=86ebc4f895e046169e2197bfbe608f2a,/Identifier=b4648f3dbcd246e5923a95d2095040cc" />
+      <TitlePart Title="SensorEvent" />
+      <IdentityPart Identifier="afd991d226d6487e99704d2549b3cb5b" />
+      <BodyPart Text="&lt;p&gt;Sensor events are recorded each time a vehicle pulls into or out of one of the metered parking spaces in Santa Monica.&lt;/p&gt;&#xD;&#xA;&lt;p&gt;Corresponding &lt;abbr class=&quot;text-info&quot; title=&quot;Session start&quot;&gt;SS&lt;/abbr&gt; and &lt;abbr class=&quot;text-info&quot; title=&quot;Session end&quot;&gt;SE&lt;/abbr&gt;&amp;nbsp;sensor events&amp;nbsp;share a common &lt;code&gt;#{EntityFields.SensorEvent.SessionId:ApiName}&lt;/code&gt;&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T18:56:14.2802513Z" PublishedUtc="2015-04-23T22:25:09.3302821Z" ModifiedUtc="2015-04-23T22:25:09.3272818Z" />
+      <EntityDefinitionPart-Infoset ApiName="sensor_event" />
+    </EntityDefinition>
+    <EntityDefinition Id="/Identifier=6863e7323b0343d5b5ad9cca43d4c6ba" Status="Published">
+      <ContentPickerField.FieldDefinitions ContentItems="/Identifier=17c5f65468d94873868bdd64bcef3fa3,/Identifier=a476f8b44c364ca3b95d2da074fabca1,/Identifier=a4451ba4962f43ab98b8252af2f67d9f" />
+      <TitlePart Title="SensorEventLifetime" />
+      <IdentityPart Identifier="6863e7323b0343d5b5ad9cca43d4c6ba" />
+      <BodyPart Text="&lt;p&gt;Represents the amount of time (after &lt;code&gt;#{EntityFields.SensorEvent.EventTime:ApiName}&lt;/code&gt;) that sensor events are available on the public API.&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T18:57:34.7692994Z" PublishedUtc="2015-04-23T22:26:14.4597944Z" ModifiedUtc="2015-04-23T22:26:14.4567941Z" />
+      <EntityDefinitionPart-Infoset ApiName="lifetime" />
+    </EntityDefinition>
+    <EntityDefinition Id="/Identifier=8b093424f1834e4e897d86e3544c0e13" Status="Published">
+      <ContentPickerField.FieldDefinitions ContentItems="/Identifier=432b14c6f8594177bcc5741cb8badbd4,/Identifier=02641078e04b4e9f8a11f7b3b6931bd5,/Identifier=86a69415a27643b0947d76fca891ab46,/Identifier=59c7bbae512b4c42bb26f4f2a572f4bb,/Identifier=cba049a398494314aec88347bb09dcc4,/Identifier=3051d2a3a44c43d69bcfe1f0eee019cd" />
+      <TitlePart Title="MeteredSpace" />
+      <IdentityPart Identifier="8b093424f1834e4e897d86e3544c0e13" />
+      <BodyPart Text="&lt;p&gt;&lt;span&gt;Represents static information about metered parking spaces in Santa Monica.&lt;/span&gt;&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T18:58:09.2697491Z" PublishedUtc="2015-04-23T20:12:24.59486Z" ModifiedUtc="2015-04-14T21:42:46.1932553Z" />
+      <EntityDefinitionPart-Infoset ApiName="metered_space" />
+    </EntityDefinition>
+    <EntityField Id="/Identifier=7b18013d8e5e443ba45d7f120f029189" Status="Published">
+      <TitlePart Title="SensorEvent.EventId" />
+      <IdentityPart Identifier="7b18013d8e5e443ba45d7f120f029189" />
+      <BodyPart Text="Unique identifier for a sensor event." />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T18:43:01.2359548Z" PublishedUtc="2015-04-23T20:12:24.244825Z" ModifiedUtc="2015-04-10T18:43:01.2839596Z" />
+      <EntityFieldPart-Infoset DataType="integer" ApiName="event_id" />
+    </EntityField>
+    <EntityField Id="/Identifier=bec491af1a174e188d87b892327405fb" Status="Published">
+      <TitlePart Title="SensorEvent.EventTime" />
+      <IdentityPart Identifier="bec491af1a174e188d87b892327405fb" />
+      <BodyPart Text="The date and time an event is recorded by the meter." />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T18:43:36.0274336Z" PublishedUtc="2015-04-23T20:12:24.2598265Z" ModifiedUtc="2015-04-10T18:43:36.0754384Z" />
+      <EntityFieldPart-Infoset DataType="UTC datetime" ApiName="event_time" />
+    </EntityField>
+    <EntityField Id="/Identifier=5096fea5a3a24df4b618f831e8ccb141" Status="Published">
+      <TitlePart Title="SensorEvent.EventType" />
+      <IdentityPart Identifier="5096fea5a3a24df4b618f831e8ccb141" />
+      <BodyPart Text="&lt;table class=&quot;table table-condensed&quot;&gt;&#xD;&#xA;&lt;tbody&gt;&#xD;&#xA;&lt;tr&gt;&#xD;&#xA;&lt;td&gt;&lt;abbr title=&quot;Session start&quot;&gt;SS&lt;/abbr&gt;&lt;/td&gt;&#xD;&#xA;&lt;td&gt;Indicates the event corresponds to a vehicle pulling into a metered space.&lt;/td&gt;&#xD;&#xA;&lt;/tr&gt;&#xD;&#xA;&lt;tr&gt;&#xD;&#xA;&lt;td&gt;&lt;abbr title=&quot;Session end&quot;&gt;SE&lt;/abbr&gt;&lt;/td&gt;&#xD;&#xA;&lt;td&gt;Indicates the event corresponds to a vehicle pulling out of a metered space.&lt;/td&gt;&#xD;&#xA;&lt;/tr&gt;&#xD;&#xA;&lt;/tbody&gt;&#xD;&#xA;&lt;/table&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T18:46:12.027032Z" PublishedUtc="2015-04-23T20:12:24.2758281Z" ModifiedUtc="2015-04-22T21:00:08.9859199Z" />
+      <EntityFieldPart-Infoset DataType="string" ApiName="event_type" />
+    </EntityField>
+    <EntityField Id="/Identifier=7e571caeb6b5427ba426147528e04ed2" Status="Published">
+      <TitlePart Title="SensorEvent.MeterId" />
+      <IdentityPart Identifier="7e571caeb6b5427ba426147528e04ed2" />
+      <BodyPart Text="Unique identifier for the metered space at which an event occurred." />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T18:46:42.1630453Z" PublishedUtc="2015-04-23T20:12:24.2918297Z" ModifiedUtc="2015-04-10T18:46:42.21005Z" />
+      <EntityFieldPart-Infoset DataType="string" ApiName="meter_id" />
+    </EntityField>
+    <EntityField Id="/Identifier=86ebc4f895e046169e2197bfbe608f2a" Status="Published">
+      <TitlePart Title="SensorEvent.ReceivedTime" />
+      <IdentityPart Identifier="86ebc4f895e046169e2197bfbe608f2a" />
+      <BodyPart Text="The date and time an event's data is received by this server." />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T18:47:19.793808Z" PublishedUtc="2015-04-23T20:12:24.3088314Z" ModifiedUtc="2015-04-10T18:47:19.8408127Z" />
+      <EntityFieldPart-Infoset DataType="UTC datetime" ApiName="received_time" />
+    </EntityField>
+    <EntityField Id="/Identifier=b4648f3dbcd246e5923a95d2095040cc" Status="Published">
+      <TitlePart Title="SensorEvent.SessionId" />
+      <IdentityPart Identifier="b4648f3dbcd246e5923a95d2095040cc" />
+      <BodyPart Text="&lt;p&gt;&lt;span&gt;Identifier tying a particular &lt;abbr title=&quot;Session start&quot;&gt;SS&lt;/abbr&gt; event to the corresponding &lt;abbr title=&quot;Session end&quot;&gt;SE&lt;/abbr&gt; event.&lt;/span&gt;&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T18:47:53.9192202Z" PublishedUtc="2015-04-23T20:12:24.3238329Z" ModifiedUtc="2015-04-22T20:55:48.8181951Z" />
+      <EntityFieldPart-Infoset DataType="integer" ApiName="session_id" />
+    </EntityField>
+    <EntityField Id="/Identifier=17c5f65468d94873868bdd64bcef3fa3" Status="Published">
+      <TitlePart Title="SensorEventLifetime.Length" />
+      <IdentityPart Identifier="17c5f65468d94873868bdd64bcef3fa3" />
+      <BodyPart Text="&lt;p&gt;The amount of time in units specified by&amp;nbsp;&lt;code&gt;#{EntityFields.SensorEventLifetime.Units:ApiName}&lt;/code&gt;&lt;units&gt;&lt;/units&gt;&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T18:48:56.2064483Z" PublishedUtc="2015-04-23T21:40:50.6691845Z" ModifiedUtc="2015-04-23T21:40:50.6631845Z" />
+      <EntityFieldPart-Infoset DataType="decimal" ApiName="length" />
+    </EntityField>
+    <EntityField Id="/Identifier=a476f8b44c364ca3b95d2da074fabca1" Status="Published">
+      <TitlePart Title="SensorEventLifetime.Units" />
+      <IdentityPart Identifier="a476f8b44c364ca3b95d2da074fabca1" />
+      <BodyPart Text="The unit of time this lifetime measures; one of &quot;hours&quot;, &quot;minutes&quot;, &quot;seconds&quot;." />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T18:50:31.773004Z" PublishedUtc="2015-04-23T20:12:24.4468452Z" ModifiedUtc="2015-04-10T18:50:31.8200087Z" />
+      <EntityFieldPart-Infoset DataType="string" ApiName="units" />
+    </EntityField>
+    <EntityField Id="/Identifier=a4451ba4962f43ab98b8252af2f67d9f" Status="Published">
+      <TitlePart Title="SensorEventLifetime.Since" />
+      <IdentityPart Identifier="a4451ba4962f43ab98b8252af2f67d9f" />
+      <BodyPart Text="The earliest date and time for which &lt;sensor_events&gt; are available from this API." />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T18:51:17.7486011Z" PublishedUtc="2015-04-23T20:12:24.4628468Z" ModifiedUtc="2015-04-10T18:51:17.7966059Z" />
+      <EntityFieldPart-Infoset DataType="UTC datetime" ApiName="since" />
+    </EntityField>
+    <EntityField Id="/Identifier=432b14c6f8594177bcc5741cb8badbd4" Status="Published">
+      <TitlePart Title="MeteredSpace.Active" />
+      <IdentityPart Identifier="432b14c6f8594177bcc5741cb8badbd4" />
+      <BodyPart Text="true if the metered space is currently active, false otherwise." />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T18:52:06.0234281Z" PublishedUtc="2015-04-23T20:12:24.6138619Z" ModifiedUtc="2015-04-10T18:52:06.0714329Z" />
+      <EntityFieldPart-Infoset DataType="boolean" ApiName="active" />
+    </EntityField>
+    <EntityField Id="/Identifier=02641078e04b4e9f8a11f7b3b6931bd5" Status="Published">
+      <TitlePart Title="MeteredSpace.Area" />
+      <IdentityPart Identifier="02641078e04b4e9f8a11f7b3b6931bd5" />
+      <BodyPart Text="Identifier for the general location of a metered space." />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T18:52:30.9299185Z" PublishedUtc="2015-04-23T20:12:24.6518657Z" ModifiedUtc="2015-04-10T18:52:30.9769232Z" />
+      <EntityFieldPart-Infoset DataType="string" ApiName="area" />
+    </EntityField>
+    <EntityField Id="/Identifier=86a69415a27643b0947d76fca891ab46" Status="Published">
+      <TitlePart Title="MeteredSpace.Latitude" />
+      <IdentityPart Identifier="86a69415a27643b0947d76fca891ab46" />
+      <BodyPart Text="Latitude coordinate where the metered space is located." />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T18:53:06.4094661Z" PublishedUtc="2015-04-23T20:12:24.6698675Z" ModifiedUtc="2015-04-10T18:53:06.4564708Z" />
+      <EntityFieldPart-Infoset DataType="decimal" ApiName="latitude" />
+    </EntityField>
+    <EntityField Id="/Identifier=59c7bbae512b4c42bb26f4f2a572f4bb" Status="Published">
+      <TitlePart Title="MeteredSpace.Longitude" />
+      <IdentityPart Identifier="59c7bbae512b4c42bb26f4f2a572f4bb" />
+      <BodyPart Text="Longitude coordinate where the metered space is located." />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T18:53:38.7246973Z" PublishedUtc="2015-04-23T20:12:24.6878693Z" ModifiedUtc="2015-04-10T18:53:38.7727021Z" />
+      <EntityFieldPart-Infoset DataType="decimal" ApiName="longitude" />
+    </EntityField>
+    <EntityField Id="/Identifier=cba049a398494314aec88347bb09dcc4" Status="Published">
+      <TitlePart Title="MeteredSpace.MeterId" />
+      <IdentityPart Identifier="cba049a398494314aec88347bb09dcc4" />
+      <BodyPart Text="Unique identifier for a metered space." />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T18:54:07.8766122Z" PublishedUtc="2015-04-23T20:12:24.704871Z" ModifiedUtc="2015-04-10T18:54:07.9236169Z" />
+      <EntityFieldPart-Infoset DataType="string" ApiName="meter_id" />
+    </EntityField>
+    <EntityField Id="/Identifier=3051d2a3a44c43d69bcfe1f0eee019cd" Status="Published">
+      <TitlePart Title="MeteredSpace.StreetAddress" />
+      <IdentityPart Identifier="3051d2a3a44c43d69bcfe1f0eee019cd" />
+      <BodyPart Text="Approximate street address of a metered space." />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T18:54:34.1502393Z" PublishedUtc="2015-04-23T20:12:24.7238729Z" ModifiedUtc="2015-04-10T18:54:34.2002443Z" />
+      <EntityFieldPart-Infoset DataType="string" ApiName="street_address" />
+    </EntityField>
+    <ErrorResult Id="/Identifier=4debe6e47b3b4055a9b7e51ee64dd974" Status="Published">
+      <TitlePart Title="SensorEvents.Since.UnparsableArgument" />
+      <IdentityPart Identifier="4debe6e47b3b4055a9b7e51ee64dd974" />
+      <BodyPart Text="&lt;p&gt;Indicates that the provided {{SensorEvents.Since.Datetime}}&amp;nbsp;argument could not be parsed as an UTC &lt;a href=&quot;http://en.wikipedia.org/wiki/ISO_8601&quot; target=&quot;_blank&quot; title=&quot;ISO 8061&quot;&gt;ISO 8061&lt;/a&gt;&amp;nbsp;date and time in the basic format.&amp;nbsp;&lt;/p&gt;&#xA;&lt;p&gt;The basic format for &lt;a href=&quot;http://en.wikipedia.org/wiki/ISO_8601&quot; target=&quot;_blank&quot; title=&quot;ISO 8061&quot;&gt;ISO 8061&lt;/a&gt;&amp;nbsp;date and times in UTC looks like &lt;code&gt;yyyyMMddTHHmmssZ&lt;/code&gt;&amp;nbsp;where:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;code&gt;yyyy&lt;/code&gt; is the 4 digit year (e.g. 2015)&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;MM&lt;/code&gt; is the 2 digit month (e.g. 04 for April)&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;dd&lt;/code&gt; is the 2 digit day of the month (e.g. 01)&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;T&lt;/code&gt; is the date and time separator character&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;HH&lt;/code&gt; is the 24-hour format hour of the day (e.g. 19)&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;mm&lt;/code&gt; is the 2 digit minute of the hour (e.g. 45)&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;ss&lt;/code&gt; is the 2 digit second of the minute (e.g. 30)&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;Z&lt;/code&gt; is the UTC timezone marker&lt;/li&gt;&#xA;&lt;/ul&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T22:37:52.1559597Z" PublishedUtc="2015-04-23T20:12:24.844885Z" ModifiedUtc="2015-04-10T22:37:52.6780119Z" />
+      <ErrorResultPart-Infoset Code="400" ReasonPhrase="Bad Request" />
+    </ErrorResult>
+    <ErrorResult Id="/Identifier=58d8256656174ba8ae64ee15ff695d1b" Status="Published">
+      <TitlePart Title="SensorEvents.Since.ArgumentBeforeLifetime" />
+      <IdentityPart Identifier="58d8256656174ba8ae64ee15ff695d1b" />
+      <BodyPart Text="&lt;p&gt;Indicates that the provided&amp;nbsp;&lt;span&gt;{{SensorEvents.Since.Datetime}} argument is earlier than the minimum allowed date and time, defined on the {{SensorEvents.Lifetime}} endpoint.&amp;nbsp;&lt;/span&gt;&lt;/p&gt;" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-10T22:43:45.9173323Z" PublishedUtc="2015-04-23T20:12:24.8638869Z" ModifiedUtc="2015-04-10T22:43:46.3263732Z" />
+      <ErrorResultPart-Infoset Code="400" ReasonPhrase="Bad Request" />
+    </ErrorResult>
+    <ProjectionPage Id="/alias=entities" Status="Published">
+      <TitlePart Title="Entities" />
+      <AdminMenuPart AdminMenuText="" AdminMenuPosition="5.1" OnAdminMenu="false" />
+      <CommonPart Owner="/User.UserName=admin" CreatedUtc="2015-04-22T20:16:02.4638614Z" PublishedUtc="2015-04-23T20:12:25.0979103Z" ModifiedUtc="2015-04-22T20:16:02.7918942Z" />
+      <AutoroutePart Alias="entities" UseCustomPattern="false" />
+      <ProjectionPart Items="0" ItemsPerPage="0" Offset="0" PagerSuffix="" MaxItems="20" DisplayPager="false" Query="/Identifier=013468244b9745b590ab0a5b288356c6" LayoutIndex="0" />
+    </ProjectionPage>
+    <Query Id="/Identifier=013468244b9745b590ab0a5b288356c6" Status="Published">
+      <TitlePart Title="Entities" />
+      <IdentityPart Identifier="013468244b9745b590ab0a5b288356c6" />
+      <QueryPart>
+        <FilterGroups>
+          <FilterGroup>
+            <Filter Category="Content" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;ContentTypes&gt;EntityDefinition&lt;/ContentTypes&gt;&lt;/Form&gt;" Type="ContentTypes" />
+          </FilterGroup>
+        </FilterGroups>
+        <SortCriteria>
+          <SortCriterion Category="TitlePartRecord" Description="" Position="0" State="&lt;Form&gt;&lt;Description&gt;&lt;/Description&gt;&lt;Sort&gt;true&lt;/Sort&gt;&lt;/Form&gt;" Type="Title" />
+        </SortCriteria>
+        <Layouts>
+          <Layout Category="Html" Description="" State="&lt;Form&gt;&lt;QueryId&gt;37&lt;/QueryId&gt;&lt;Category&gt;Html&lt;/Category&gt;&lt;Type&gt;Shape&lt;/Type&gt;&lt;Description&gt;&lt;/Description&gt;&lt;Display&gt;0&lt;/Display&gt;&lt;DisplayType&gt;Detail&lt;/DisplayType&gt;&lt;ShapeType&gt;EntityList&lt;/ShapeType&gt;&lt;/Form&gt;" Display="0" DisplayType="Detail" Type="Shape">
+            <Properties />
+            <Group />
+          </Layout>
+        </Layouts>
+      </QueryPart>
+    </Query>
+  </Data>
+</Orchard>

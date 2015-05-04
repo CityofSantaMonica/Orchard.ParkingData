@@ -11,16 +11,28 @@ namespace CSM.ParkingData.Models
 
     public class SensorEventsSettings : ContentPart
     {
-        public double LifetimeLength
+        public double DefaultLifetimeLength
         {
-            get { return this.Retrieve(x => x.LifetimeLength, 3.0); }
-            set { this.Store(x => x.LifetimeLength, value); }
+            get { return this.Retrieve(x => x.DefaultLifetimeLength); }
+            set { this.Store(x => x.DefaultLifetimeLength, value); }
         }
 
-        public LifetimeUnits LifetimeUnits
+        public LifetimeUnits DefaultLifetimeUnits
         {
-            get { return this.Retrieve(x => x.LifetimeUnits, LifetimeUnits.Hours); }
-            set { this.Store(x => x.LifetimeUnits, value); }
+            get { return this.Retrieve(x => x.DefaultLifetimeUnits); }
+            set { this.Store(x => x.DefaultLifetimeUnits, value); }
+        }
+
+        public double MaxLifetimeLength
+        {
+            get { return this.Retrieve(x => x.MaxLifetimeLength, 3.0); }
+            set { this.Store(x => x.MaxLifetimeLength, value); }
+        }
+
+        public LifetimeUnits MaxLifetimeUnits
+        {
+            get { return this.Retrieve(x => x.MaxLifetimeUnits, LifetimeUnits.Hours); }
+            set { this.Store(x => x.MaxLifetimeUnits, value); }
         }
     }
 }

@@ -38,11 +38,11 @@ namespace CSM.ParkingData.Controllers
                 return BadRequest(String.Format("'{0}' could not be interpreted as an UTC ISO 8061 basic formatted DateTime.", datetime));
             }
 
-            var lifetime = _sensorEventsService.GetLifetime();
+            var lifetime = _sensorEventsService.GetMaxLifetime();
 
             if (datetimeParsed < lifetime.Since)
             {
-                return BadRequest("The provided datetime was earlier than the allowed lifetime.");
+                return BadRequest("The provided datetime was earlier than the maximum allowed lifetime.");
             }
 
             var events = getSince(datetimeParsed);
@@ -53,8 +53,19 @@ namespace CSM.ParkingData.Controllers
         [HttpGet]
         public IHttpActionResult Get()
         {
-            var lifetime = _sensorEventsService.GetLifetime();
-            var events = getSince(lifetime.Since);
+            var defaultLifetime = _sensorEventsService.GetDefaultLifetime();
+            var events = Enumerable.Empty<SensorEventGET>();
+
+            if (defaultLifetime != null)
+            {
+                events = getSince(defaultLifetime.Since);
+            }
+            else
+            {
+                var maxLifetime = _sensorEventsService.GetMaxLifetime();
+                events = getSince(maxLifetime.Since);
+            }
+
             return Ok(events);
         }
 
@@ -103,10 +114,10 @@ namespace CSM.ParkingData.Controllers
 
         private IEnumerable<SensorEventGET> getSince(DateTime datetime)
         {
-            return _sensorEventsService.Query()
-                                       .Where(s => datetime <= s.EventTime)
-                                       .OrderByDescending(s => s.EventTime)
-                                       .Select(_sensorEventsService.ConvertToViewModel);
+            return _sensorEventsService.QuerySince(datetime)
+                                       .Select(_sensorEventsService.ConvertToViewModel)
+                                       //make sure the final result set is ordered by event time
+                                       .OrderByDescending(vm => vm.EventTime);
         }
     }
 }
