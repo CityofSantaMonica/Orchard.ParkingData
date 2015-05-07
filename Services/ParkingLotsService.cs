@@ -6,7 +6,7 @@ using Microsoft.WindowsAzure;
 
 namespace CSM.ParkingData.Services
 {
-    public class ParkingLotService : IParkingLotService
+    public class ParkingLotsService : IParkingLotsService
     {
         public IEnumerable<ParkingLot> Get()
         {

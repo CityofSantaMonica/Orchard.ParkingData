@@ -4,7 +4,7 @@ using Orchard;
 
 namespace CSM.ParkingData.Services
 {
-    public interface IParkingLotService : IDependency
+    public interface IParkingLotsService : IDependency
     {
         IEnumerable<ParkingLot> Get();
     }
