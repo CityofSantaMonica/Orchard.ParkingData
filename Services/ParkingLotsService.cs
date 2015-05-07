@@ -10,13 +10,13 @@ namespace CSM.ParkingData.Services
     {
         public IEnumerable<ParkingLot> Get()
         {
-            var parkingServerUrl = CloudConfigurationManager.GetSetting("ParkingLotServerUrl");
-            return Get(parkingServerUrl);
+            var lotDataUrl = CloudConfigurationManager.GetSetting("ParkingLotDataUrl");
+            return Get(lotDataUrl);
         }
 
-        public IEnumerable<ParkingLot> Get(string parkingServerUrl)
+        public IEnumerable<ParkingLot> Get(string lotDataUrl)
         {
-            var xdocument = XDocument.Load(parkingServerUrl);
+            var xdocument = XDocument.Load(lotDataUrl);
             var lots = new List<ParkingLot>();
 
             foreach (var lot in xdocument.Root.Elements("lot"))
