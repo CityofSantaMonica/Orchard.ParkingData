@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using CSM.ParkingData.ViewModels;
 using Microsoft.WindowsAzure;
@@ -16,7 +17,17 @@ namespace CSM.ParkingData.Services
 
         public IEnumerable<ParkingLot> Get(string lotDataUrl)
         {
-            var xdocument = XDocument.Load(lotDataUrl);
+            XDocument xdocument;
+
+            try
+            {
+                xdocument = XDocument.Load(lotDataUrl);
+            }
+            catch
+            {
+                return Enumerable.Empty<ParkingLot>();
+            }
+
             var lots = new List<ParkingLot>();
 
             foreach (var lot in xdocument.Root.Elements("lot"))
