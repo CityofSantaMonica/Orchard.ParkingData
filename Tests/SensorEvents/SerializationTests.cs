@@ -9,6 +9,7 @@ using NUnit.Framework;
 
 namespace CSM.ParkingData.Tests.SensorEvents
 {
+    [TestFixture]
     public class SerializationTests
     {
         [Test]

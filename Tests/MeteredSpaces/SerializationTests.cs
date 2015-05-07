@@ -8,6 +8,7 @@ using NUnit.Framework;
 
 namespace CSM.ParkingData.Tests.MeteredSpaces
 {
+    [TestFixture]
     public class SerializationTests
     {
         [Test]

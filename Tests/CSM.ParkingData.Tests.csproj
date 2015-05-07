@@ -77,6 +77,8 @@
     <Compile Include="ControllerTestsBase.cs" />
     <Compile Include="Lifetime\ControllerTests.cs" />
     <Compile Include="Lifetime\SerializationTests.cs" />
+    <Compile Include="Lots\ControllerTests.cs" />
+    <Compile Include="Lots\SerializationTests.cs" />
     <Compile Include="MeteredSpaces\ControllerTests.cs" />
     <Compile Include="MeteredSpaces\SerializationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
