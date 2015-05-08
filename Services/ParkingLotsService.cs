@@ -39,7 +39,7 @@ namespace CSM.ParkingData.Services
                     Longitude = Convert.ToDecimal(lot.Element("longitude").Value),
                     Name = lot.Element("name").Value,
                     StreetAddress = lot.Element("address").Value,
-                    ZipCode = Convert.ToInt16(lot.Element("zip").Value)
+                    ZipCode = Convert.ToInt32(lot.Element("zip").Value)
                 });
             }
 
