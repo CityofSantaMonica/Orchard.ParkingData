@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
 namespace CSM.ParkingData.ViewModels
@@ -11,6 +12,9 @@ namespace CSM.ParkingData.ViewModels
 
         [DataMember(Name = "description")]
         public string Description { get; set; }
+
+        [DataMember(Name = "last_update")]
+        public DateTime LastUpdate { get; set; }
 
         [DataMember(Name = "latitude")]
         [Range(-90.0, 90.0)]
