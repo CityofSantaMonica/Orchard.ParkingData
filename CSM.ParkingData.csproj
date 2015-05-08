@@ -129,6 +129,7 @@
     <Content Include="Placement.info" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\LotsController.cs" />
     <Compile Include="Controllers\MeteredSpacesController.cs" />
     <Compile Include="Controllers\LifetimeController.cs" />
     <Compile Include="Controllers\SensorEventsController.cs" />
@@ -143,13 +144,16 @@
     <Compile Include="Models\MeteredSpace.cs" />
     <Compile Include="Models\SensorEvent.cs" />
     <Compile Include="Services\IMeteredSpacesService.cs" />
+    <Compile Include="Services\IParkingLotsService.cs" />
     <Compile Include="Services\ISensorEventsService.cs" />
     <Compile Include="Services\MeteredSpacesService.cs" />
+    <Compile Include="Services\ParkingLotsService.cs" />
     <Compile Include="Services\SensorEventsService.cs" />
     <Compile Include="ViewModels\ISourcedFromXml.cs" />
     <Compile Include="ViewModels\MeteredSpaceGET.cs" />
     <Compile Include="ViewModels\MeteredSpacePOST.cs" />
     <Compile Include="ViewModels\MeteredSpacePOSTCollection.cs" />
+    <Compile Include="ViewModels\ParkingLot.cs" />
     <Compile Include="ViewModels\SensorEventGET.cs" />
     <Compile Include="ViewModels\SensorEventLifetime.cs" />
     <Compile Include="ViewModels\SensorEventMeteredSpacePOST.cs" />

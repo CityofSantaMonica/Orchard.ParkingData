@@ -6,6 +6,7 @@ using NUnit.Framework;
 
 namespace CSM.ParkingData.Tests.Lifetime
 {
+    [TestFixture]
     public class SerializationTests
     {
         [Test]

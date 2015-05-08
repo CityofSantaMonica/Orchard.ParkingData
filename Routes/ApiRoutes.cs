@@ -62,6 +62,15 @@ namespace CSM.ParkingData.Routes
                         controller = "MeteredSpaces",
                         id = RouteParameter.Optional
                     }
+                },
+                new HttpRouteDescriptor() {
+                    Name = "Lots",
+                    Priority = 5,
+                    RouteTemplate = "lots",
+                    Defaults = new {
+                        area = _area,
+                        controller = "Lots"
+                    }
                 }
             };
         }
