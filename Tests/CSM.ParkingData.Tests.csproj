@@ -64,6 +64,7 @@
       <HintPath>..\..\..\..\..\lib\aspnetmvc\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -78,6 +79,7 @@
     <Compile Include="Lifetime\ControllerTests.cs" />
     <Compile Include="Lifetime\SerializationTests.cs" />
     <Compile Include="Lots\ControllerTests.cs" />
+    <Compile Include="Lots\ServiceTests.cs" />
     <Compile Include="Lots\SerializationTests.cs" />
     <Compile Include="MeteredSpaces\ControllerTests.cs" />
     <Compile Include="MeteredSpaces\SerializationTests.cs" />

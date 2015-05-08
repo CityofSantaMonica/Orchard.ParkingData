@@ -1,14 +1,22 @@
-﻿using CSM.ParkingData.ViewModels;
-using Microsoft.WindowsAzure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using CSM.ParkingData.ViewModels;
+using Microsoft.WindowsAzure;
+using Orchard.Services;
 
 namespace CSM.ParkingData.Services
 {
     public class ParkingLotsService : IParkingLotsService
     {
+        private readonly IClock _clock;
+
+        public ParkingLotsService(IClock clock)
+        {
+            _clock = clock;
+        }
+
         public IEnumerable<ParkingLot> Get()
         {
             string lotDataUrl = CloudConfigurationManager.GetSetting("ParkingLotDataUrl");
@@ -42,28 +50,39 @@ namespace CSM.ParkingData.Services
 
         public ParkingLot ParseFromXml(XElement xml)
         {
-            return new ParkingLot()
+            try
             {
-                AvailableSpaces = Convert.ToInt32(xml.Element("available").Value),
-                Description = xml.Element("description").Value,
-                Latitude = Convert.ToDecimal(xml.Element("latitude").Value),
-                Longitude = Convert.ToDecimal(xml.Element("longitude").Value),
-                Name = xml.Element("name").Value,
-                StreetAddress = xml.Element("address").Value,
-                ZipCode = Convert.ToInt32(xml.Element("zip").Value)
-            };
+                return new ParkingLot() {
+                    AvailableSpaces = Convert.ToInt32(xml.Element("available").Value),
+                    Description = xml.Element("description").Value,
+                    Latitude = Convert.ToDecimal(xml.Element("latitude").Value),
+                    Longitude = Convert.ToDecimal(xml.Element("longitude").Value),
+                    Name = xml.Element("name").Value,
+                    StreetAddress = xml.Element("address").Value,
+                    ZipCode = Convert.ToInt32(xml.Element("zip").Value)
+                };
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public DateTime ParseLastUpdateUtc(XElement xml)
         {
-            string dateString = xml.Element("date").Value;
-            string timeString = xml.Element("time").Value;
-            string tzString = xml.Element("timezone").Value;
-            
-            DateTime local = DateTime.ParseExact(dateString + " " + timeString, "yyyy-MM-dd HH:mm", null);
-            TimeZoneInfo sourceTz = TimeZoneInfo.FindSystemTimeZoneById(tzString);
+            try
+            {
+                string dateString = xml.Element("date").Value;
+                string timeString = xml.Element("time").Value;
 
-            return TimeZoneInfo.ConvertTimeToUtc(local, sourceTz);
+                DateTime local = DateTime.ParseExact(dateString + " " + timeString, "yyyy-MM-dd HH:mm", null);
+
+                return TimeZoneInfo.ConvertTimeToUtc(local, TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
+            }
+            catch
+            {
+                return _clock.UtcNow;
+            }
         }
     }
 }

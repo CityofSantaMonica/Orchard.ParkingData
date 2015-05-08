@@ -1,4 +1,5 @@
-﻿using CSM.ParkingData.ViewModels;
+﻿using System;
+using CSM.ParkingData.ViewModels;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
@@ -17,6 +18,7 @@ namespace CSM.ParkingData.Tests.Lots
                 AvailableSpaces = 100,
                 Description = "Description here",
                 Name = "Lot1",
+                LastUpdate = new DateTime(2015, 5, 8, 15, 0, 0, DateTimeKind.Utc), 
                 Latitude = 42.0M,
                 Longitude = -42.0M,
                 StreetAddress = "123 Main Street",
@@ -32,6 +34,7 @@ namespace CSM.ParkingData.Tests.Lots
             StringAssert.IsMatch(@"""available_spaces"":100", serialized);
             StringAssert.IsMatch(@"""description"":""Description here""", serialized);
             StringAssert.IsMatch(@"""name"":""Lot1""", serialized);
+            StringAssert.IsMatch(@"""last_update"":""2015-05-08T15:00:00Z""", serialized);
             StringAssert.IsMatch(@"""latitude"":42.0", serialized);
             StringAssert.IsMatch(@"""longitude"":-42.0", serialized);
             StringAssert.IsMatch(@"""street_address"":""123 Main Street""", serialized);
