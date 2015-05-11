@@ -75,13 +75,28 @@ namespace CSM.ParkingData.Services
 
         public IQueryable<SensorEvent> Query()
         {
-            return _sensorEventsRepo.Table;
+            return Query(null);
+        }
+
+        public IQueryable<SensorEvent> Query(string meterId)
+        {
+            var table = _sensorEventsRepo.Table;
+            
+            if (!String.IsNullOrEmpty(meterId))
+                table = table.Where(s => s.MeteredSpace.MeterId == meterId);
+
+            return table;
         }
 
         public IQueryable<SensorEvent> QuerySince(DateTime since)
         {
+            return QuerySince(since, null);
+        }
+
+        public IQueryable<SensorEvent> QuerySince(DateTime since, string meterId)
+        {
             return
-                Query()
+                Query(meterId)
                 //taking advantage of the clustered index on Id
                 //and the fact that later events are always at the end
                 .OrderByDescending(s => s.Id)

@@ -27,14 +27,24 @@ namespace CSM.ParkingData.Services
         SensorEvent Get(long transmissionId);
 
         /// <summary>
-        /// Get a queryable collection of sensor event records in the database.
+        /// Get a queryable collection of sensor event records.
         /// </summary>
         IQueryable<SensorEvent> Query();
 
         /// <summary>
-        /// Get a queryable collection of sensor event records in the database, occuring since the specified DateTime.
+        /// Get a queryable collection of sensor event records occuring at the MeteredSpace with the specified id.
+        /// </summary>
+        IQueryable<SensorEvent> Query(string meterId);
+
+        /// <summary>
+        /// Get a queryable collection of sensor event records occuring since the specified DateTime.
         /// </summary>
         IQueryable<SensorEvent> QuerySince(DateTime since);
+
+        /// <summary>
+        /// Get a queryable collection of sensor event records occuring since the specified DateTime at the MeteredSpace with the specified id.
+        /// </summary>
+        IQueryable<SensorEvent> QuerySince(DateTime since, string meterId);
 
         /// <summary>
         /// Given the sensor event data in a POSTed view model, insert a new record or update an existing record.

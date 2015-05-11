@@ -16,6 +16,11 @@ namespace CSM.ParkingData.Services
         MeteredSpace Get(string meterId);
 
         /// <summary>
+        /// Get a flag indicating if the meter with the specified id exists.
+        /// </summary>
+        bool Exists(string meterId);
+
+        /// <summary>
         /// Given the metered space data in a POSTed view model, insert a new record or update an existing record.
         /// </summary>
         MeteredSpace AddOrUpdate(MeteredSpacePOST viewModel);
@@ -31,7 +36,7 @@ namespace CSM.ParkingData.Services
         MeteredSpaceGET ConvertToViewModel(MeteredSpace entity);
 
         /// <summary>
-        /// Get a queryable collection of metered space records in the database.
+        /// Get a queryable collection of metered space records.
         /// </summary>
         IQueryable<MeteredSpace> Query();
     }
