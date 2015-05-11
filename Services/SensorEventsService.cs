@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CSM.ParkingData.Models;
 using CSM.ParkingData.ViewModels;
@@ -68,11 +69,6 @@ namespace CSM.ParkingData.Services
             return lifetime;
         }
 
-        public SensorEvent Get(long transmissionId)
-        {
-            return _sensorEventsRepo.Get(x => x.TransmissionId == transmissionId);
-        }
-
         public IQueryable<SensorEvent> Query()
         {
             return Query(null);
@@ -118,7 +114,7 @@ namespace CSM.ParkingData.Services
                 TransmissionTime = DateTime.Parse(viewModel.TransmissionDateTime)
             };
 
-            var existing = Get(posted.TransmissionId);
+            var existing = _sensorEventsRepo.Get(x => x.TransmissionId == posted.TransmissionId);
 
             if (existing == null)
             {
@@ -133,7 +129,7 @@ namespace CSM.ParkingData.Services
             return posted;
         }
 
-        public SensorEventGET ConvertToViewModel(SensorEvent entity)
+        public SensorEventGET GetViewModel(SensorEvent entity)
         {
             return new SensorEventGET() {
                 EventId = entity.TransmissionId,
@@ -143,6 +139,20 @@ namespace CSM.ParkingData.Services
                 ReceivedTime = entity.ReceivedTime,
                 SessionId = entity.SessionId
             };
+        }
+
+        public IEnumerable<SensorEventGET> GetViewModelsSince(DateTime since)
+        {
+            return GetViewModelsSince(since, null);
+        }
+
+        public IEnumerable<SensorEventGET> GetViewModelsSince(DateTime since, string meterId)
+        {
+            return
+                QuerySince(since, meterId)
+                .Select(GetViewModel)
+                //make sure the final result set is ordered by event time
+                .OrderByDescending(vm => vm.EventTime);
         }
 
         private DateTime getLifetimeSince(double length, LifetimeUnits units)
