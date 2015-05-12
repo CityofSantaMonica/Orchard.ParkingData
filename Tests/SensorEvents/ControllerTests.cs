@@ -11,24 +11,35 @@ using NUnit.Framework;
 
 namespace CSM.ParkingData.Tests.SensorEvents
 {
+    [TestFixture]
     public class ControllerTests : ControllerTestsBase
     {
         private SensorEventsController _controller;
 
         [SetUp]
-        public override void TestsSetup()
+        public override void SetUp()
         {
-            base.TestsSetup();
+            base.SetUp();
 
-            _controller = new SensorEventsController(_mockSensorEventsService.Object) {
-                Request = _mockRequest,
-                RequestContext = _mockRequestContext
+            _controller = new SensorEventsController(_mockMeteredSpacesService.Object, _mockSensorEventsService.Object) {
+                Request = _requestStub,
+                RequestContext = _requestContextStub
             };
+        }
+
+        private void anyMeterIdExists()
+        {
+            _mockMeteredSpacesService
+                .Setup(m => m.Exists(It.IsAny<string>()))
+                .Returns(true);
         }
 
         //nothing
         [TestCase((string)null)]
         [TestCase("")]
+        //not even close
+        [TestCase("not a date")]
+        [TestCase("January 1, 2015 12:00 A.M.")]
         //date no time
         [TestCase("20150101TZ")]
         //time no date
@@ -42,89 +53,250 @@ namespace CSM.ParkingData.Tests.SensorEvents
         //no UTC specifier
         [TestCase("20150101T000000")]
         [Category("SensorEvents")]
-        public void GetSince_RequiresUTCISO8061_yyyyMMddTHHmmssZ(string argument)
+        public void EvaluateRequestedDateTime_RequiresArgument_InExpectedFormat(string argument)
         {
-            IHttpActionResult actionResult = _controller.Get(argument);
-            var contentResult = actionResult as BadRequestErrorMessageResult;
+            IHttpActionResult badRequest = null;
+            DateTime parsed;
 
-            Assert.IsNotNull(contentResult);
-            StringAssert.IsMatch("UTC.+ISO 8061.+basic format", contentResult.Message);
+            bool success = _controller.EvaluateRequestedDateTime(argument, out parsed, out badRequest);
+
+            Assert.IsFalse(success);
+            Assert.IsNotNull(badRequest as BadRequestErrorMessageResult);
+            StringAssert.IsMatch("UTC.+ISO 8061.+basic format", (badRequest as BadRequestErrorMessageResult).Message);
         }
 
         [Test]
         [Category("SensorEvents")]
-        public void GetSince_RequiresArgument_NotBeforeMaxLifetime()
+        public void EvaluateRequestedDateTime_RequiresArgument_NotBeforeMaxLifetime()
         {
-            base.setupMaxLifetime();
+            IHttpActionResult badRequest = null;
+            DateTime parsed;
+            string argumentBeforeLifetime = _lifetimeStub.Since.AddHours(-1).ToString(SensorEventsController.ExpectedDateTimeFormat);
 
-            string argumentBeforeLifetime = _referenceMaxLifetime.Since.AddHours(-1).ToString(_utcISO8061BasicFormat);
+            bool success = _controller.EvaluateRequestedDateTime(argumentBeforeLifetime, out parsed, out badRequest);
 
-            IHttpActionResult actionResult = _controller.Get(argumentBeforeLifetime);
-            var contentResult = actionResult as BadRequestErrorMessageResult;
-
-            Assert.IsNotNull(contentResult);
-            StringAssert.IsMatch("provided.+earlier than.+lifetime", contentResult.Message);
+            Assert.IsFalse(success);
+            Assert.IsNotNull(badRequest as BadRequestErrorMessageResult);
+            StringAssert.IsMatch("provided.+earlier than.+lifetime", (badRequest as BadRequestErrorMessageResult).Message);
         }
 
         [Test]
         [Category("SensorEvents")]
-        public void GetSince_ReturnsSensorEventGETCollection_WithEventTimeSinceArgument()
+        public void EvaluateRequestedDateTime_WithValidDateTime_BadRequestIsNull_ReturnsTrue()
         {
-            base.setupQuery();
+            IHttpActionResult badRequest = new OkNegotiatedContentResult<object>(new object(), _controller);
+            DateTime parsed = DateTime.MinValue;
+            string validArgument = _lifetimeStub.Since.AddMinutes(1).ToString(SensorEventsController.ExpectedDateTimeFormat);
 
-            string sinceArgument = _referenceMaxLifetime.Since.AddHours(_referenceMaxLifetime.Length / 2).ToString(_utcISO8061BasicFormat);
+            bool success = _controller.EvaluateRequestedDateTime(validArgument, out parsed, out badRequest);
 
-            IHttpActionResult actionResult = _controller.Get(sinceArgument);
+            Assert.IsTrue(success);
+            Assert.IsNull(badRequest);
+            Assert.AreEqual(_lifetimeStub.Since.AddMinutes(1), parsed);
+        }
+
+        [Test]
+        [Category("SensorEvents")]
+        public void AtMeterSince_GivenBadMeterId_ReturnsNotFound()
+        {
+            _mockMeteredSpacesService.Setup(m => m.Exists(It.IsAny<string>())).Returns(false);
+
+            string validDateArgument = _dateTimeStub.ToString(SensorEventsController.ExpectedDateTimeFormat);
+            IHttpActionResult actionResult = _controller.AtMeterSince("no match", validDateArgument);
+            NotFoundResult contentResult = actionResult as NotFoundResult;
+
+            Assert.IsNotNull(contentResult);
+        }
+
+        [Test]
+        [Category("SensorEvents")]
+        public void AtMeterSince_GivenGoodMeterIdAndDatetime_ReturnsMatchingSensorEventGETCollection()
+        {
+            anyMeterIdExists();
+
+            DateTime sinceStub = _lifetimeStub.Since.AddMinutes(1);
+            string meterIdStub = "match";
+
+            _mockSensorEventsService
+               .Setup(m => m.GetViewModelsSince(It.IsAny<DateTime>(), It.IsAny<string>()))
+               .Returns<DateTime, string>((since, meterId) => new[] {
+                    //MeterId matches, EventTime in range => return
+                    new SensorEventGET() { MeterId = meterIdStub, EventTime = sinceStub },
+                     //MeterId matches, EventTime in range => return
+                    new SensorEventGET() { MeterId = meterIdStub, EventTime = sinceStub },
+                    //MeterId matches, EventTime out of range => shouldn't return
+                    new SensorEventGET() { MeterId = meterIdStub, EventTime = _lifetimeStub.Since.AddHours(-1) },
+                    //MeterId doesn't match, EventTime in range => shouldn't return
+                    new SensorEventGET() { MeterId = "don't match", EventTime = sinceStub },
+                }.Where(vm => vm.MeterId == meterId && vm.EventTime >= since));
+
+            IHttpActionResult actionResult = _controller.AtMeterSince(meterIdStub, sinceStub.ToString(SensorEventsController.ExpectedDateTimeFormat));
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
 
             Assert.IsNotNull(contentResult);
             Assert.IsNotNull(contentResult.Content);
             Assert.AreEqual(2, contentResult.Content.Count());
-            Assert.IsNull(contentResult.Content.FirstOrDefault(c => c.EventId == 3));
+            Assert.True(contentResult.Content.All(vm => vm.MeterId == meterIdStub));
+            Assert.True(contentResult.Content.All(vm => vm.EventTime >= sinceStub));
         }
 
         [Test]
         [Category("SensorEvents")]
-        public void GetSince_ReturnsSensorEventGETCollection_WithMostRecentFirst()
+        public void AtMeter_GivenBadMeterId_ReturnsNotFound()
         {
-            base.setupQuery();
+            _mockMeteredSpacesService.Setup(m => m.Exists(It.IsAny<string>())).Returns(false);
 
-            string sinceArgument = _referenceMaxLifetime.Since.AddHours(_referenceMaxLifetime.Length / 2).ToString(_utcISO8061BasicFormat);
+            IHttpActionResult actionResult = _controller.AtMeter("no match");
+            NotFoundResult contentResult = actionResult as NotFoundResult;
 
-            IHttpActionResult actionResult = _controller.Get(sinceArgument);
+            Assert.IsNotNull(contentResult);
+        }
+
+        [Test]
+        [Category("SensorEvents")]
+        public void AtMeter_WhenNoDefaultLifetime_UsesMaxLifetime()
+        {
+            anyMeterIdExists();
+
+            _mockSensorEventsService
+                .Setup(m => m.GetDefaultLifetime())
+                .Returns(default(SensorEventLifetime));
+
+            _mockSensorEventsService
+                .Setup(m => m.GetMaxLifetime())
+                .Returns(_lifetimeStub);
+
+            _mockSensorEventsService
+               .Setup(m => m.GetViewModelsSince(It.IsAny<DateTime>(), It.IsAny<string>()))
+               .Returns<DateTime, string>((since, meterId) => new[] { new SensorEventGET() })
+               .Callback<DateTime, string>((sinceArg, meterId) => Assert.AreEqual(_lifetimeStub.Since, sinceArg));
+
+            IHttpActionResult actionResult = _controller.AtMeter("meterId");
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
-            var content = contentResult.Content;
 
-            Assert.Greater(content.First().EventTime, content.Skip(1).First().EventTime);
-            Assert.Greater(content.First().EventTime, content.Last().EventTime);
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.AreEqual(1, contentResult.Content.Count());
         }
 
         [Test]
         [Category("SensorEvents")]
-        public void GetDefault_ReturnsSensorEventGETCollection_WithEventTimeSinceLifetime()
+        public void AtMeter_GivenGoodMeterId_ReturnsMatchingSensorEventGETCollection_SinceDefaultLifetime()
         {
-            base.setupQuery();
+            anyMeterIdExists();
 
-            IHttpActionResult actionResult = _controller.Get();
+            _mockSensorEventsService.Setup(m => m.GetDefaultLifetime()).Returns(_lifetimeStub);
+
+            string meterIdStub = "match";
+
+            _mockSensorEventsService
+               .Setup(m => m.GetViewModelsSince(It.IsAny<DateTime>(), It.IsAny<string>()))
+               .Returns<DateTime, string>((since, meterId) => new[] {
+                    //MeterId matches, EventTime in range => return
+                    new SensorEventGET() { MeterId = meterIdStub, EventTime = _lifetimeStub.Since.AddMinutes(1) },
+                    //MeterId matches, EventTime in range => return
+                    new SensorEventGET() { MeterId = meterIdStub, EventTime = _lifetimeStub.Since.AddMinutes(5) },
+                    //MeterId doesn't match => shouldn't return
+                    new SensorEventGET() { MeterId = "nope", EventTime = _lifetimeStub.Since },
+                    //EventTime out of range => shouldn't return
+                    new SensorEventGET() { MeterId = meterIdStub, EventTime = _lifetimeStub.Since.AddHours(-1) },
+                }.Where(vm => vm.MeterId == meterId && vm.EventTime >= since));
+
+            IHttpActionResult actionResult = _controller.AtMeter(meterIdStub);
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
 
             Assert.IsNotNull(contentResult);
             Assert.IsNotNull(contentResult.Content);
             Assert.AreEqual(2, contentResult.Content.Count());
-            Assert.IsNull(contentResult.Content.FirstOrDefault(c => c.EventId == 3));
+            Assert.True(contentResult.Content.All(vm => vm.MeterId == meterIdStub));
+            Assert.True(contentResult.Content.All(vm => vm.EventTime >= _lifetimeStub.Since));
         }
 
         [Test]
         [Category("SensorEvents")]
-        public void GetDefault_ReturnsSensorEventGETCollection_WithMostRecentFirst()
+        public void Since_ReturnsMatchingSensorEventGETCollection()
         {
-            base.setupQuery();
+            anyMeterIdExists();
 
-            IHttpActionResult actionResult = _controller.Get();
+            DateTime sinceStub = _lifetimeStub.Since.AddMinutes(1);
+
+            _mockSensorEventsService
+               .Setup(m => m.GetViewModelsSince(It.IsAny<DateTime>()))
+               .Returns<DateTime>((since) => new[] {
+                    //EventTime in range => return
+                    new SensorEventGET() { EventTime = sinceStub },
+                    //EventTime in range => return
+                    new SensorEventGET() { EventTime = sinceStub.AddMinutes(5) },
+                    //EventTime out of range => shouldn't return
+                    new SensorEventGET() { EventTime = sinceStub.AddMinutes(-1) },
+                    //EventTime out of range => shouldn't return
+                    new SensorEventGET() { EventTime = sinceStub.AddMinutes(-5) },
+                }.Where(vm => vm.EventTime >= since));
+
+            IHttpActionResult actionResult = _controller.Since(sinceStub.ToString(SensorEventsController.ExpectedDateTimeFormat));
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
-            var content = contentResult.Content;
 
-            Assert.Greater(content.First().EventTime, content.Last().EventTime);
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.AreEqual(2, contentResult.Content.Count());
+            Assert.True(contentResult.Content.All(vm => vm.EventTime >= sinceStub));
+        }
+
+        [Test]
+        [Category("SensorEvents")]
+        public void Default_WhenNoDefaultLifetime_UsesMaxLifetime()
+        {
+            anyMeterIdExists();
+
+            _mockSensorEventsService
+                .Setup(m => m.GetDefaultLifetime())
+                .Returns(default(SensorEventLifetime));
+
+            _mockSensorEventsService
+                .Setup(m => m.GetMaxLifetime())
+                .Returns(_lifetimeStub);
+
+            _mockSensorEventsService
+               .Setup(m => m.GetViewModelsSince(It.IsAny<DateTime>()))
+               .Returns<DateTime>(since => new[] { new SensorEventGET() })
+               .Callback<DateTime>(sinceArg => Assert.AreEqual(_lifetimeStub.Since, sinceArg));
+
+            IHttpActionResult actionResult = _controller.Default();
+            var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
+
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.AreEqual(1, contentResult.Content.Count());
+        }
+
+        [Test]
+        [Category("SensorEvents")]
+        public void Default_ReturnsSensorEventGETCollection_SinceDefaultLifetime()
+        {
+            anyMeterIdExists();
+
+            _mockSensorEventsService.Setup(m => m.GetDefaultLifetime()).Returns(_lifetimeStub);
+
+            _mockSensorEventsService
+               .Setup(m => m.GetViewModelsSince(It.IsAny<DateTime>()))
+               .Returns<DateTime>((since) => new[] {
+                    //EventTime in range => return
+                    new SensorEventGET() { EventTime = _lifetimeStub.Since },
+                    //EventTime in range => return
+                    new SensorEventGET() { EventTime = _lifetimeStub.Since.AddMinutes(5) },
+                    //EventTime out of range => shouldn't return
+                    new SensorEventGET() { EventTime = _lifetimeStub.Since.AddMinutes(-1) },
+                    //EventTime out of range => shouldn't return
+                    new SensorEventGET() { EventTime = _lifetimeStub.Since.AddMinutes(-5) },
+                }.Where(vm => vm.EventTime >= since));
+
+            IHttpActionResult actionResult = _controller.Default();
+            var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
+
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.AreEqual(2, contentResult.Content.Count());
+            Assert.True(contentResult.Content.All(vm => vm.EventTime >= _lifetimeStub.Since));
         }
 
         [Test]
