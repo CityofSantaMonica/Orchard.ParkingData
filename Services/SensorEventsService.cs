@@ -69,36 +69,6 @@ namespace CSM.ParkingData.Services
             return lifetime;
         }
 
-        public IQueryable<SensorEvent> Query()
-        {
-            return Query(null);
-        }
-
-        public IQueryable<SensorEvent> Query(string meterId)
-        {
-            var table = _sensorEventsRepo.Table;
-            
-            if (!String.IsNullOrEmpty(meterId))
-                table = table.Where(s => s.MeteredSpace.MeterId == meterId);
-
-            return table;
-        }
-
-        public IQueryable<SensorEvent> QuerySince(DateTime since)
-        {
-            return QuerySince(since, null);
-        }
-
-        public IQueryable<SensorEvent> QuerySince(DateTime since, string meterId)
-        {
-            return
-                Query(meterId)
-                //taking advantage of the clustered index on Id
-                //and the fact that later events are always at the end
-                .OrderByDescending(s => s.Id)
-                .Where(s => s.EventTime >= since);
-        }
-
         public SensorEvent AddOrUpdate(SensorEventPOST viewModel)
         {
             var meteredSpace = _meteredSpacesService.AddOrUpdate(viewModel.MeteredSpace);
@@ -148,8 +118,17 @@ namespace CSM.ParkingData.Services
 
         public IEnumerable<SensorEventGET> GetViewModelsSince(DateTime since, string meterId)
         {
+            var table = _sensorEventsRepo.Table;
+
+            if (!String.IsNullOrEmpty(meterId))
+                table = table.Where(s => s.MeteredSpace.MeterId == meterId);
+
             return
-                QuerySince(since, meterId)
+                table
+                //taking advantage of the clustered index on Id
+                //and the fact that later events are always at the end
+                .OrderByDescending(s => s.Id)
+                .Where(s => s.EventTime >= since)
                 .Select(GetViewModel)
                 //make sure the final result set is ordered by event time
                 .OrderByDescending(vm => vm.EventTime);
