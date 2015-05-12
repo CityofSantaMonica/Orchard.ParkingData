@@ -9,8 +9,8 @@ using System.Security;
 [assembly: AssemblyTitle("CSM.ParkingData")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("Orchard")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyProduct("CSM.ParkingData")]
+[assembly: AssemblyCopyright("Copyright © City of Santa Monica, CA 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -21,6 +21,7 @@ using System.Security;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("553bc3f3-a16b-413f-9e9d-e01d05406b50")]
+[assembly: InternalsVisibleTo("CSM.ParkingData.Tests")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -34,4 +35,3 @@ using System.Security;
 
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-

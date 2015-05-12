@@ -88,6 +88,7 @@
     <Compile Include="SensorEvents\SerializationTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TestsBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CSM.ParkingData.csproj">

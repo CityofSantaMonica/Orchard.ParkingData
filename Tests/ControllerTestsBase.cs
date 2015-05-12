@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Routing;
@@ -7,28 +6,23 @@ using CSM.ParkingData.Models;
 using CSM.ParkingData.Services;
 using CSM.ParkingData.ViewModels;
 using Moq;
-using NUnit.Framework;
-using Orchard.Settings;
 
 namespace CSM.ParkingData.Tests
 {
-    [TestFixture]
-    public abstract class ControllerTestsBase
+    public abstract class ControllerTestsBase : TestsBase
     {
-        protected static readonly string _utcISO8061BasicFormat = "yyyyMMddTHHmmssZ";
-        protected static readonly DateTime _referenceDateTime = new DateTime(2015, 01, 01, 0, 0, 0, DateTimeKind.Utc);
-        protected static readonly SensorEventLifetime _referenceMaxLifetime = new SensorEventLifetime() { Length = 1.0, Units = LifetimeUnits.Hours, Since = _referenceDateTime };
+        protected static readonly SensorEventLifetime _lifetimeStub = new SensorEventLifetime() { Length = 1.0, Units = LifetimeUnits.Hours, Since = _dateTimeStub };
 
-        protected HttpRequestMessage _mockRequest;
-        protected HttpRequestContext _mockRequestContext;
+        protected HttpRequestMessage _requestStub;
+        protected HttpRequestContext _requestContextStub;
         protected Mock<ISensorEventsService> _mockSensorEventsService;
         protected Mock<IMeteredSpacesService> _mockMeteredSpacesService;
-        protected Mock<ISiteService> _mockSiteSevice;
 
-        [SetUp]
-        public virtual void TestsSetup()
+        public override void SetUp()
         {
-            _mockRequest = new HttpRequestMessage() {
+            base.SetUp();
+
+            _requestStub = new HttpRequestMessage() {
                 Content = new StringContent("StringContent")
             };
 
@@ -40,13 +34,13 @@ namespace CSM.ParkingData.Tests
             mockRouteData.SetupGet(m => m.Route)
                          .Returns(mockRoute.Object);
 
-            _mockRequestContext = new HttpRequestContext() {
+            _requestContextStub = new HttpRequestContext() {
                 RouteData = mockRouteData.Object,
             };
 
             _mockSensorEventsService = new Mock<ISensorEventsService>();
             _mockSensorEventsService
-                .Setup(m => m.ConvertToViewModel(It.IsAny<SensorEvent>()))
+                .Setup(m => m.GetViewModel(It.IsAny<SensorEvent>()))
                 .Returns<SensorEvent>(
                     se => new SensorEventGET {
                         EventId = se.TransmissionId,
@@ -54,6 +48,9 @@ namespace CSM.ParkingData.Tests
                         SessionId = se.SessionId,
                     }
                 );
+            _mockSensorEventsService
+                .Setup(m => m.GetMaxLifetime())
+                .Returns(_lifetimeStub);
 
             _mockMeteredSpacesService = new Mock<IMeteredSpacesService>();
             _mockMeteredSpacesService
@@ -64,47 +61,18 @@ namespace CSM.ParkingData.Tests
                         MeterId = ms.MeterId
                     }
                 );
-
-            var mockSettings = new Mock<ISite>();
-            mockSettings.Setup(m => m.BaseUrl).Returns("http://www.example.com");
-
-            _mockSiteSevice = new Mock<ISiteService>();
-            _mockSiteSevice
-                .Setup(m => m.GetSiteSettings())
-                .Returns(mockSettings.Object);
         }
 
-        protected void setupMaxLifetime()
+        protected IQueryable<SensorEvent> queryableSensorEvents()
         {
-            _mockSensorEventsService
-                .Setup(m => m.GetMaxLifetime())
-                .Returns(_referenceMaxLifetime);
-        }
-
-        protected void setupQuery()
-        {
-            setupMaxLifetime();
-
-            var queryResult = new[] {
+            return new[] {
                 //EventTime in the "future" => should be included in the results
-                new SensorEvent { TransmissionId = 1, EventTime = _referenceDateTime.AddHours(_referenceMaxLifetime.Length * 1) },
+                new SensorEvent { TransmissionId = 1, EventTime = _dateTimeStub.AddHours(_lifetimeStub.Length * 1) },
                 //EventTime in the "future" => should be included in the results
-                new SensorEvent { TransmissionId = 2, EventTime = _referenceDateTime.AddHours(_referenceMaxLifetime.Length * 2) },
+                new SensorEvent { TransmissionId = 2, EventTime = _dateTimeStub.AddHours(_lifetimeStub.Length * 2) },
                 //EventTime in the "past" by more than lifetime => should be excluded
-                new SensorEvent { TransmissionId = 3, EventTime = _referenceDateTime.AddHours(_referenceMaxLifetime.Length * -4) }
+                new SensorEvent { TransmissionId = 3, EventTime = _dateTimeStub.AddHours(_lifetimeStub.Length * -4) }
             }.AsQueryable();
-
-            _mockSensorEventsService
-                .Setup(m => m.Query())
-                .Returns(queryResult);
-
-            _mockSensorEventsService
-                .Setup(m => m.QuerySince(It.IsAny<DateTime>()))
-                .Returns<DateTime>(since => queryResult.Where(se => se.EventTime >= since));
-
-            _mockSensorEventsService
-                .Setup(m => m.ConvertToViewModel(It.IsAny<SensorEvent>()))
-                .Returns<SensorEvent>(s => new SensorEventGET() { EventId = s.TransmissionId, EventTime = s.EventTime });
         }
     }
 }
