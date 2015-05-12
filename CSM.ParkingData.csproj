@@ -105,7 +105,7 @@
     <Content Include="Recipes\documentation.recipe.xml" />
     <Content Include="Recipes\setup.recipe.xml" />
     <Content Include="Web.config" />
-    <Content Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -139,7 +139,12 @@
     <Compile Include="Handlers\SensorEventsSettingsHandler.cs" />
     <Compile Include="Models\SensorEventSettings.cs" />
     <Compile Include="Permissions.cs" />
-    <Compile Include="Routes\ApiRoutes.cs" />
+    <Compile Include="Routes\LifetimeRoutes.cs" />
+    <Compile Include="Routes\Routes.cs" />
+    <Compile Include="Routes\SensorEventRoutes.cs" />
+    <Compile Include="Routes\MeteredSpaceRoutes.cs" />
+    <Compile Include="Routes\LotRoutes.cs" />
+    <Compile Include="Routes\ApiWriterRoutes.cs" />
     <Compile Include="Migrations.cs" />
     <Compile Include="Models\MeteredSpace.cs" />
     <Compile Include="Models\SensorEvent.cs" />

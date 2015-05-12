@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using CSM.ParkingData.Extensions;
@@ -17,55 +15,83 @@ namespace CSM.ParkingData.Controllers
     [EnableCors("*", null, "GET")]
     public class SensorEventsController : ApiController
     {
+        private readonly IMeteredSpacesService _meteredSpacesService;
         private readonly ISensorEventsService _sensorEventsService;
 
         public ILogger Logger { get; set; }
 
-        public SensorEventsController(ISensorEventsService sensorEventsService)
+        public SensorEventsController(
+            IMeteredSpacesService meteredSpacesService,
+            ISensorEventsService sensorEventsService)
         {
+            _meteredSpacesService = meteredSpacesService;
             _sensorEventsService = sensorEventsService;
 
             Logger = NullLogger.Instance;
         }
 
+        [TrackAnalytics("GET Sensor Events at Meter Since")]
+        [HttpGet]
+        public IHttpActionResult AtMeterSince(string meterId, string datetime)
+        {
+            if (!_meteredSpacesService.Exists(meterId))
+                return NotFound();
+
+            IHttpActionResult badRequest;
+            DateTime datetimeParsed;
+            if (!EvaluateRequestedDateTime(datetime, out datetimeParsed, out badRequest))
+            {
+                return badRequest;
+            }
+
+            var events = _sensorEventsService.GetViewModelsSince(datetimeParsed, meterId);
+            return Ok(events);
+        }
+
+        [TrackAnalytics("GET Sensor Events at Meter")]
+        [HttpGet]
+        public IHttpActionResult AtMeter(string meterId)
+        {
+            if (!_meteredSpacesService.Exists(meterId))
+                return NotFound();
+
+            var lifetime = _sensorEventsService.GetDefaultLifetime();
+            if (lifetime == null)
+            {
+                lifetime = _sensorEventsService.GetMaxLifetime();
+            }
+
+            var events = _sensorEventsService.GetViewModelsSince(lifetime.Since, meterId);
+            return Ok(events);
+        }
+
         [TrackAnalytics("GET Sensor Events Since")]
         [HttpGet]
-        public IHttpActionResult Get(string datetime)
+        public IHttpActionResult Since(string datetime)
         {
+            IHttpActionResult badRequest;
             DateTime datetimeParsed;
-            if (!DateTime.TryParseExact(datetime, "yyyyMMddTHHmmssZ", null, DateTimeStyles.AdjustToUniversal, out datetimeParsed))
+
+            if (!EvaluateRequestedDateTime(datetime, out datetimeParsed, out badRequest))
             {
-                return BadRequest(String.Format("'{0}' could not be interpreted as an UTC ISO 8061 basic formatted DateTime.", datetime));
+                return badRequest;
             }
 
-            var lifetime = _sensorEventsService.GetMaxLifetime();
-
-            if (datetimeParsed < lifetime.Since)
-            {
-                return BadRequest("The provided datetime was earlier than the maximum allowed lifetime.");
-            }
-
-            var events = getSince(datetimeParsed);
+            var events = _sensorEventsService.GetViewModelsSince(datetimeParsed);
             return Ok(events);
         }
 
         [TrackAnalytics("GET Sensor Events")]
         [HttpGet]
-        public IHttpActionResult Get()
+        public IHttpActionResult Default()
         {
-            var defaultLifetime = _sensorEventsService.GetDefaultLifetime();
-            var events = Enumerable.Empty<SensorEventGET>();
-
-            if (defaultLifetime != null)
+            var lifetime = _sensorEventsService.GetDefaultLifetime();
+            if (lifetime == null)
             {
-                events = getSince(defaultLifetime.Since);
-            }
-            else
-            {
-                var maxLifetime = _sensorEventsService.GetMaxLifetime();
-                events = getSince(maxLifetime.Since);
+                lifetime = _sensorEventsService.GetMaxLifetime();
             }
 
+            var events = _sensorEventsService.GetViewModelsSince(lifetime.Since);
             return Ok(events);
         }
 
@@ -109,15 +135,27 @@ namespace CSM.ParkingData.Controllers
             //    entity
             //);
 
-            return Ok(_sensorEventsService.ConvertToViewModel(entity));
+            return Ok(_sensorEventsService.GetViewModel(entity));
         }
 
-        private IEnumerable<SensorEventGET> getSince(DateTime datetime)
+        internal static readonly string ExpectedDateTimeFormat = "yyyyMMddTHHmmssZ";
+
+        internal bool EvaluateRequestedDateTime(string requestedDatetimeString, out DateTime parsed, out IHttpActionResult badRequest)
         {
-            return _sensorEventsService.QuerySince(datetime)
-                                       .Select(_sensorEventsService.ConvertToViewModel)
-                                       //make sure the final result set is ordered by event time
-                                       .OrderByDescending(vm => vm.EventTime);
+            if (!DateTime.TryParseExact(requestedDatetimeString, SensorEventsController.ExpectedDateTimeFormat, null, DateTimeStyles.AdjustToUniversal, out parsed))
+            {
+                badRequest = BadRequest(String.Format("'{0}' could not be interpreted as an UTC ISO 8061 basic formatted DateTime.", requestedDatetimeString));
+                return false;
+            }
+
+            if (parsed < _sensorEventsService.GetMaxLifetime().Since)
+            {
+                badRequest = BadRequest("The provided datetime was earlier than the maximum allowed lifetime.");
+                return false;
+            }
+
+            badRequest = null;
+            return true;
         }
     }
 }

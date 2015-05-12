@@ -10,13 +10,14 @@ using NUnit.Framework;
 
 namespace CSM.ParkingData.Tests.Lots
 {
+    [TestFixture]
     public class ControllerTests
     {
         private Mock<IParkingLotsService> _mockLotService;
         private LotsController _controller;
 
         [SetUp]
-        public void Setup()
+        public void SetUp()
         {
             _mockLotService = new Mock<IParkingLotsService>();
             _mockLotService

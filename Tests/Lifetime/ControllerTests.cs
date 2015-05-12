@@ -8,44 +8,41 @@ using NUnit.Framework;
 
 namespace CSM.ParkingData.Tests.Lifetime
 {
+    [TestFixture]
     public class ControllerTests : ControllerTestsBase
     {
         private LifetimeController _controller;
 
         [SetUp]
-        public override void TestsSetup()
+        public override void SetUp()
         {
-            base.TestsSetup();
+            base.SetUp();
 
             _controller = new LifetimeController(_mockSensorEventsService.Object) {
-                Request = _mockRequest,
-                RequestContext = _mockRequestContext
+                Request = _requestStub,
+                RequestContext = _requestContextStub
             };
         }
 
         [Test]
         [Category("SensorEventsLifetime")]
-        public void GetMax_ReturnsSensorEventMaxLifetime()
+        public void Max_ReturnsSensorEventMaxLifetime()
         {
-            base.setupMaxLifetime();
-
             IHttpActionResult actionResult = _controller.Max();
             var contentResult = actionResult as OkNegotiatedContentResult<SensorEventLifetime>;
 
             Assert.IsNotNull(contentResult);
             Assert.IsNotNull(contentResult.Content);
-            Assert.AreEqual(_referenceMaxLifetime.Length, contentResult.Content.Length);
+            Assert.AreEqual(_lifetimeStub.Length, contentResult.Content.Length);
             Assert.AreEqual(DateTimeKind.Utc, contentResult.Content.Since.Kind);
-            Assert.AreEqual(_referenceMaxLifetime.Since, contentResult.Content.Since);
-            Assert.AreEqual(_referenceMaxLifetime.Units, contentResult.Content.Units);
+            Assert.AreEqual(_lifetimeStub.Since, contentResult.Content.Since);
+            Assert.AreEqual(_lifetimeStub.Units, contentResult.Content.Units);
         }
 
         [Test]
         [Category("SensorEventsLifetime")]
-        public void GetDefault_ReturnsSensorEventMaxLifetime_WhenDefaultIsNull()
+        public void Default_ReturnsSensorEventMaxLifetime_WhenDefaultIsNull()
         {
-            base.setupMaxLifetime();
-
             SensorEventLifetime notConfigured = null;
 
             _mockSensorEventsService
@@ -57,15 +54,15 @@ namespace CSM.ParkingData.Tests.Lifetime
 
             Assert.IsNotNull(contentResult);
             Assert.IsNotNull(contentResult.Content);
-            Assert.AreEqual(_referenceMaxLifetime.Length, contentResult.Content.Length);
+            Assert.AreEqual(_lifetimeStub.Length, contentResult.Content.Length);
             Assert.AreEqual(DateTimeKind.Utc, contentResult.Content.Since.Kind);
-            Assert.AreEqual(_referenceMaxLifetime.Since, contentResult.Content.Since);
-            Assert.AreEqual(_referenceMaxLifetime.Units, contentResult.Content.Units);
+            Assert.AreEqual(_lifetimeStub.Since, contentResult.Content.Since);
+            Assert.AreEqual(_lifetimeStub.Units, contentResult.Content.Units);
         }
 
         [Test]
         [Category("SensorEventsLifetime")]
-        public void GetDefault_ReturnsSensorEventDefaultLifetime()
+        public void Default_ReturnsSensorEventDefaultLifetime()
         {
             var mockDefaultLifetime = new SensorEventLifetime {
                 Length = 1,

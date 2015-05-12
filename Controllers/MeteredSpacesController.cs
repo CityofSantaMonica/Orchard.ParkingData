@@ -9,7 +9,6 @@ using CSM.ParkingData.Services;
 using CSM.ParkingData.ViewModels;
 using CSM.WebApi.Filters;
 using Orchard.Logging;
-using Orchard.Settings;
 
 namespace CSM.ParkingData.Controllers
 {
@@ -17,14 +16,12 @@ namespace CSM.ParkingData.Controllers
     public class MeteredSpacesController : ApiController
     {
         private readonly IMeteredSpacesService _meteredSpacesService;
-        private readonly ISiteService _siteService;
 
         public ILogger Logger { get; set; }
 
-        public MeteredSpacesController(IMeteredSpacesService meteredSpacesService, ISiteService siteService)
+        public MeteredSpacesController(IMeteredSpacesService meteredSpacesService)
         {
             _meteredSpacesService = meteredSpacesService;
-            _siteService = siteService;
 
             Logger = NullLogger.Instance;
         }

@@ -10,18 +10,19 @@ using NUnit.Framework;
 
 namespace CSM.ParkingData.Tests.MeteredSpaces
 {
+    [TestFixture]
     public class ControllerTests : ControllerTestsBase
     {
         private MeteredSpacesController _controller;
 
         [SetUp]
-        public override void TestsSetup()
+        public override void SetUp()
         {
-            base.TestsSetup();
+            base.SetUp();
 
-            _controller = new MeteredSpacesController(_mockMeteredSpacesService.Object, _mockSiteSevice.Object) {
-                Request = _mockRequest,
-                RequestContext = _mockRequestContext
+            _controller = new MeteredSpacesController(_mockMeteredSpacesService.Object) {
+                Request = _requestStub,
+                RequestContext = _requestContextStub
             };
         }
 
@@ -67,8 +68,6 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
                 .Setup(m => m.Get(meterId))
                 .Returns(new MeteredSpace { MeterId = meterId });
 
-            //var controller = new MeteredSpacesController(_mockMeteredSpacesService.Object);
-
             //act
 
             IHttpActionResult actionResult = _controller.Get(meterId);
@@ -85,10 +84,6 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
         [Category("MeteredSpaces")]
         public void Get_GivenBadId_ReturnsNotFound()
         {
-            //arrange
-
-            //var controller = new MeteredSpacesController(_mockMeteredSpacesService.Object);
-
             //act
 
             IHttpActionResult actionResult = _controller.Get("bad-id");
@@ -102,12 +97,6 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
         [Category("MeteredSpaces")]
         public void Post_GivenNullViewModel_ReturnsBadRequest()
         {
-            ////arrange
-
-            //var controller = new MeteredSpacesController(_mockMeteredSpacesService.Object) {
-            //    RequestContext = _mockRequestContext
-            //};
-
             //act
 
             IHttpActionResult actionResult = _controller.Post(null);
@@ -121,12 +110,6 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
         [Category("MeteredSpaces")]
         public void Post_GivenEmptyViewModel_ReturnsBadRequest()
         {
-            //arrange
-
-            //var controller = new MeteredSpacesController(_mockMeteredSpacesService.Object) {
-            //    RequestContext = _mockRequestContext
-            //};
-
             var emptyViewModelCollection = new MeteredSpacePOSTCollection();
 
             //act
@@ -149,11 +132,6 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
             _mockMeteredSpacesService
                 .Setup(m => m.AddOrUpdate(It.IsAny<MeteredSpacePOST>()))
                 .Throws(exception);
-
-            //var controller = new MeteredSpacesController(_mockMeteredSpacesService.Object) {
-            //    Request = _mockRequest,
-            //    RequestContext = _mockRequestContext
-            //};
 
             var viewModelCollection = new MeteredSpacePOSTCollection { new MeteredSpacePOST() };
 
@@ -180,8 +158,6 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
                         Active = vm.Status == 1
                     }
                 );
-
-            //var controller = new MeteredSpacesController(_mockMeteredSpacesService.Object);
 
             var viewModelCollection = new MeteredSpacePOSTCollection {
                 new MeteredSpacePOST {

@@ -15,6 +15,14 @@ namespace CSM.ParkingData.Controllers
             _sensorEventsService = sensorEventsService;
         }
 
+        [TrackAnalytics("GET Max Sensor Events Lifetime")]
+        [HttpGet]
+        public IHttpActionResult Max()
+        {
+            var lifetime = _sensorEventsService.GetMaxLifetime();
+            return Ok(lifetime);
+        }
+
         [TrackAnalytics("GET Sensor Events Lifetime")]
         [HttpGet]
         public IHttpActionResult Default()
@@ -24,14 +32,6 @@ namespace CSM.ParkingData.Controllers
             if (lifetime == null)
                 lifetime = _sensorEventsService.GetMaxLifetime();
 
-            return Ok(lifetime);
-        }
-
-        [TrackAnalytics("GET Max Sensor Events Lifetime")]
-        [HttpGet]
-        public IHttpActionResult Max()
-        {
-            var lifetime = _sensorEventsService.GetMaxLifetime();
             return Ok(lifetime);
         }
     }

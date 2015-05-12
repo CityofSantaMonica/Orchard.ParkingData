@@ -3,19 +3,16 @@ using System.Linq;
 using System.Xml.Linq;
 using CSM.ParkingData.Services;
 using CSM.ParkingData.ViewModels;
-using Moq;
 using NUnit.Framework;
-using Orchard.Services;
 
 namespace CSM.ParkingData.Tests.Lots
 {
     [TestFixture]
-    public class ServiceTests
+    public class ServiceTests : TestsBase
     {
-        Mock<IClock> _mockClock;
         ParkingLotsService _service;
 
-        private XElement newLotXml(string count, string desc, string lat, string lng, string name, string addr, string zip)
+        private XElement lotXmlStub(string count, string desc, string lat, string lng, string name, string addr, string zip)
         {
             return new XElement("lot", new XElement("available", count),
                                     new XElement("description", desc),
@@ -27,10 +24,11 @@ namespace CSM.ParkingData.Tests.Lots
         }
 
         [SetUp]
-        public void Setup()
+        public override void SetUp()
         {
-            _mockClock = new Mock<IClock>();
-            _service = new ParkingLotsService(_mockClock.Object);
+            base.SetUp();
+
+            _service = new ParkingLotsService(base._mockClock.Object);
         }
 
         [Test]
@@ -55,7 +53,7 @@ namespace CSM.ParkingData.Tests.Lots
 
             foreach (string i in range)
             {
-                root.Add(newLotXml(i, "lot " + i, i, i, "lot " + i, i + " Main Street", "1234" + i));
+                root.Add(lotXmlStub(i, "lot " + i, i, i, "lot " + i, i + " Main Street", "1234" + i));
             }
 
             lotsXml.Add(root);
@@ -81,7 +79,7 @@ namespace CSM.ParkingData.Tests.Lots
         [Category("Lots")]
         public void ParseFromXml_ReturnsParkingLot()
         {
-            XElement xml = newLotXml("100", "somewhere", "42.42", "-42.42", "some lot", "123 Main Street", "12345");
+            XElement xml = lotXmlStub("100", "somewhere", "42.42", "-42.42", "some lot", "123 Main Street", "12345");
 
             ParkingLot parkingLot = _service.ParseFromXml(xml);
 
@@ -122,9 +120,9 @@ namespace CSM.ParkingData.Tests.Lots
             DateTime lastUpdate = _service.ParseLastUpdateUtc(dateTimeXml);
 
             Assert.AreEqual(DateTimeKind.Utc, lastUpdate.Kind);
-            Assert.AreEqual(testDate.Year, lastUpdate.Year);
-            Assert.AreEqual(testDate.Month, lastUpdate.Month);
-            Assert.AreEqual(testDate.Day, lastUpdate.Day);
+            Assert.AreEqual(testDate.ToUniversalTime().Year, lastUpdate.Year);
+            Assert.AreEqual(testDate.ToUniversalTime().Month, lastUpdate.Month);
+            Assert.AreEqual(testDate.ToUniversalTime().Day, lastUpdate.Day);
 
             Assert.AreEqual(testDate.ToUniversalTime().Hour, lastUpdate.Hour);
             Assert.AreEqual(testDate.ToUniversalTime().Minute, lastUpdate.Minute);
@@ -134,17 +132,13 @@ namespace CSM.ParkingData.Tests.Lots
         [Category("Lots")]
         public void ParseLastUpdateUtc_ReturnsCurrentUtc_WhenParseFails()
         {
-            DateTime testDate = DateTime.UtcNow;
-
-            _mockClock.Setup(m => m.UtcNow).Returns(testDate);
-
             XElement dateTimeXml =
                 new XElement("datetime", new XElement("date", "fail"),
                                          new XElement("time", "bad data"));
 
             DateTime lastUpdate = _service.ParseLastUpdateUtc(dateTimeXml);
 
-            Assert.AreEqual(testDate, lastUpdate);
+            Assert.AreEqual(_dateTimeStub, lastUpdate);
         }
     }
 }

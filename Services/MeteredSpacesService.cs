@@ -24,6 +24,11 @@ namespace CSM.ParkingData.Services
             return _meteredSpacesRepo.Get(m => m.MeterId == meterId);
         }
 
+        public bool Exists(string meterId)
+        {
+            return Get(meterId) != null;
+        }
+
         public MeteredSpace AddOrUpdate(MeteredSpacePOST viewModel)
         {
             var posted = new MeteredSpace() {
