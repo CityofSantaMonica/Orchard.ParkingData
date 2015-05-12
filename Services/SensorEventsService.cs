@@ -118,18 +118,19 @@ namespace CSM.ParkingData.Services
 
         public IEnumerable<SensorEventGET> GetViewModelsSince(DateTime since, string meterId)
         {
-            var table = _sensorEventsRepo.Table;
+            var query = 
+                _sensorEventsRepo
+                    .Table
+                    //taking advantage of the clustered index on Id
+                    //and the fact that later events are always at the end
+                    .OrderByDescending(s => s.Id)
+                    .Where(s => s.EventTime >= since);
 
             if (!String.IsNullOrEmpty(meterId))
-                table = table.Where(s => s.MeteredSpace.MeterId == meterId);
+                query = query.Where(s => s.MeteredSpace.MeterId == meterId);
 
             return
-                table
-                //taking advantage of the clustered index on Id
-                //and the fact that later events are always at the end
-                .OrderByDescending(s => s.Id)
-                .Where(s => s.EventTime >= since)
-                .Select(GetViewModel)
+                query.Select(GetViewModel)
                 //make sure the final result set is ordered by event time
                 .OrderByDescending(vm => vm.EventTime);
         }
