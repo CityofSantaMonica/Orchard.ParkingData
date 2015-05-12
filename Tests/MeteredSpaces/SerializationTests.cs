@@ -92,15 +92,13 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
         {
             //arrange
 
-            string expected = @"{""active"":true,""area"":""51"",""latitude"":42.0,""longitude"":-42.0,""meter_id"":""Pole1"",""street_address"":""255""}";
-
             var viewModel = new MeteredSpaceGET {
                 Active = true,
                 Area = "51",
                 Latitude = 42.0m,
                 Longitude = -42.0m,
                 MeterId = "Pole1",
-                StreetAddress = "255",
+                StreetAddress = "123 Main Street",
             };
 
             //act
@@ -109,7 +107,12 @@ namespace CSM.ParkingData.Tests.MeteredSpaces
 
             //assert
 
-            Assert.AreEqual(expected, actual);
+            StringAssert.IsMatch(@"""active"":true", actual);
+            StringAssert.IsMatch(@"""area"":""51""", actual);
+            StringAssert.IsMatch(@"""latitude"":42.0", actual);
+            StringAssert.IsMatch(@"""longitude"":-42.0", actual);
+            StringAssert.IsMatch(@"""meter_id"":""Pole1""", actual);
+            StringAssert.IsMatch(@"""street_address"":""123 Main Street""", actual);
         }
     }
 }

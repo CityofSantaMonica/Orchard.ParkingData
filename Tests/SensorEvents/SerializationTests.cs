@@ -63,14 +63,11 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
             DateTime time = new DateTime(2015, 1, 26, 17, 0, 0, DateTimeKind.Utc);
 
-            string expected = @"{""event_id"":12345678,""event_time"":""2015-01-26T17:00:00Z"",""event_type"":""SE"",""meter_id"":""Pole1"",""received_time"":""2015-01-26T17:00:00Z"",""session_id"":123}";
-
             var viewModel = new SensorEventGET {
                 EventId = 12345678,
                 EventTime = time,
                 EventType = "SE",
                 MeterId = "Pole1",
-                ReceivedTime = time,
                 SessionId = 123
             };
 
@@ -80,7 +77,11 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
             //assert
 
-            Assert.AreEqual(expected, actual);
+            StringAssert.IsMatch(@"""event_id"":12345678", actual);
+            StringAssert.IsMatch(@"""event_time"":""2015-01-26T17:00:00Z""", actual);
+            StringAssert.IsMatch(@"""event_type"":""SE""", actual);
+            StringAssert.IsMatch(@"""meter_id"":""Pole1""", actual);
+            StringAssert.IsMatch(@"""session_id"":123", actual);
         }
 
         
