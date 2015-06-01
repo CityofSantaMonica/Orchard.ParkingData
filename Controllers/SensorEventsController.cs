@@ -98,7 +98,6 @@ namespace CSM.ParkingData.Controllers
         [RequireBasicAuthentication]
         [RequirePermissions("ApiWriter")]
         [ModelValidation]
-        [TrackAnalytics("POST Sensor Events")]
         public IHttpActionResult Post([FromBody]SensorEventPOST postedSensorEvent)
         {
             if (postedSensorEvent == null)
