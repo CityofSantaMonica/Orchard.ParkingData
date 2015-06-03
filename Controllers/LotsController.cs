@@ -19,7 +19,7 @@ namespace CSM.ParkingData.Controllers
 
         [TrackAnalytics("GET Lots")]
         [HttpGet]
-        public IHttpActionResult Get(string name)
+        public IHttpActionResult Get(string name = null)
         {
             var lots = _parkingLotsService.Get();
 
