@@ -111,28 +111,43 @@ namespace CSM.ParkingData.Services
             };
         }
 
-        public IEnumerable<SensorEventGET> GetViewModelsSince(DateTime since)
+        public IQueryable<SensorEvent> Query()
         {
-            return GetViewModelsSince(since, null);
-        }
-
-        public IEnumerable<SensorEventGET> GetViewModelsSince(DateTime since, string meterId)
-        {
-            var query = 
-                _sensorEventsRepo
+            return _sensorEventsRepo
                     .Table
                     //taking advantage of the clustered index on Id
-                    //and the fact that later events are always at the end
-                    .OrderByDescending(s => s.Id)
-                    .Where(s => s.EventTime >= since);
+                    //since we normally want the most recent events (which are at the end)
+                    .OrderByDescending(s => s.Id);
+        }
+
+        public IEnumerable<SensorEventGET> GetViewModelsSince(DateTime datetime)
+        {
+            return GetViewModelsSince(datetime, null);
+        }
+
+        public IEnumerable<SensorEventGET> GetViewModelsSince(DateTime datetime, string meterId)
+        {
+            var query = Query().Where(s => s.EventTime >= datetime);
 
             if (!String.IsNullOrEmpty(meterId))
                 query = query.Where(s => s.MeteredSpace.MeterId == meterId);
 
-            return
-                query.Select(GetViewModel)
-                //make sure the final result set is ordered by event time
-                .OrderByDescending(vm => vm.EventTime);
+            return query.Select(GetViewModel).OrderByDescending(vm => vm.EventTime);
+        }
+
+        public IEnumerable<SensorEventGET> GetViewModelsSince(long sequenceNumber)
+        {
+            return GetViewModelsSince(sequenceNumber, null);
+        }
+
+        public IEnumerable<SensorEventGET> GetViewModelsSince(long sequenceNumber, string meterId)
+        {
+            var query = Query().Where(s => s.Id >= sequenceNumber);
+
+            if (!String.IsNullOrEmpty(meterId))
+                query = query.Where(s => s.MeteredSpace.MeterId == meterId);
+
+            return query.Select(GetViewModel).OrderByDescending(vm => vm.SequenceNumber);
         }
 
         private DateTime getLifetimeSince(double length, LifetimeUnits units)
