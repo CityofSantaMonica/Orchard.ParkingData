@@ -13,16 +13,29 @@ namespace CSM.ParkingData.Routes
         {
             return new[] {
                 new HttpRouteDescriptor() {
-                    Name = "SensorEventsAtMeterSince",
+                    Name = "SensorEventsAtMeterSinceDateTime",
                     Priority = Routes.DefaultPriority,
                     RouteTemplate = String.Format("{0}/since/{{datetime}}", Routes.BaseEventAtRoute),
                     Defaults = new {
                         area = Routes.Area,
                         controller = _controller,
-                        action = "AtMeterSince"
+                        action = "AtMeterSinceDateTime"
                     },
                     Constraints = new {
                         datetime = Routes.DateTimeConstraint
+                    }
+                },
+                new HttpRouteDescriptor() {
+                    Name = "SensorEventsAtMeterSinceSequence",
+                    Priority = Routes.DefaultPriority,
+                    RouteTemplate = String.Format("{0}/since/{{sequence}}", Routes.BaseEventAtRoute),
+                    Defaults = new {
+                        area = Routes.Area,
+                        controller = _controller,
+                        action = "AtMeterSinceSequence"
+                    },
+                    Constraints = new {
+                        sequence = Routes.SequenceConstraint
                     }
                 },
                 new HttpRouteDescriptor() {
@@ -36,16 +49,29 @@ namespace CSM.ParkingData.Routes
                     }
                 },
                 new HttpRouteDescriptor() {
-                    Name = "SensorEventsSince",
+                    Name = "SensorEventsSinceDateTime",
                     Priority = Routes.DefaultPriority,
                     RouteTemplate = String.Format("{0}/since/{{datetime}}", Routes.BaseEventRoute),
                     Defaults = new {
                         area = Routes.Area,
                         controller = _controller,
-                        action = "Since"
+                        action = "SinceDateTime"
                     },
                     Constraints = new {
                         datetime = Routes.DateTimeConstraint
+                    }
+                },
+                 new HttpRouteDescriptor() {
+                    Name = "SensorEventsSinceSequence",
+                    Priority = Routes.DefaultPriority,
+                    RouteTemplate = String.Format("{0}/since/{{sequence}}", Routes.BaseEventRoute),
+                    Defaults = new {
+                        area = Routes.Area,
+                        controller = _controller,
+                        action = "SinceSequence"
+                    },
+                    Constraints = new {
+                        sequence = Routes.SequenceConstraint
                     }
                 },
                 new HttpRouteDescriptor() {
