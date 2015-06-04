@@ -106,7 +106,8 @@ namespace CSM.ParkingData.Services
                 EventTime = entity.EventTime,
                 EventType = entity.EventType,
                 MeterId = entity.MeteredSpace.MeterId,
-                SessionId = entity.SessionId
+                SessionId = entity.SessionId,
+                SequenceNumber = entity.Id,
             };
         }
 
