@@ -134,20 +134,20 @@ namespace CSM.ParkingData.Services
                 .OrderByDescending(vm => vm.EventTime);
         }
 
-        private DateTime getLifetimeSince(double length, LifetimeUnits units)
+        private DateTime getLifetimeSince(double length, TimeSpanUnits units)
         {
             DateTime since = DateTime.MaxValue;
             double lengthModifier = -1 * length;
 
             switch (units)
             {
-                case LifetimeUnits.Hours:
+                case TimeSpanUnits.Hours:
                     since = _clock.UtcNow.AddHours(lengthModifier);
                     break;
-                case LifetimeUnits.Minutes:
+                case TimeSpanUnits.Minutes:
                     since = _clock.UtcNow.AddMinutes(lengthModifier);
                     break;
-                case LifetimeUnits.Seconds:
+                case TimeSpanUnits.Seconds:
                     since = _clock.UtcNow.AddSeconds(lengthModifier);
                     break;
             }

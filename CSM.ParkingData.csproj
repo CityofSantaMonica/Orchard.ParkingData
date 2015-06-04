@@ -105,6 +105,7 @@
     <Content Include="Recipes\documentation.recipe.xml" />
     <Content Include="Recipes\setup.recipe.xml" />
     <Content Include="Web.config" />
+    <Compile Include="Models\TimeSpanUnits.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
