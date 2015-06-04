@@ -1,22 +1,44 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using CSM.ParkingData.Models;
 using CSM.ParkingData.ViewModels;
+using Orchard.ContentManagement;
 using Orchard.Data;
 using Orchard.Logging;
+using Orchard.Settings;
 
 namespace CSM.ParkingData.Services
 {
     public class MeteredSpacesService : IMeteredSpacesService
     {
         private readonly IRepository<MeteredSpace> _meteredSpacesRepo;
+        private readonly ISiteService _siteService;
 
         public ILogger Logger { get; set; }
 
-        public MeteredSpacesService(IRepository<MeteredSpace> meteredSpacesRepo)
+        public MeteredSpacesService(
+            IRepository<MeteredSpace> meteredSpacesRepo,
+            ISiteService siteService)
         {
             _meteredSpacesRepo = meteredSpacesRepo;
+            _siteService = siteService;
 
             Logger = NullLogger.Instance;
+        }
+
+        public MeteredSpaceCacheSettings GetCacheSettings()
+        {
+            var siteSettings = _siteService.GetSiteSettings();
+            var meteredSpaceCacheSettings = siteSettings.As<MeteredSpaceCacheSettings>();
+
+            if (meteredSpaceCacheSettings == null)
+            {
+                meteredSpaceCacheSettings = new MeteredSpaceCacheSettings();
+                meteredSpaceCacheSettings.ContentItem = siteSettings.ContentItem;
+            }
+
+            return meteredSpaceCacheSettings;
         }
 
         public MeteredSpace Get(string meterId)
