@@ -71,7 +71,14 @@ namespace CSM.ParkingData.Services
 
         public SensorEvent AddOrUpdate(SensorEventPOST viewModel)
         {
-            var meteredSpace = _meteredSpacesService.AddOrUpdate(viewModel.MeteredSpace);
+            //try to get an existing meter, by looking in a local cache first
+            var meteredSpace = _meteredSpacesService.Get(viewModel.MeteredSpace.MeterID);
+
+            if (meteredSpace == null)
+            {
+                //record this meter in the db
+                meteredSpace = _meteredSpacesService.AddOrUpdate(viewModel.MeteredSpace);
+            }
 
             var posted = new SensorEvent() {
                 ClientId = viewModel.ClientID,
