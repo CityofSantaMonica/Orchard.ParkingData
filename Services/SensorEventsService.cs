@@ -142,7 +142,9 @@ namespace CSM.ParkingData.Services
 
         public IEnumerable<SensorEventGET> GetViewModelsSince(long sequenceNumber, string meterId)
         {
-            var query = Query().Where(s => s.Id >= sequenceNumber);
+            var maxLifetime = GetMaxLifetime();
+
+            var query = Query().Where(s => s.Id >= sequenceNumber && s.EventTime >= maxLifetime.Since);
 
             if (!String.IsNullOrEmpty(meterId))
                 query = query.Where(s => s.MeteredSpace.MeterId == meterId);
