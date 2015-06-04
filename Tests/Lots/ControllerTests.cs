@@ -24,7 +24,9 @@ namespace CSM.ParkingData.Tests.Lots
                 .Setup(m => m.Get())
                 .Returns(() => new[] { 
                     new ParkingLot { Name = "Lot1", AvailableSpaces = 0 },
-                    new ParkingLot { Name = "Lot2", AvailableSpaces = 100 }
+                    new ParkingLot { Name = "Lot2", AvailableSpaces = 100 },
+                    new ParkingLot { Name = "Structure1", AvailableSpaces = 0 },
+                    new ParkingLot { Name = "Structure2", AvailableSpaces = 100 }
                 });
 
             _controller = new LotsController(_mockLotService.Object);
@@ -32,24 +34,44 @@ namespace CSM.ParkingData.Tests.Lots
 
         [Test]
         [Category("Lots")]
-        public void Get_Returns_ParkingLotCollection()
+        public void Get_ReturnsParkingLotCollection()
         {
             IHttpActionResult actionResult = _controller.Get();
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<ParkingLot>>;
 
             Assert.NotNull(contentResult);
             Assert.NotNull(contentResult.Content);
+            Assert.AreEqual(4, contentResult.Content.Count());
+            Assert.AreEqual(200, contentResult.Content.Aggregate(0, (total, lot) => total += lot.AvailableSpaces));
+        }
+
+        [Test]
+        [Category("Lots")]
+        public void GetWithName_ReturnsParkingLotCollection_FuzzyMatchingName()
+        {
+            IHttpActionResult actionResult = _controller.Get("lot");
+            var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<ParkingLot>>;
+
+            Assert.NotNull(contentResult);
+            Assert.NotNull(contentResult.Content);
             Assert.AreEqual(2, contentResult.Content.Count());
+            foreach (var result in contentResult.Content)
+            {
+                StringAssert.IsMatch(@"Lot\d", result.Name);
+            }
+            Assert.AreEqual(100, contentResult.Content.Aggregate(0, (total, lot) => total += lot.AvailableSpaces));
 
-            var fullLot = contentResult.Content.SingleOrDefault(lot => lot.AvailableSpaces == 0);
-            var emptyLot = contentResult.Content.SingleOrDefault(lot => lot.AvailableSpaces > 0);
+            actionResult = _controller.Get("struct");
+            contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<ParkingLot>>;
 
-            Assert.NotNull(fullLot);
-            Assert.AreEqual("Lot1", fullLot.Name);
-
-            Assert.NotNull(emptyLot);
-            Assert.AreEqual("Lot2", emptyLot.Name);
-            Assert.AreEqual(100, emptyLot.AvailableSpaces);
+            Assert.NotNull(contentResult);
+            Assert.NotNull(contentResult.Content);
+            Assert.AreEqual(2, contentResult.Content.Count());
+            foreach (var result in contentResult.Content)
+            {
+                StringAssert.IsMatch(@"Structure\d", result.Name);
+            }
+            Assert.AreEqual(100, contentResult.Content.Aggregate(0, (total, lot) => total += lot.AvailableSpaces));
         }
     }
 }

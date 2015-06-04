@@ -51,7 +51,6 @@ namespace CSM.ParkingData.Controllers
         [RequireBasicAuthentication]
         [RequirePermissions("ApiWriter")]
         [ModelValidation]
-        [TrackAnalytics("Metered Spaces POST")]
         public IHttpActionResult Post([FromBody]MeteredSpacePOSTCollection postedMeteredSpaces)
         {
             if (postedMeteredSpaces == null)

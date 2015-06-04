@@ -1,4 +1,6 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.Linq;
+using System.Web.Http;
 using System.Web.Http.Cors;
 using CSM.ParkingData.Filters;
 using CSM.ParkingData.Services;
@@ -17,11 +19,21 @@ namespace CSM.ParkingData.Controllers
 
         [TrackAnalytics("GET Lots")]
         [HttpGet]
-        public IHttpActionResult Get()
+        public IHttpActionResult Get(string name = null)
         {
             var lots = _parkingLotsService.Get();
 
-            return Ok(lots);
+            if(!String.IsNullOrEmpty(name))
+                lots = lots.Where(l => l.Name.ToLower().Contains(name.ToLower()));
+
+            if(lots.Any())
+            {
+                return Ok(lots);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }
