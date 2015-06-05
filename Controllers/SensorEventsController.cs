@@ -47,14 +47,14 @@ namespace CSM.ParkingData.Controllers
             return Ok(events);
         }
 
-        [TrackAnalytics("GET Sensor Events at Meter Since Sequence")]
+        [TrackAnalytics("GET Sensor Events at Meter Since Ordinal")]
         [HttpGet]
-        public IHttpActionResult AtMeterSinceSequence(string meterId, long sequence)
+        public IHttpActionResult AtMeterSinceOrdinal(string meterId, long ordinal)
         {
             if (!_meteredSpacesService.Exists(meterId))
                 return NotFound();
 
-            var events = _sensorEventsService.GetViewModelsSince(sequence, meterId);
+            var events = _sensorEventsService.GetViewModelsSince(ordinal, meterId);
             return Ok(events);
         }
 
@@ -91,11 +91,11 @@ namespace CSM.ParkingData.Controllers
             return Ok(events);
         }
 
-        [TrackAnalytics("GET Sensor Events Since Sequence")]
+        [TrackAnalytics("GET Sensor Events Since Ordinal")]
         [HttpGet]
-        public IHttpActionResult SinceSequence(long sequence)
+        public IHttpActionResult SinceOrdinal(long ordinal)
         {
-            var events = _sensorEventsService.GetViewModelsSince(sequence);
+            var events = _sensorEventsService.GetViewModelsSince(ordinal);
             return Ok(events);
         }
 

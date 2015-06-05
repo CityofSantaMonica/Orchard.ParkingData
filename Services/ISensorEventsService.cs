@@ -48,13 +48,13 @@ namespace CSM.ParkingData.Services
         IEnumerable<SensorEventGET> GetViewModelsSince(DateTime datetime, string meterId);
 
         /// <summary>
-        /// Get a collection of view models occuring since the specified sequence number.
+        /// Get a collection of view models occuring since the specified ordinal number.
         /// </summary>
-        IEnumerable<SensorEventGET> GetViewModelsSince(long sequenceNumber);
+        IEnumerable<SensorEventGET> GetViewModelsSince(long ordinal);
 
         /// <summary>
-        /// Get a collection of view models occuring since the specified sequence number at the MeteredSpace with the specified id.
+        /// Get a collection of view models occuring since the specified ordinal number at the MeteredSpace with the specified id.
         /// </summary>
-        IEnumerable<SensorEventGET> GetViewModelsSince(long sequenceNumber, string meterId);
+        IEnumerable<SensorEventGET> GetViewModelsSince(long ordinal, string meterId);
     }
 }
