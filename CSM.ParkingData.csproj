@@ -106,6 +106,7 @@
     <Content Include="Recipes\setup.recipe.xml" />
     <Content Include="Web.config" />
     <Compile Include="Drivers\MeteredSpaceCacheSettingsDriver.cs" />
+    <Compile Include="Extensions\Iso8061Extensions.cs" />
     <Compile Include="Handlers\MeteredSpaceCacheSettingsHandler.cs" />
     <Compile Include="Models\MeteredSpaceCacheSettings.cs" />
     <Compile Include="Models\TimeSpanUnits.cs" />

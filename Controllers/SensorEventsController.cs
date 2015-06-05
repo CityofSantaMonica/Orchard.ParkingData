@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using CSM.ParkingData.Extensions;
@@ -156,11 +155,9 @@ namespace CSM.ParkingData.Controllers
             return Ok(_sensorEventsService.GetViewModel(entity));
         }
 
-        internal static readonly string ExpectedDateTimeFormat = "yyyyMMddTHHmmssZ";
-
         internal bool EvaluateRequestedDateTime(string requestedDatetimeString, out DateTime parsed, out IHttpActionResult badRequest)
         {
-            if (!DateTime.TryParseExact(requestedDatetimeString, SensorEventsController.ExpectedDateTimeFormat, null, DateTimeStyles.AdjustToUniversal, out parsed))
+            if (!requestedDatetimeString.TryParseIso8061Basic(out parsed))
             {
                 badRequest = BadRequest(String.Format("'{0}' could not be interpreted as an UTC ISO 8061 basic formatted DateTime.", requestedDatetimeString));
                 return false;

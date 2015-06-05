@@ -76,6 +76,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ControllerTestsBase.cs" />
+    <Compile Include="Iso8061BasicExtensionsTests.cs" />
     <Compile Include="Lifetime\ControllerTests.cs" />
     <Compile Include="Lifetime\SerializationTests.cs" />
     <Compile Include="Lots\ControllerTests.cs" />
