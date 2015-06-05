@@ -79,7 +79,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
             //assert
 
             StringAssert.IsMatch(@"""event_id"":12345678", actual);
-            StringAssert.IsMatch(@"""event_time"":""2015-01-26T17:00:00Z""", actual);
+            StringAssert.IsMatch(@"""event_time"":""20150126T170000Z""", actual);
             StringAssert.IsMatch(@"""event_type"":""SE""", actual);
             StringAssert.IsMatch(@"""meter_id"":""Pole1""", actual);
             StringAssert.IsMatch(@"""session_id"":123", actual);

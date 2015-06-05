@@ -6,6 +6,7 @@ using System.Web.Http.Results;
 using CSM.ParkingData.Controllers;
 using CSM.ParkingData.Models;
 using CSM.ParkingData.ViewModels;
+using CSM.ParkingData.Extensions;
 using Moq;
 using NUnit.Framework;
 
@@ -71,7 +72,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
         {
             IHttpActionResult badRequest = null;
             DateTime parsed;
-            string argumentBeforeLifetime = _lifetimeStub.Since.AddHours(-1).ToString(SensorEventsController.ExpectedDateTimeFormat);
+            string argumentBeforeLifetime = _lifetimeStub.Since.AddHours(-1).ToIso8061BasicString();
 
             bool success = _controller.EvaluateRequestedDateTime(argumentBeforeLifetime, out parsed, out badRequest);
 
@@ -86,7 +87,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
         {
             IHttpActionResult badRequest = new OkNegotiatedContentResult<object>(new object(), _controller);
             DateTime parsed = DateTime.MinValue;
-            string validArgument = _lifetimeStub.Since.AddMinutes(1).ToString(SensorEventsController.ExpectedDateTimeFormat);
+            string validArgument = _lifetimeStub.Since.AddMinutes(1).ToIso8061BasicString();
 
             bool success = _controller.EvaluateRequestedDateTime(validArgument, out parsed, out badRequest);
 
@@ -101,7 +102,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
         {
             _mockMeteredSpacesService.Setup(m => m.Exists(It.IsAny<string>())).Returns(false);
 
-            string validDateArgument = _dateTimeStub.ToString(SensorEventsController.ExpectedDateTimeFormat);
+            string validDateArgument = _dateTimeStub.ToIso8061BasicString();
             IHttpActionResult actionResult = _controller.AtMeterSinceDateTime("no match", validDateArgument);
             NotFoundResult contentResult = actionResult as NotFoundResult;
 
@@ -143,7 +144,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
                     new SensorEventGET() { MeterId = "don't match", EventTime = sinceStub },
                 }.Where(vm => vm.MeterId == meterId && vm.EventTime >= since));
 
-            IHttpActionResult actionResult = _controller.AtMeterSinceDateTime(meterIdStub, sinceStub.ToString(SensorEventsController.ExpectedDateTimeFormat));
+            IHttpActionResult actionResult = _controller.AtMeterSinceDateTime(meterIdStub, sinceStub.ToIso8061BasicString());
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
 
             Assert.IsNotNull(contentResult);
@@ -306,7 +307,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
                     new SensorEventGET() { EventTime = sinceStub.AddMinutes(-5) },
                 }.Where(vm => vm.EventTime >= since));
 
-            IHttpActionResult actionResult = _controller.SinceDateTime(sinceStub.ToString(SensorEventsController.ExpectedDateTimeFormat));
+            IHttpActionResult actionResult = _controller.SinceDateTime(sinceStub.ToIso8061BasicString());
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
 
             Assert.IsNotNull(contentResult);

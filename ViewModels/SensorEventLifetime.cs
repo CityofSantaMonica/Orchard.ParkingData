@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using CSM.ParkingData.Extensions;
 using CSM.ParkingData.Models;
 
 namespace CSM.ParkingData.ViewModels
@@ -19,7 +20,13 @@ namespace CSM.ParkingData.ViewModels
             private set { ; }
         }
 
-        [DataMember(Name = "since")]
         public DateTime Since { get; set; }
+
+        [DataMember(Name = "since")]
+        public string SinceFormatted
+        {
+            get { return Since.ToIso8061BasicString(); }
+            private set { ; }
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
+using CSM.ParkingData.Extensions;
 
 namespace CSM.ParkingData.ViewModels
 {
@@ -13,8 +14,14 @@ namespace CSM.ParkingData.ViewModels
         [DataMember(Name = "description")]
         public string Description { get; set; }
 
-        [DataMember(Name = "last_update")]
         public DateTime LastUpdate { get; set; }
+
+        [DataMember(Name = "last_update")]
+        public string LastUpdateFormatted
+        {
+            get { return LastUpdate.ToIso8061BasicString(); }
+            private set { ; }
+        }
 
         [DataMember(Name = "latitude")]
         [Range(-90.0, 90.0)]
