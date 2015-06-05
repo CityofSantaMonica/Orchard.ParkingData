@@ -20,5 +20,8 @@ namespace CSM.ParkingData.ViewModels
 
         [DataMember(Name = "session_id")]
         public long SessionId { get; set; }
+
+        [DataMember(Name = "sequence_number")]
+        public long SequenceNumber { get; set; }
     }
 }

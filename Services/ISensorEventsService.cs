@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CSM.ParkingData.Models;
 using CSM.ParkingData.ViewModels;
 using Orchard;
@@ -27,18 +28,33 @@ namespace CSM.ParkingData.Services
         SensorEvent AddOrUpdate(SensorEventPOST viewModel);
 
         /// <summary>
-        /// Given a sensor event record, convert to an equivalent GET view model.
+        /// Convert the SensorEvent to an equivalent view model.
         /// </summary>
         SensorEventGET GetViewModel(SensorEvent entity);
 
         /// <summary>
-        /// Get a collection of sensor event GET view models occuring since the specified DateTime.
+        /// Return a queryable collection of SensorEvent records.
         /// </summary>
-        IEnumerable<SensorEventGET> GetViewModelsSince(DateTime since);
+        IQueryable<SensorEvent> Query();
 
         /// <summary>
-        /// Get a collection of sensor event GET view models occuring since the specified DateTime at the MeteredSpace with the specified id.
+        /// Get a collection of view models occuring since the specified DateTime.
         /// </summary>
-        IEnumerable<SensorEventGET> GetViewModelsSince(DateTime since, string meterId);
+        IEnumerable<SensorEventGET> GetViewModelsSince(DateTime datetime);
+
+        /// <summary>
+        /// Get a collection of view models occuring since the specified DateTime at the MeteredSpace with the specified id.
+        /// </summary>
+        IEnumerable<SensorEventGET> GetViewModelsSince(DateTime datetime, string meterId);
+
+        /// <summary>
+        /// Get a collection of view models occuring since the specified sequence number.
+        /// </summary>
+        IEnumerable<SensorEventGET> GetViewModelsSince(long sequenceNumber);
+
+        /// <summary>
+        /// Get a collection of view models occuring since the specified sequence number at the MeteredSpace with the specified id.
+        /// </summary>
+        IEnumerable<SensorEventGET> GetViewModelsSince(long sequenceNumber, string meterId);
     }
 }

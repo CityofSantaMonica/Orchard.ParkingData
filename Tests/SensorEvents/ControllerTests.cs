@@ -97,12 +97,12 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
         [Test]
         [Category("SensorEvents")]
-        public void AtMeterSince_GivenBadMeterId_ReturnsNotFound()
+        public void AtMeterSinceDateTime_GivenBadMeterId_ReturnsNotFound()
         {
             _mockMeteredSpacesService.Setup(m => m.Exists(It.IsAny<string>())).Returns(false);
 
             string validDateArgument = _dateTimeStub.ToString(SensorEventsController.ExpectedDateTimeFormat);
-            IHttpActionResult actionResult = _controller.AtMeterSince("no match", validDateArgument);
+            IHttpActionResult actionResult = _controller.AtMeterSinceDateTime("no match", validDateArgument);
             NotFoundResult contentResult = actionResult as NotFoundResult;
 
             Assert.IsNotNull(contentResult);
@@ -110,7 +110,20 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
         [Test]
         [Category("SensorEvents")]
-        public void AtMeterSince_GivenGoodMeterIdAndDatetime_ReturnsMatchingSensorEventGETCollection()
+        public void AtMeterSinceSequence_GivenBadMeterId_ReturnsNotFound()
+        {
+            _mockMeteredSpacesService.Setup(m => m.Exists(It.IsAny<string>())).Returns(false);
+
+            long validSequenceArgument = 1;
+            IHttpActionResult actionResult = _controller.AtMeterSinceSequence("no match", validSequenceArgument);
+            NotFoundResult contentResult = actionResult as NotFoundResult;
+
+            Assert.IsNotNull(contentResult);
+        }
+
+        [Test]
+        [Category("SensorEvents")]
+        public void AtMeterSinceDateTime_GivenGoodMeterIdAndDatetime_ReturnsMatchingSensorEventGETCollection()
         {
             anyMeterIdExists();
 
@@ -130,7 +143,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
                     new SensorEventGET() { MeterId = "don't match", EventTime = sinceStub },
                 }.Where(vm => vm.MeterId == meterId && vm.EventTime >= since));
 
-            IHttpActionResult actionResult = _controller.AtMeterSince(meterIdStub, sinceStub.ToString(SensorEventsController.ExpectedDateTimeFormat));
+            IHttpActionResult actionResult = _controller.AtMeterSinceDateTime(meterIdStub, sinceStub.ToString(SensorEventsController.ExpectedDateTimeFormat));
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
 
             Assert.IsNotNull(contentResult);
@@ -138,6 +151,66 @@ namespace CSM.ParkingData.Tests.SensorEvents
             Assert.AreEqual(2, contentResult.Content.Count());
             Assert.True(contentResult.Content.All(vm => vm.MeterId == meterIdStub));
             Assert.True(contentResult.Content.All(vm => vm.EventTime >= sinceStub));
+        }
+
+        [Test]
+        [Category("SensorEvents")]
+        public void AtMeterSinceSequence_GivenGoodMeterIdAndSequence_ReturnsMatchingSensorEventGETCollection()
+        {
+            anyMeterIdExists();
+
+            long sequenceStub = 1;
+            string meterIdStub = "match";
+
+            _mockSensorEventsService
+               .Setup(m => m.GetViewModelsSince(It.IsAny<long>(), It.IsAny<string>()))
+               .Returns<long, string>((since, meterId) => new[] {
+                    new SensorEventGET() { MeterId = meterIdStub, SequenceNumber = sequenceStub - 1 },
+                    new SensorEventGET() { MeterId = meterIdStub, SequenceNumber = sequenceStub },
+                    new SensorEventGET() { MeterId = meterIdStub, SequenceNumber = sequenceStub + 1 },
+                    new SensorEventGET() { MeterId = "don't match", SequenceNumber = sequenceStub + 2 },
+                }.Where(vm => vm.MeterId == meterId && vm.SequenceNumber >= since));
+
+            IHttpActionResult actionResult = _controller.AtMeterSinceSequence(meterIdStub, sequenceStub);
+            var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
+
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.AreEqual(2, contentResult.Content.Count());
+            Assert.True(contentResult.Content.All(vm => vm.MeterId == meterIdStub));
+            Assert.True(contentResult.Content.All(vm => vm.SequenceNumber >= sequenceStub));
+        }
+
+        [Test]
+        [Category("SensorEvents")]
+        public void AtMeterSinceSequence_RespectsMaxLifetime()
+        {
+            anyMeterIdExists();
+
+            long sequenceStub = 1;
+            string meterIdStub = "match";
+
+            _mockSensorEventsService
+               .Setup(m => m.GetViewModelsSince(It.IsAny<long>(), It.IsAny<string>()))
+               .Returns<long, string>((since, meterId) => new[] {
+                    //matching sequence, but before max lifetime
+                    new SensorEventGET() { MeterId = meterIdStub, SequenceNumber = sequenceStub, EventTime = _lifetimeStub.Since.AddHours(-1) },
+                    //matching sequence
+                    new SensorEventGET() { MeterId = meterIdStub, SequenceNumber = sequenceStub, EventTime = _lifetimeStub.Since.AddMinutes(1) },
+                    //matching sequence
+                    new SensorEventGET() { MeterId = meterIdStub, SequenceNumber = sequenceStub + 1, EventTime = _lifetimeStub.Since.AddMinutes(2) },
+                    //non-matching sequence
+                    new SensorEventGET() { MeterId = meterIdStub, SequenceNumber = sequenceStub - 1 },
+                }.Where(vm => vm.MeterId == meterId && vm.SequenceNumber >= since && vm.EventTime >= _lifetimeStub.Since));
+
+            IHttpActionResult actionResult = _controller.AtMeterSinceSequence(meterIdStub, sequenceStub);
+            var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
+
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.AreEqual(2, contentResult.Content.Count());
+            Assert.True(contentResult.Content.All(vm => vm.SequenceNumber >= sequenceStub));
+            Assert.True(contentResult.Content.All(vm => vm.EventTime >= _lifetimeStub.Since));
         }
 
         [Test]
@@ -214,7 +287,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
         [Test]
         [Category("SensorEvents")]
-        public void Since_ReturnsMatchingSensorEventGETCollection()
+        public void SinceDateTime_ReturnsMatchingSensorEventGETCollection()
         {
             anyMeterIdExists();
 
@@ -233,13 +306,96 @@ namespace CSM.ParkingData.Tests.SensorEvents
                     new SensorEventGET() { EventTime = sinceStub.AddMinutes(-5) },
                 }.Where(vm => vm.EventTime >= since));
 
-            IHttpActionResult actionResult = _controller.Since(sinceStub.ToString(SensorEventsController.ExpectedDateTimeFormat));
+            IHttpActionResult actionResult = _controller.SinceDateTime(sinceStub.ToString(SensorEventsController.ExpectedDateTimeFormat));
             var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
 
             Assert.IsNotNull(contentResult);
             Assert.IsNotNull(contentResult.Content);
             Assert.AreEqual(2, contentResult.Content.Count());
             Assert.True(contentResult.Content.All(vm => vm.EventTime >= sinceStub));
+        }
+
+        [Test]
+        [Category("SensorEvents")]
+        public void SinceSequence_GivenBadSequence_ReturnsEmptyCollection()
+        {
+            anyMeterIdExists();
+
+            long sequenceStub = 1;
+
+            _mockSensorEventsService
+               .Setup(m => m.GetViewModelsSince(It.IsAny<DateTime>()))
+               .Returns<long>((since) => new[] {
+                    new SensorEventGET() { SequenceNumber = sequenceStub - 4 },
+                    new SensorEventGET() { SequenceNumber = sequenceStub - 3 },
+                    new SensorEventGET() { SequenceNumber = sequenceStub - 2 },
+                    new SensorEventGET() { SequenceNumber = sequenceStub - 1 },
+                }.Where(vm => vm.SequenceNumber >= since));
+
+            IHttpActionResult actionResult = _controller.SinceSequence(sequenceStub);
+            var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
+
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            CollectionAssert.IsEmpty(contentResult.Content);
+        }
+
+        [Test]
+        [Category("SensorEvents")]
+        public void SinceSequence_GivenGoodSequence_ReturnsMatchingSensorEventGETCollection()
+        {
+            anyMeterIdExists();
+
+            long sequenceStub = 1;
+
+            _mockSensorEventsService
+               .Setup(m => m.GetViewModelsSince(It.IsAny<long>()))
+               .Returns<long>((since) => new[] {
+                    new SensorEventGET() { SequenceNumber = sequenceStub - 1 },
+                    new SensorEventGET() { SequenceNumber = sequenceStub },
+                    new SensorEventGET() { SequenceNumber = sequenceStub + 1 },
+                    new SensorEventGET() { SequenceNumber = sequenceStub + 2 },
+                }.Where(vm => vm.SequenceNumber >= since));
+
+            IHttpActionResult actionResult = _controller.SinceSequence(sequenceStub);
+            var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
+
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.AreEqual(3, contentResult.Content.Count());
+            Assert.True(contentResult.Content.All(vm => vm.SequenceNumber >= sequenceStub));
+        }
+
+        [Test]
+        [Category("SensorEvents")]
+        public void SinceSequence_RespectsMaxLifetime()
+        {
+            anyMeterIdExists();
+
+            long sequenceStub = 1;
+            string meterIdStub = "match";
+
+            _mockSensorEventsService
+               .Setup(m => m.GetViewModelsSince(It.IsAny<long>()))
+               .Returns<long>(sequence => new[] {
+                    //matching sequence, but before max lifetime
+                    new SensorEventGET() { MeterId = meterIdStub, SequenceNumber = sequenceStub, EventTime = _lifetimeStub.Since.AddHours(-1) },
+                    //matching sequence
+                    new SensorEventGET() { MeterId = meterIdStub, SequenceNumber = sequenceStub, EventTime = _lifetimeStub.Since.AddMinutes(1) },
+                    //matching sequence
+                    new SensorEventGET() { MeterId = meterIdStub, SequenceNumber = sequenceStub + 1, EventTime = _lifetimeStub.Since.AddMinutes(2) },
+                    //non-matching sequence
+                    new SensorEventGET() { MeterId = meterIdStub, SequenceNumber = sequenceStub - 1 },
+                }.Where(vm => vm.SequenceNumber >= sequence && vm.EventTime >= _lifetimeStub.Since));
+
+            IHttpActionResult actionResult = _controller.SinceSequence(sequenceStub);
+            var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<SensorEventGET>>;
+
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.AreEqual(2, contentResult.Content.Count());
+            Assert.True(contentResult.Content.All(vm => vm.SequenceNumber >= sequenceStub));
+            Assert.True(contentResult.Content.All(vm => vm.EventTime >= _lifetimeStub.Since));
         }
 
         [Test]

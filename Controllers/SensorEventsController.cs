@@ -30,9 +30,9 @@ namespace CSM.ParkingData.Controllers
             Logger = NullLogger.Instance;
         }
 
-        [TrackAnalytics("GET Sensor Events at Meter Since")]
+        [TrackAnalytics("GET Sensor Events at Meter Since DateTime")]
         [HttpGet]
-        public IHttpActionResult AtMeterSince(string meterId, string datetime)
+        public IHttpActionResult AtMeterSinceDateTime(string meterId, string datetime)
         {
             if (!_meteredSpacesService.Exists(meterId))
                 return NotFound();
@@ -45,6 +45,17 @@ namespace CSM.ParkingData.Controllers
             }
 
             var events = _sensorEventsService.GetViewModelsSince(datetimeParsed, meterId);
+            return Ok(events);
+        }
+
+        [TrackAnalytics("GET Sensor Events at Meter Since Sequence")]
+        [HttpGet]
+        public IHttpActionResult AtMeterSinceSequence(string meterId, long sequence)
+        {
+            if (!_meteredSpacesService.Exists(meterId))
+                return NotFound();
+
+            var events = _sensorEventsService.GetViewModelsSince(sequence, meterId);
             return Ok(events);
         }
 
@@ -65,9 +76,9 @@ namespace CSM.ParkingData.Controllers
             return Ok(events);
         }
 
-        [TrackAnalytics("GET Sensor Events Since")]
+        [TrackAnalytics("GET Sensor Events Since DateTime")]
         [HttpGet]
-        public IHttpActionResult Since(string datetime)
+        public IHttpActionResult SinceDateTime(string datetime)
         {
             IHttpActionResult badRequest;
             DateTime datetimeParsed;
@@ -78,6 +89,14 @@ namespace CSM.ParkingData.Controllers
             }
 
             var events = _sensorEventsService.GetViewModelsSince(datetimeParsed);
+            return Ok(events);
+        }
+
+        [TrackAnalytics("GET Sensor Events Since Sequence")]
+        [HttpGet]
+        public IHttpActionResult SinceSequence(long sequence)
+        {
+            var events = _sensorEventsService.GetViewModelsSince(sequence);
             return Ok(events);
         }
 
