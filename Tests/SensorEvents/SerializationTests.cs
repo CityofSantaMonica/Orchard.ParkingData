@@ -69,7 +69,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
                 EventType = "SE",
                 MeterId = "Pole1",
                 SessionId = 123,
-                SequenceNumber = 1
+                Ordinal = 1
             };
 
             //act
@@ -83,7 +83,7 @@ namespace CSM.ParkingData.Tests.SensorEvents
             StringAssert.IsMatch(@"""event_type"":""SE""", actual);
             StringAssert.IsMatch(@"""meter_id"":""Pole1""", actual);
             StringAssert.IsMatch(@"""session_id"":123", actual);
-            StringAssert.IsMatch(@"""sequence_number"":1", actual);
+            StringAssert.IsMatch(@"""ordinal"":1", actual);
         }
     }
 }

@@ -25,10 +25,10 @@ namespace CSM.ParkingData.ViewModels
         [DataMember(Name = "meter_id")]
         public string MeterId { get; set; }
 
+        [DataMember(Name = "ordinal")]
+        public long Ordinal { get; set; }
+
         [DataMember(Name = "session_id")]
         public long SessionId { get; set; }
-
-        [DataMember(Name = "sequence_number")]
-        public long SequenceNumber { get; set; }
     }
 }

@@ -113,7 +113,7 @@ namespace CSM.ParkingData.Services
                 EventType = entity.EventType,
                 MeterId = entity.MeteredSpace.MeterId,
                 SessionId = entity.SessionId,
-                SequenceNumber = entity.Id,
+                Ordinal = entity.Id,
             };
         }
 
@@ -141,21 +141,21 @@ namespace CSM.ParkingData.Services
             return query.Select(GetViewModel).OrderByDescending(vm => vm.EventTime);
         }
 
-        public IEnumerable<SensorEventGET> GetViewModelsSince(long sequenceNumber)
+        public IEnumerable<SensorEventGET> GetViewModelsSince(long ordinal)
         {
-            return GetViewModelsSince(sequenceNumber, null);
+            return GetViewModelsSince(ordinal, null);
         }
 
-        public IEnumerable<SensorEventGET> GetViewModelsSince(long sequenceNumber, string meterId)
+        public IEnumerable<SensorEventGET> GetViewModelsSince(long ordinal, string meterId)
         {
             var maxLifetime = GetMaxLifetime();
 
-            var query = Query().Where(s => s.Id >= sequenceNumber && s.EventTime >= maxLifetime.Since);
+            var query = Query().Where(s => s.Id >= ordinal && s.EventTime >= maxLifetime.Since);
 
             if (!String.IsNullOrEmpty(meterId))
                 query = query.Where(s => s.MeteredSpace.MeterId == meterId);
 
-            return query.Select(GetViewModel).OrderByDescending(vm => vm.SequenceNumber);
+            return query.Select(GetViewModel).OrderByDescending(vm => vm.Ordinal);
         }
 
         private DateTime getLifetimeSince(double length, TimeSpanUnits units)

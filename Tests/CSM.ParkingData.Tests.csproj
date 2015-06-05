@@ -103,7 +103,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="ParkingDataTests.playlist" />
   </ItemGroup>
   <ItemGroup />
   <Choose>

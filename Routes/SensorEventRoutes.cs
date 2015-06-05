@@ -26,16 +26,16 @@ namespace CSM.ParkingData.Routes
                     }
                 },
                 new HttpRouteDescriptor() {
-                    Name = "SensorEventsAtMeterSinceSequence",
+                    Name = "SensorEventsAtMeterSinceOrdinal",
                     Priority = Routes.DefaultPriority,
-                    RouteTemplate = String.Format("{0}/since/{{sequence}}", Routes.BaseEventAtRoute),
+                    RouteTemplate = String.Format("{0}/since/{{ordinal}}", Routes.BaseEventAtRoute),
                     Defaults = new {
                         area = Routes.Area,
                         controller = _controller,
-                        action = "AtMeterSinceSequence"
+                        action = "AtMeterSinceOrdinal"
                     },
                     Constraints = new {
-                        sequence = Routes.SequenceConstraint
+                        ordinal = Routes.OrdinalConstraint
                     }
                 },
                 new HttpRouteDescriptor() {
@@ -62,16 +62,16 @@ namespace CSM.ParkingData.Routes
                     }
                 },
                  new HttpRouteDescriptor() {
-                    Name = "SensorEventsSinceSequence",
+                    Name = "SensorEventsSinceOrdinal",
                     Priority = Routes.DefaultPriority,
-                    RouteTemplate = String.Format("{0}/since/{{sequence}}", Routes.BaseEventRoute),
+                    RouteTemplate = String.Format("{0}/since/{{ordinal}}", Routes.BaseEventRoute),
                     Defaults = new {
                         area = Routes.Area,
                         controller = _controller,
-                        action = "SinceSequence"
+                        action = "SinceOrdinal"
                     },
                     Constraints = new {
-                        sequence = Routes.SequenceConstraint
+                        ordinal = Routes.OrdinalConstraint
                     }
                 },
                 new HttpRouteDescriptor() {
