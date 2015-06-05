@@ -2,12 +2,6 @@
 
 namespace CSM.ParkingData.Models
 {
-    public enum LifetimeUnits
-    {
-        Hours,
-        Minutes,
-        Seconds
-    }
 
     public class SensorEventsSettings : ContentPart
     {
@@ -17,7 +11,7 @@ namespace CSM.ParkingData.Models
             set { this.Store(x => x.DefaultLifetimeLength, value); }
         }
 
-        public LifetimeUnits DefaultLifetimeUnits
+        public TimeSpanUnits DefaultLifetimeUnits
         {
             get { return this.Retrieve(x => x.DefaultLifetimeUnits); }
             set { this.Store(x => x.DefaultLifetimeUnits, value); }
@@ -29,9 +23,9 @@ namespace CSM.ParkingData.Models
             set { this.Store(x => x.MaxLifetimeLength, value); }
         }
 
-        public LifetimeUnits MaxLifetimeUnits
+        public TimeSpanUnits MaxLifetimeUnits
         {
-            get { return this.Retrieve(x => x.MaxLifetimeUnits, LifetimeUnits.Hours); }
+            get { return this.Retrieve(x => x.MaxLifetimeUnits, TimeSpanUnits.Hours); }
             set { this.Store(x => x.MaxLifetimeUnits, value); }
         }
     }

@@ -1,3 +1,4 @@
 ﻿<Placement>
-  <Place Parts_SensorEventsSettings="Content:1" />
+  <Place Parts_SensorEventsSettings="Content:1"
+         Parts_MeteredSpaceCacheSettings="Content:2"/>
 </Placement>

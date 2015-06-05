@@ -105,6 +105,10 @@
     <Content Include="Recipes\documentation.recipe.xml" />
     <Content Include="Recipes\setup.recipe.xml" />
     <Content Include="Web.config" />
+    <Compile Include="Drivers\MeteredSpaceCacheSettingsDriver.cs" />
+    <Compile Include="Handlers\MeteredSpaceCacheSettingsHandler.cs" />
+    <Compile Include="Models\MeteredSpaceCacheSettings.cs" />
+    <Compile Include="Models\TimeSpanUnits.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Module.txt" />
   </ItemGroup>
@@ -122,6 +126,11 @@
     <ProjectReference Include="..\CSM.WebApi\CSM.WebApi.csproj">
       <Project>{44c685fd-fc5e-41a8-a4dd-20896ca1f77e}</Project>
       <Name>CSM.WebApi</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Orchard.Caching\Orchard.Caching.csproj">
+      <Project>{7528bf74-25c7-4abe-883a-443b4eec4776}</Project>
+      <Name>Orchard.Caching</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
@@ -169,6 +178,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Parts.SensorEventsSettings.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\EditorTemplates\Parts.MeteredSpaceCacheSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

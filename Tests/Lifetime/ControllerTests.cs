@@ -66,7 +66,7 @@ namespace CSM.ParkingData.Tests.Lifetime
         {
             var mockDefaultLifetime = new SensorEventLifetime {
                 Length = 1,
-                Units = LifetimeUnits.Hours,
+                Units = TimeSpanUnits.Hours,
                 Since = new DateTime(1, DateTimeKind.Utc)
             };
 

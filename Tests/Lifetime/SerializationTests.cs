@@ -17,8 +17,8 @@ namespace CSM.ParkingData.Tests.Lifetime
 
             DateTime since = new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-            var lifetime1 = new SensorEventLifetime() { Length = 1.0, Units = LifetimeUnits.Hours, Since = since };
-            var lifetime2 = new SensorEventLifetime() { Length = 0.42, Units = LifetimeUnits.Seconds, Since = since };
+            var lifetime1 = new SensorEventLifetime() { Length = 1.0, Units = TimeSpanUnits.Hours, Since = since };
+            var lifetime2 = new SensorEventLifetime() { Length = 0.42, Units = TimeSpanUnits.Seconds, Since = since };
 
             //act
 

@@ -11,6 +11,12 @@ namespace CSM.ParkingData.Services
     public interface IMeteredSpacesService : IDependency
     {
         /// <summary>
+        /// Get the configured cache settings for metered spaces.
+        /// </summary>
+        /// <returns></returns>
+        MeteredSpaceCacheSettings GetCacheSettings();
+
+        /// <summary>
         /// Get a metered space record by its meter identifier.
         /// </summary>
         MeteredSpace Get(string meterId);

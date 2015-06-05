@@ -71,7 +71,13 @@ namespace CSM.ParkingData.Services
 
         public SensorEvent AddOrUpdate(SensorEventPOST viewModel)
         {
-            var meteredSpace = _meteredSpacesService.AddOrUpdate(viewModel.MeteredSpace);
+            //try to get an existing meter, by looking in a local cache first
+            var meteredSpace = _meteredSpacesService.Get(viewModel.MeteredSpace.MeterID);
+            if (meteredSpace == null)
+            {
+                //record this meter in the db
+                meteredSpace = _meteredSpacesService.AddOrUpdate(viewModel.MeteredSpace);
+            }
 
             var posted = new SensorEvent() {
                 ClientId = viewModel.ClientID,
@@ -152,20 +158,20 @@ namespace CSM.ParkingData.Services
             return query.Select(GetViewModel).OrderByDescending(vm => vm.SequenceNumber);
         }
 
-        private DateTime getLifetimeSince(double length, LifetimeUnits units)
+        private DateTime getLifetimeSince(double length, TimeSpanUnits units)
         {
             DateTime since = DateTime.MaxValue;
             double lengthModifier = -1 * length;
 
             switch (units)
             {
-                case LifetimeUnits.Hours:
+                case TimeSpanUnits.Hours:
                     since = _clock.UtcNow.AddHours(lengthModifier);
                     break;
-                case LifetimeUnits.Minutes:
+                case TimeSpanUnits.Minutes:
                     since = _clock.UtcNow.AddMinutes(lengthModifier);
                     break;
-                case LifetimeUnits.Seconds:
+                case TimeSpanUnits.Seconds:
                     since = _clock.UtcNow.AddSeconds(lengthModifier);
                     break;
             }

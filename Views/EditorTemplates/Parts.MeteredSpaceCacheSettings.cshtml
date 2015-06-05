@@ -1,0 +1,10 @@
+﻿@model CSM.ParkingData.Models.MeteredSpaceCacheSettings
+
+<h2>Metered Space Cache Settings</h2>
+
+<fieldset>
+    @Html.LabelFor(m => m.Length, T("Cache Meters For"))
+    @Html.TextBoxFor(m => m.Length, new { @class = "text small" })
+    @Html.EnumDropDownListFor(m => m.Units)
+    <span class="hint">This is the maximum length of time meter data is cached locally from the database.</span>
+</fieldset>

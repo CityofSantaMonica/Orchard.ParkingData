@@ -11,7 +11,7 @@ namespace CSM.ParkingData.Tests
 {
     public abstract class ControllerTestsBase : TestsBase
     {
-        protected static readonly SensorEventLifetime _lifetimeStub = new SensorEventLifetime() { Length = 1.0, Units = LifetimeUnits.Hours, Since = _dateTimeStub };
+        protected static readonly SensorEventLifetime _lifetimeStub = new SensorEventLifetime() { Length = 1.0, Units = TimeSpanUnits.Hours, Since = _dateTimeStub };
 
         protected HttpRequestMessage _requestStub;
         protected HttpRequestContext _requestContextStub;
