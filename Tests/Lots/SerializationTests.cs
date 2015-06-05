@@ -34,7 +34,7 @@ namespace CSM.ParkingData.Tests.Lots
             StringAssert.IsMatch(@"""available_spaces"":100", serialized);
             StringAssert.IsMatch(@"""description"":""Description here""", serialized);
             StringAssert.IsMatch(@"""name"":""Lot1""", serialized);
-            StringAssert.IsMatch(@"""last_update"":""2015-05-08T15:00:00Z""", serialized);
+            StringAssert.IsMatch(@"""last_update"":""20150508T150000Z""", serialized);
             StringAssert.IsMatch(@"""latitude"":42.0", serialized);
             StringAssert.IsMatch(@"""longitude"":-42.0", serialized);
             StringAssert.IsMatch(@"""street_address"":""123 Main Street""", serialized);

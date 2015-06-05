@@ -29,11 +29,11 @@ namespace CSM.ParkingData.Tests.Lifetime
 
             StringAssert.IsMatch(@"""length"":1.0", actual1);
             StringAssert.IsMatch(@"""units"":""hours""", actual1);
-            StringAssert.IsMatch(@"""since"":""2015-01-01T00:00:00Z""", actual1);
+            StringAssert.IsMatch(@"""since"":""20150101T000000Z""", actual1);
 
             StringAssert.IsMatch(@"""length"":0.42", actual2);
             StringAssert.IsMatch(@"""units"":""seconds""", actual2);
-            StringAssert.IsMatch(@"""since"":""2015-01-01T00:00:00Z""", actual2);
+            StringAssert.IsMatch(@"""since"":""20150101T000000Z""", actual2);
         }
     }
 }
