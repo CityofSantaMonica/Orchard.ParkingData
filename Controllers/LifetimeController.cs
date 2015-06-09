@@ -1,11 +1,11 @@
 ﻿using System.Web.Http;
-using System.Web.Http.Cors;
 using CSM.ParkingData.Filters;
 using CSM.ParkingData.Services;
+using CSM.WebApi.Filters;
 
 namespace CSM.ParkingData.Controllers
 {
-    [EnableCors("*", null, "GET")]
+    [EnableGlobalCors("GET")]
     public class LifetimeController : ApiController
     {
         private readonly ISensorEventsService _sensorEventsService;
