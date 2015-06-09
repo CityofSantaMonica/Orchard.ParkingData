@@ -15,11 +15,11 @@ namespace CSM.ParkingData.Routes
                 new HttpRouteDescriptor() {
                     Name = "LotsDefault",
                     Priority = Routes.DefaultPriority,
-                    RouteTemplate = "lots/{name}",
+                    RouteTemplate = "lots/{id}",
                     Defaults = new {
                         area = Routes.Area,
                         controller = _controller,
-                        name = RouteParameter.Optional
+                        id = RouteParameter.Optional
                     }
                 }
             };
