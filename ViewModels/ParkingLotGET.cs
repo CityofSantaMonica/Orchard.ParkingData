@@ -21,7 +21,7 @@ namespace CSM.ParkingData.ViewModels
             get
             {
                 //split the name on space
-                //take the first character in each piece as uppsercase
+                //take the first character in each piece as uppercase
                 //convert to ASCII value
                 var nameValues = Name.Split(' ').SelectMany(s => s.Substring(0,1).ToUpper()).Select(c => Convert.ToInt16(c));
                 //combine into long
