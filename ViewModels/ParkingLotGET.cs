@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Runtime.Serialization;
 using CSM.ParkingData.Extensions;
 
@@ -13,6 +14,21 @@ namespace CSM.ParkingData.ViewModels
 
         [DataMember(Name = "description")]
         public string Description { get; set; }
+
+        [DataMember(Name = "id")]
+        public long Id
+        {
+            get
+            {
+                //split the name on space
+                //take the first character in each piece as uppsercase
+                //convert to ASCII value
+                var nameValues = Name.Split(' ').SelectMany(s => s.Substring(0,1).ToUpper()).Select(c => Convert.ToInt16(c));
+                //combine into long
+                return long.Parse(String.Join("", nameValues));
+            }
+            private set { ; }
+        }
 
         public DateTime LastUpdate { get; set; }
 
