@@ -17,7 +17,7 @@ namespace CSM.ParkingData.Services
             _clock = clock;
         }
 
-        public IEnumerable<ParkingLot> Get()
+        public IEnumerable<ParkingLotGET> Get()
         {
             string lotDataUrl = CloudConfigurationManager.GetSetting("ParkingLotDataUrl");
             XDocument xdocument;
@@ -29,13 +29,13 @@ namespace CSM.ParkingData.Services
             }
             catch
             {
-                return Enumerable.Empty<ParkingLot>();
+                return Enumerable.Empty<ParkingLotGET>();
             }
         }
 
-        public IEnumerable<ParkingLot> Get(XDocument lotXml)
+        public IEnumerable<ParkingLotGET> Get(XDocument lotXml)
         {
-            var parkingLots = new List<ParkingLot>();
+            var parkingLots = new List<ParkingLotGET>();
             DateTime lastUpdateUtc = ParseLastUpdateUtc(lotXml.Root);
 
             foreach (var lot in lotXml.Root.Elements("lot"))
@@ -48,11 +48,11 @@ namespace CSM.ParkingData.Services
             return parkingLots;
         }
 
-        public ParkingLot ParseFromXml(XElement xml)
+        public ParkingLotGET ParseFromXml(XElement xml)
         {
             try
             {
-                return new ParkingLot() {
+                return new ParkingLotGET() {
                     AvailableSpaces = Convert.ToInt32(xml.Element("available").Value),
                     Description = xml.Element("description").Value,
                     Latitude = Convert.ToDecimal(xml.Element("latitude").Value),

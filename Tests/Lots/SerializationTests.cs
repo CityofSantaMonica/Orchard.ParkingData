@@ -14,7 +14,7 @@ namespace CSM.ParkingData.Tests.Lots
         {
             //arrange
 
-            var lot = new ParkingLot {
+            var lot = new ParkingLotGET {
                 AvailableSpaces = 100,
                 Description = "Description here",
                 Name = "Lot1",

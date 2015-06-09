@@ -12,14 +12,14 @@ namespace CSM.ParkingData.Services
     public interface IParkingLotsService : IDependency
     {
         /// <summary>
-        /// Get the collection of <see cref="CSM.ParkingData.ViewModels.ParkingLot"/> records.
+        /// Get the collection of <see cref="CSM.ParkingData.ViewModels.ParkingLotGET"/> records.
         /// </summary>
-        IEnumerable<ParkingLot> Get();
+        IEnumerable<ParkingLotGET> Get();
 
         /// <summary>
-        /// Parse the xml representation of a parking lot into its <see cref="CSM.ParkingData.ViewModels.ParkingLot"/> representation.
+        /// Parse the xml representation of a parking lot into its <see cref="CSM.ParkingData.ViewModels.ParkingLotGET"/> representation.
         /// </summary>
-        ParkingLot ParseFromXml(XElement xml);
+        ParkingLotGET ParseFromXml(XElement xml);
 
         /// <summary>
         /// Parse the xml representation of the last update date and time into its <see cref="System.DateTime"/> representation.

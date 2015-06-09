@@ -6,7 +6,7 @@ using CSM.ParkingData.Extensions;
 namespace CSM.ParkingData.ViewModels
 {
     [DataContract(Name = "lot", Namespace = "")]
-    public class ParkingLot
+    public class ParkingLotGET
     {
         [DataMember(Name = "available_spaces")]
         public int AvailableSpaces { get; set; }

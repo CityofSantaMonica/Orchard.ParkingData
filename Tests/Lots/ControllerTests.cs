@@ -23,10 +23,10 @@ namespace CSM.ParkingData.Tests.Lots
             _mockLotService
                 .Setup(m => m.Get())
                 .Returns(() => new[] { 
-                    new ParkingLot { Name = "Lot1", AvailableSpaces = 0 },
-                    new ParkingLot { Name = "Lot2", AvailableSpaces = 100 },
-                    new ParkingLot { Name = "Structure1", AvailableSpaces = 0 },
-                    new ParkingLot { Name = "Structure2", AvailableSpaces = 100 }
+                    new ParkingLotGET { Name = "Lot1", AvailableSpaces = 0 },
+                    new ParkingLotGET { Name = "Lot2", AvailableSpaces = 100 },
+                    new ParkingLotGET { Name = "Structure1", AvailableSpaces = 0 },
+                    new ParkingLotGET { Name = "Structure2", AvailableSpaces = 100 }
                 });
 
             _controller = new LotsController(_mockLotService.Object);
@@ -37,7 +37,7 @@ namespace CSM.ParkingData.Tests.Lots
         public void Get_ReturnsParkingLotCollection()
         {
             IHttpActionResult actionResult = _controller.Get();
-            var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<ParkingLot>>;
+            var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<ParkingLotGET>>;
 
             Assert.NotNull(contentResult);
             Assert.NotNull(contentResult.Content);
@@ -50,7 +50,7 @@ namespace CSM.ParkingData.Tests.Lots
         public void GetWithName_ReturnsParkingLotCollection_FuzzyMatchingName()
         {
             IHttpActionResult actionResult = _controller.Get("lot");
-            var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<ParkingLot>>;
+            var contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<ParkingLotGET>>;
 
             Assert.NotNull(contentResult);
             Assert.NotNull(contentResult.Content);
@@ -62,7 +62,7 @@ namespace CSM.ParkingData.Tests.Lots
             Assert.AreEqual(100, contentResult.Content.Aggregate(0, (total, lot) => total += lot.AvailableSpaces));
 
             actionResult = _controller.Get("struct");
-            contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<ParkingLot>>;
+            contentResult = actionResult as OkNegotiatedContentResult<IEnumerable<ParkingLotGET>>;
 
             Assert.NotNull(contentResult);
             Assert.NotNull(contentResult.Content);
