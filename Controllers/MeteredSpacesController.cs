@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Http;
-using System.Web.Http.Cors;
 using CSM.ParkingData.Extensions;
 using CSM.ParkingData.Filters;
 using CSM.ParkingData.Models;
@@ -12,7 +11,7 @@ using Orchard.Logging;
 
 namespace CSM.ParkingData.Controllers
 {
-    [EnableCors("*", null, "GET")]
+    [EnableGlobalCors("GET")]
     public class MeteredSpacesController : ApiController
     {
         private readonly IMeteredSpacesService _meteredSpacesService;
