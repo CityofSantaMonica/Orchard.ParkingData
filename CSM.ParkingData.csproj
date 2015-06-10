@@ -156,7 +156,7 @@
     <Compile Include="ViewModels\MeteredSpaceGET.cs" />
     <Compile Include="ViewModels\MeteredSpacePOST.cs" />
     <Compile Include="ViewModels\MeteredSpacePOSTCollection.cs" />
-    <Compile Include="ViewModels\ParkingLot.cs" />
+    <Compile Include="ViewModels\ParkingLotGET.cs" />
     <Compile Include="ViewModels\SensorEventGET.cs" />
     <Compile Include="ViewModels\SensorEventLifetime.cs" />
     <Compile Include="ViewModels\SensorEventMeteredSpacePOST.cs" />

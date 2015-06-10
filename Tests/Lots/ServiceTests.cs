@@ -81,7 +81,7 @@ namespace CSM.ParkingData.Tests.Lots
         {
             XElement xml = lotXmlStub("100", "somewhere", "42.42", "-42.42", "some lot", "123 Main Street", "12345");
 
-            ParkingLot parkingLot = _service.ParseFromXml(xml);
+            ParkingLotGET parkingLot = _service.ParseFromXml(xml);
 
             Assert.AreEqual(100, parkingLot.AvailableSpaces);
             Assert.AreEqual("somewhere", parkingLot.Description);
@@ -102,7 +102,7 @@ namespace CSM.ParkingData.Tests.Lots
                                     new XElement("longitude", "bad"),
                                     new XElement("zip", "not gonna work"));
 
-            ParkingLot parkingLot = _service.ParseFromXml(parkingLotXml);
+            ParkingLotGET parkingLot = _service.ParseFromXml(parkingLotXml);
 
             Assert.IsNull(parkingLot);
         }

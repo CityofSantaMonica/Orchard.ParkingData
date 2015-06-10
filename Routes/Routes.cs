@@ -9,6 +9,7 @@
 
         public static readonly int DefaultPriority = 5;
 
+        public static readonly string NonEmptyStringContraint = @"^.+$";
         public static readonly string DateTimeConstraint = @"^\d{8}T\d{6}Z$";
         public static readonly string OrdinalConstraint = @"^\d+$";
     }

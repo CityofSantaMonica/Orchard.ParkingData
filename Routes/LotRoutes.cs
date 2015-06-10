@@ -13,13 +13,27 @@ namespace CSM.ParkingData.Routes
         {
             return new[] {
                 new HttpRouteDescriptor() {
-                    Name = "LotsDefault",
+                    Name = "LotsMatching",
                     Priority = Routes.DefaultPriority,
-                    RouteTemplate = "lots/{name}",
+                    RouteTemplate = "lots/matching/{name}",
                     Defaults = new {
                         area = Routes.Area,
+                        action = "GetMatching",
                         controller = _controller,
-                        name = RouteParameter.Optional
+                    },
+                    Constraints = new { 
+                        name = Routes.NonEmptyStringContraint
+                    }
+                },
+                new HttpRouteDescriptor() {
+                    Name = "LotsDefault",
+                    Priority = Routes.DefaultPriority,
+                    RouteTemplate = "lots/{id}",
+                    Defaults = new {
+                        area = Routes.Area,
+                        action = "GetDefault",
+                        controller = _controller,
+                        id = RouteParameter.Optional
                     }
                 }
             };
