@@ -117,6 +117,21 @@ namespace CSM.ParkingData.Services
             };
         }
 
+        public SensorEventGET GetLatestViewModel()
+        {
+            return GetLatestViewModel(null);
+        }
+
+        public SensorEventGET GetLatestViewModel(string meterId)
+        {
+            var query = Query();
+
+            if (!String.IsNullOrEmpty(meterId))
+                query = query.Where(s => s.MeteredSpace.MeterId == meterId);
+
+            return GetViewModel(query.First());
+        }
+
         public IQueryable<SensorEvent> Query()
         {
             return _sensorEventsRepo
