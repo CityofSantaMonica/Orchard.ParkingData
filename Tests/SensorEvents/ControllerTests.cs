@@ -4,9 +4,9 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Results;
 using CSM.ParkingData.Controllers;
+using CSM.ParkingData.Extensions;
 using CSM.ParkingData.Models;
 using CSM.ParkingData.ViewModels;
-using CSM.ParkingData.Extensions;
 using Moq;
 using NUnit.Framework;
 
@@ -104,9 +104,8 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
             string validDateArgument = _dateTimeStub.ToIso8061BasicString();
             IHttpActionResult actionResult = _controller.AtMeterSinceDateTime("no match", validDateArgument);
-            NotFoundResult contentResult = actionResult as NotFoundResult;
 
-            Assert.IsNotNull(contentResult);
+            Assert.IsInstanceOf<NotFoundResult>(actionResult);
         }
 
         [Test]
@@ -117,9 +116,9 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
             long validOrdinalArgument = 1;
             IHttpActionResult actionResult = _controller.AtMeterSinceOrdinal("no match", validOrdinalArgument);
-            NotFoundResult contentResult = actionResult as NotFoundResult;
 
-            Assert.IsNotNull(contentResult);
+
+            Assert.IsInstanceOf<NotFoundResult>(actionResult);
         }
 
         [Test]
@@ -216,14 +215,44 @@ namespace CSM.ParkingData.Tests.SensorEvents
 
         [Test]
         [Category("SensorEvents")]
+        public void AtMeterLatest_GivenBadMeterId_ReturnsNotFound()
+        {
+            _mockMeteredSpacesService.Setup(m => m.Exists(It.IsAny<string>())).Returns(false);
+
+            IHttpActionResult actionResult = _controller.AtMeterLatest("no match");
+
+            Assert.IsInstanceOf<NotFoundResult>(actionResult);
+        }
+
+        [Test]
+        [Category("SensorEvents")]
+        public void AtMeterLatest_GivenGoodMeterId_ReturnsLatestSensorEventGET_FromMeter()
+        {
+            anyMeterIdExists();
+            string meterIdStub = "match";
+
+            _mockSensorEventsService
+                .Setup(m => m.GetLatestViewModel(It.IsAny<string>()))
+                .Returns(new SensorEventGET() { MeterId = meterIdStub, EventId = 12345 });
+
+            IHttpActionResult actionResult = _controller.AtMeterLatest(meterIdStub);
+            var contentResult = actionResult as OkNegotiatedContentResult<SensorEventGET>;
+
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.AreEqual(meterIdStub, contentResult.Content.MeterId);
+            Assert.AreEqual(12345, contentResult.Content.EventId);
+        }
+
+        [Test]
+        [Category("SensorEvents")]
         public void AtMeter_GivenBadMeterId_ReturnsNotFound()
         {
             _mockMeteredSpacesService.Setup(m => m.Exists(It.IsAny<string>())).Returns(false);
 
             IHttpActionResult actionResult = _controller.AtMeter("no match");
-            NotFoundResult contentResult = actionResult as NotFoundResult;
 
-            Assert.IsNotNull(contentResult);
+            Assert.IsInstanceOf<NotFoundResult>(actionResult);
         }
 
         [Test]
@@ -397,6 +426,22 @@ namespace CSM.ParkingData.Tests.SensorEvents
             Assert.AreEqual(2, contentResult.Content.Count());
             Assert.True(contentResult.Content.All(vm => vm.Ordinal >= ordinalStub));
             Assert.True(contentResult.Content.All(vm => vm.EventTime >= _lifetimeStub.Since));
+        }
+
+        [Test]
+        [Category("SensorEvent")]
+        public void Latest_ReturnsLatestSensorEventGET()
+        {
+            _mockSensorEventsService
+                .Setup(m => m.GetLatestViewModel())
+                .Returns(new SensorEventGET() { EventId = 12345 });
+
+            IHttpActionResult actionResult = _controller.Latest();
+            var contentResult = actionResult as OkNegotiatedContentResult<SensorEventGET>;
+
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            Assert.AreEqual(12345, contentResult.Content.EventId);
         }
 
         [Test]
