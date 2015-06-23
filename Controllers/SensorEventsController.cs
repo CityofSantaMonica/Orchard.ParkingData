@@ -57,6 +57,17 @@ namespace CSM.ParkingData.Controllers
             return Ok(events);
         }
 
+        [TrackAnalytics("GET Sensor Events at Meter Latest")]
+        [HttpGet]
+        public IHttpActionResult AtMeterLatest(string meterId)
+        {
+            if (!_meteredSpacesService.Exists(meterId))
+                return NotFound();
+
+            var latest = _sensorEventsService.GetLatestViewModel(meterId);
+            return Ok(latest);
+        }
+
         [TrackAnalytics("GET Sensor Events at Meter")]
         [HttpGet]
         public IHttpActionResult AtMeter(string meterId)
@@ -96,6 +107,14 @@ namespace CSM.ParkingData.Controllers
         {
             var events = _sensorEventsService.GetViewModelsSince(ordinal);
             return Ok(events);
+        }
+
+        [TrackAnalytics("GET Sensor Events Latest")]
+        [HttpGet] 
+        public IHttpActionResult Latest()
+        {
+            var latest = _sensorEventsService.GetLatestViewModel();
+            return Ok(latest);
         }
 
         [TrackAnalytics("GET Sensor Events")]

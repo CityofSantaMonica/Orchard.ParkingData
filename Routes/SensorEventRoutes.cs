@@ -39,6 +39,16 @@ namespace CSM.ParkingData.Routes
                     }
                 },
                 new HttpRouteDescriptor() {
+                    Name = "SensorEventsAtMeterLatest",
+                    Priority = Routes.DefaultPriority,
+                    RouteTemplate = String.Format("{0}/latest", Routes.BaseEventAtRoute),
+                    Defaults = new {
+                        area = Routes.Area,
+                        controller = _controller,
+                        action = "AtMeterLatest"
+                    }
+                },
+                new HttpRouteDescriptor() {
                     Name = "SensorEventsAtMeter",
                     Priority = Routes.DefaultPriority,
                     RouteTemplate = Routes.BaseEventAtRoute,
@@ -61,7 +71,7 @@ namespace CSM.ParkingData.Routes
                         datetime = Routes.DateTimeConstraint
                     }
                 },
-                 new HttpRouteDescriptor() {
+                new HttpRouteDescriptor() {
                     Name = "SensorEventsSinceOrdinal",
                     Priority = Routes.DefaultPriority,
                     RouteTemplate = String.Format("{0}/since/{{ordinal}}", Routes.BaseEventRoute),
@@ -72,6 +82,16 @@ namespace CSM.ParkingData.Routes
                     },
                     Constraints = new {
                         ordinal = Routes.OrdinalConstraint
+                    }
+                },
+                new HttpRouteDescriptor() {
+                    Name = "SensorEventsLatest",
+                    Priority = Routes.DefaultPriority,
+                    RouteTemplate = String.Format("{0}/latest", Routes.BaseEventRoute),
+                    Defaults = new {
+                        area = Routes.Area,
+                        controller = _controller,
+                        action = "Latest"
                     }
                 },
                 new HttpRouteDescriptor() {
