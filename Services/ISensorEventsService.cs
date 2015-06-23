@@ -33,6 +33,17 @@ namespace CSM.ParkingData.Services
         SensorEventGET GetViewModel(SensorEvent entity);
 
         /// <summary>
+        /// Gets the most recently recorded sensor event
+        /// </summary>
+        SensorEventGET GetLatestViewModel();
+
+        /// <summary>
+        /// Gets the most recently recorded sensor event at the MeteredSpace with the specified id.
+        /// </summary>
+        /// <param name="meterId"></param>
+        SensorEventGET GetLatestViewModel(string meterId);
+
+        /// <summary>
         /// Return a queryable collection of SensorEvent records.
         /// </summary>
         IQueryable<SensorEvent> Query();
