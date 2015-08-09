@@ -2,7 +2,6 @@
 
 namespace CSM.ParkingData.Models
 {
-
     public class SensorEventsSettings : ContentPart
     {
         public double DefaultLifetimeLength
