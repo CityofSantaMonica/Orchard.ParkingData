@@ -124,12 +124,9 @@ namespace CSM.ParkingData.Services
 
         public SensorEventGET GetLatestViewModel(string meterId)
         {
-            var query = Query();
+            var lifetime = GetMaxLifetime();
 
-            if (!String.IsNullOrEmpty(meterId))
-                query = query.Where(s => s.MeteredSpace.MeterId == meterId);
-
-            return GetViewModel(query.First());
+            return GetViewModelsSince(lifetime.Since, meterId).FirstOrDefault();
         }
 
         public IQueryable<SensorEvent> Query()
