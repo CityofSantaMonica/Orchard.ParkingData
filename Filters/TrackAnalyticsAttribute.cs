@@ -2,8 +2,8 @@
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using GoogleAnalyticsTracker.WebApi2;
-using Microsoft.WindowsAzure;
 using Orchard;
+using Microsoft.Azure;
 
 namespace CSM.ParkingData.Filters
 {

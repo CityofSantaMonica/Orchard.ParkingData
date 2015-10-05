@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using CSM.ParkingData.ViewModels;
-using Microsoft.WindowsAzure;
+using Microsoft.Azure;
 using Orchard.Services;
 
 namespace CSM.ParkingData.Services
