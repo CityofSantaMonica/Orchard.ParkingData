@@ -133,9 +133,8 @@ namespace CSM.ParkingData.Services
         {
             return _sensorEventsRepo
                     .Table
-                    //taking advantage of the clustered index on Id
-                    //since we normally want the most recent events (which are at the end)
-                    .OrderByDescending(s => s.Id);
+                    //pre-fetch the metered spaces to speed up later joins
+                    .Fetch(s => s.MeteredSpace);
         }
 
         public IEnumerable<SensorEventGET> GetViewModelsSince(DateTime datetime)
