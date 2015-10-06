@@ -23,6 +23,11 @@ namespace CSM.ParkingData.Services
         SensorEventLifetime GetDefaultLifetime();
 
         /// <summary>
+        /// Return a queryable collection of SensorEvent records.
+        /// </summary>
+        IQueryable<SensorEvent> Query();
+
+        /// <summary>
         /// Given the sensor event data in a POSTed view model, insert a new record or update an existing record.
         /// </summary>
         SensorEvent AddOrUpdate(SensorEventPOST viewModel);
@@ -42,11 +47,6 @@ namespace CSM.ParkingData.Services
         /// </summary>
         /// <param name="meterId"></param>
         SensorEventGET GetLatestViewModel(string meterId);
-
-        /// <summary>
-        /// Return a queryable collection of SensorEvent records.
-        /// </summary>
-        IQueryable<SensorEvent> Query();
 
         /// <summary>
         /// Get a collection of view models occuring since the specified DateTime.

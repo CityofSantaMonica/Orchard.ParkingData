@@ -69,6 +69,14 @@ namespace CSM.ParkingData.Services
             return lifetime;
         }
 
+        public IQueryable<SensorEvent> Query()
+        {
+            return _sensorEventsRepo
+                    .Table
+                    //pre-fetch the metered spaces to speed up later joins
+                    .Fetch(s => s.MeteredSpace);
+        }
+
         public SensorEvent AddOrUpdate(SensorEventPOST viewModel)
         {
             //try to get an existing meter, by looking in a local cache first
@@ -127,15 +135,6 @@ namespace CSM.ParkingData.Services
             var lifetime = GetMaxLifetime();
 
             return GetViewModelsSince(lifetime.Since, meterId).FirstOrDefault();
-        }
-
-        public IQueryable<SensorEvent> Query()
-        {
-            return _sensorEventsRepo
-                    .Table
-                    //taking advantage of the clustered index on Id
-                    //since we normally want the most recent events (which are at the end)
-                    .OrderByDescending(s => s.Id);
         }
 
         public IEnumerable<SensorEventGET> GetViewModelsSince(DateTime datetime)

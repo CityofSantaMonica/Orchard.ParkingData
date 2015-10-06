@@ -3,7 +3,7 @@ AntiForgery: enabled
 Author: City of Santa Monica
 Website: https://github.com/CityofSantaMonica/Orchard.ParkingData
 Version: 1.0
-OrchardVersion: 1.9
+OrchardVersion: 1.9.2
 Description: RESTful Web API for the City of Santa Monica's Parking Data.
 Dependencies: CSM.WebApi.Security, Orchard.Caching
 Category: Open Data

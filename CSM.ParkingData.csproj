@@ -24,6 +24,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,7 +57,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\windowsazure\Microsoft.WindowsAzure.Configuration.dll</HintPath>
     </Reference>
@@ -115,7 +116,6 @@
     <ProjectReference Include="..\CSM.WebApi\CSM.WebApi.csproj">
       <Project>{44c685fd-fc5e-41a8-a4dd-20896ca1f77e}</Project>
       <Name>CSM.WebApi</Name>
-      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\Orchard.Caching\Orchard.Caching.csproj">
       <Project>{7528bf74-25c7-4abe-883a-443b4eec4776}</Project>
